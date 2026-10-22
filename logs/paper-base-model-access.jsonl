@@ -1,0 +1,4 @@
+{"timestamp_utc": "2026-10-22T08:20:02.952893+00:00", "model_requested": "o1-mini", "purpose": "paper-base-model-access-check", "status": "unavailable", "error_class": "unsupported_by_codex_chatgpt_account", "returncode": 1}
+{"timestamp_utc": "2026-10-22T08:20:11.790664+00:00", "model_requested": "o3-mini", "purpose": "paper-base-model-access-check", "status": "unavailable", "error_class": "unsupported_by_codex_chatgpt_account", "returncode": 1}
+{"timestamp_utc": "2026-10-22T08:20:22.850060+00:00", "model_requested": "o4-mini", "purpose": "paper-base-model-access-check", "status": "unavailable", "error_class": "unsupported_by_codex_chatgpt_account", "returncode": 1}
+{"timestamp_utc": "2026-10-22T08:20:32.139582+00:00", "model_requested": "gpt-5", "purpose": "paper-base-model-access-check", "status": "unavailable", "error_class": "unsupported_by_codex_chatgpt_account", "returncode": 1}
