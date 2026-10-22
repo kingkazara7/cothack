@@ -1,0 +1,13 @@
+test_bad_control_excluded (test_metrics.Metrics.test_bad_control_excluded) ... ok
+test_cases_coverage (test_metrics.Metrics.test_cases_coverage) ... ok
+test_duplicate_rejected (test_metrics.Metrics.test_duplicate_rejected) ... ok
+test_incomplete_excluded (test_metrics.Metrics.test_incomplete_excluded) ... ok
+test_missing_reasoning_not_zero (test_metrics.Metrics.test_missing_reasoning_not_zero) ... ok
+test_no_inference_is_not_failure (test_metrics.Metrics.test_no_inference_is_not_failure) ... ok
+test_targeted (test_metrics.Metrics.test_targeted) ... ok
+test_unrelated_error_not_targeted_success (test_metrics.Metrics.test_unrelated_error_not_targeted_success) ... ok
+
+----------------------------------------------------------------------
+Ran 8 tests in 0.000s
+
+OK
