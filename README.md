@@ -7,6 +7,7 @@
 - [研究报告](research/report.md)：定义、威胁模型、指标、限制与后续验证。
 - [五种公开方法](research/references.md)：作者论文、版本、实验依据及本地变体边界。
 - [2026 年深度检索更新](research/updates-2026.md)：轨迹窃取、监控规避、推理耗尽与训练期后门等新研究及证据分层。
+- [八篇新近论文详解](research/paper-notes-2026.md)：逐篇解释威胁模型、攻击流程、实验协议、作者结果及局限。
 - [三种自主构造思路](methods/proposed.md)：假设、区别与消融设计；不主张全球首创。
 - [16 个测试样例](data/cases.json)：每种两个，包含系统约束、原任务、对照和攻击。
 - `scripts/run.py`：直接调用 OpenAI Responses / Anthropic Messages；Python 3 标准库，无第三方依赖。
