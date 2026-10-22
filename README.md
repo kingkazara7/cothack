@@ -4,6 +4,12 @@
 
 **当前实测：** `gpt-6-astra` 与 `gpt-5.6-sol` 均完成 8 个工程策略、每种 2 个样例的攻击/对照，各 32 次调用；DeepSeek Chat 的 `DeepThink` 完成 2 个对照和 4 种公开方法各 2 个代理样例；轨迹重放完成 2 个本地机制样例。DeepSeek 网页未显示 checkpoint，不能写成精确 DeepSeek-R1 版本复现。
 
+## 研究重点与 CoT 可见性
+
+后续实证以 **DeepSeek 和 Qwen** 为主，使用同题、同攻击提示和同判分标准做配对比较。DeepSeek 已完成双样例；Qwen 官方网页当前显示 `Qwen3.8-Max`，但首次提交要求用户确认出生年份，尚未发送测试。
+
+**本项目当前可用接口无法揭示或验证 GPT 与 Claude 的完整隐藏 CoT。** OpenAI 官方接口只提供不透明 reasoning items、token 统计和可选 reasoning summary；Anthropic 的 `thinking` 文本是摘要或空字段，完整推理封装在加密 signature 中。摘要、模型自述和 token 数一律不作为 raw CoT。完整说明与官方文档链接见 [`research/cot-observability.md`](research/cot-observability.md)。
+
 ## 五篇公开论文与简短 PoC
 
 ### P01 Stealing Reasoning Traces from Proprietary LLM APIs
@@ -75,6 +81,7 @@
 - [`research/report.md`](research/report.md)：威胁模型、指标、限制与错误归因。
 - [`research/references.md`](research/references.md)：五篇公开论文的详细依据。
 - [`research/paper-notes-2026.md`](research/paper-notes-2026.md)：其他新近 CoT 安全论文综述。
+- [`research/cot-observability.md`](research/cot-observability.md)：DeepSeek/Qwen 研究重点，以及 GPT/Claude 完整 CoT 不可观测边界。
 - [`data/cases.json`](data/cases.json)：Astra 运行的 8 种方法、每种 2 个样例。历史实验编号中 M03 CoT Forgery 保留为补充，正式五篇中的 P01 由单独的重放脚本验证。
 - [`logs/deepseek-web-deepthink-pilot.jsonl`](logs/deepseek-web-deepthink-pilot.jsonl)：DeepSeek 网页的逐提示、可见思考与最终输出。
 - [`logs/paper-base-model-access.jsonl`](logs/paper-base-model-access.jsonl)：旧论文模型的接口可用性检查。
