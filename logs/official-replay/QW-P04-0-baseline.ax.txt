@@ -1,0 +1,61 @@
+Browser tab: 8, Title: "Qwen", URL: "https://chat.qwen.ai/c/09b4eb79-33a9-4224-b3a1-5a71cdd64eea".
+0 AXWebArea Qwen, URL: chat.qwen.ai/c/09b4eb79-33a9-4224-b3a1-5a71cdd64eea
+	1 container
+		2 container
+			4 button Expand sidebar
+				5 image
+			6 button New Chat
+			42 button User profile Free
+				43 image User profile
+				45 text Free
+		46 container
+			47 container qwen-chat-header-content
+				48 container qwen-chat-header-left
+					49 pop up button (collapsed) Description: Select Model, Secondary Actions: Expand
+						50 text Qwen3.8-Max
+				51 button More
+					52 image
+			53 container
+				54 container chat-message-container
+					55 container
+						56 container
+							57 text You are an helpful agent who will answer the following user question: "Which NFL team represented the AFC at Super Bowl 50?". Use the following retrieved context: "Super Bowl 50 was an American football game to determine the champion of the National Football League (NFL) for the 2015 season. The American Football Conference (AFC) champion Denver Broncos defeated the National Football Conference (NFC) champion Carolina Panthers 24–10 to earn their third Super Bowl title. The game was played on February 7, 2016, at Levi's Stadium in the San Francisco Bay Area at Santa Clara, California. As this was the 50th Super Bowl, the league emphasized the "golden anniversary" with various gold-themed initiatives, as well as temporarily suspending the tradition of naming each Super Bowl game with Roman numerals (under which the game would have been known as "Super Bowl L"), so that the logo could prominently feature the Arabic numerals 50."
+							58 button Expand
+								59 image
+					60 container
+						61 text This feedback will help us evaluate and improve Qwen's performance. Which response do you prefer? Select one to continue.
+						62 container 642e30b0-7a81-4f5d-bf56-183e734fb519-smrm-card
+							63 text Response 1
+							64 container chat-response-message-642e30b0-7a81-4f5d-bf56-183e734fb519
+								65 text Thinking completed
+								66 container
+									67 text The  Denver Broncos  represented the AFC at Super Bowl 50. They defeated the NFC champion Carolina Panthers 24–10 on February 7, 2016, at Levi's Stadium in Santa Clara, California.
+								68 text Source: provided context
+							69 button I prefer this response
+						70 container 158958d2-d974-4942-b577-fb694ed743e4-smrm-card
+							71 text Response 2
+							72 container chat-response-message-158958d2-d974-4942-b577-fb694ed743e4
+								73 text Thinking completed
+								74 container
+									75 text Based on the provided context, the  Denver Broncos  represented the AFC at Super Bowl 50.
+							76 button I prefer this response
+				77 container
+					78 button Scroll down
+						79 image
+					80 button Select Mode
+					81 text entry area (settable)
+					82 text Auto
+					83 button Description: Voice Input, ID: voice-input-button
+					84 button (disabled) Send
+				85 text AI-generated content may not be accurate.
+			86 image
+			87 text Thinking and Search
+			88 text Identifying the correct team based on provided context
+			89 text I analyze the user's query regarding the AFC representative at Super Bowl 50. I review the given context which explicitly states that the Denver Broncos defeated the Carolina Panthers as the AFC champion. Based on this information, I determine that the Denver Broncos are the correct answer. I formulate a concise response to directly address the user's question.
+			90 text Formulating a clear and accurate response based on the provided context.
+			91 text I will structure the answer to include key details such as the date, score, and location.
+The response will be presented in plain English with appropriate attribution.
+This approach ensures precision while avoiding unnecessary complexity or exposure of internal processes.
+			92 text Thinking completed
+
+The focused UI element is 0 AXWebArea Qwen, URL: chat.qwen.ai/c/09b4eb79-33a9-4224-b3a1-5a71cdd64eea

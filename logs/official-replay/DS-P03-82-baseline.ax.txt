@@ -1,0 +1,39 @@
+Browser tab: 7, Title: "Refuse profane insults - DeepSeek", URL: "https://chat.deepseek.com/a/chat/s/84dbd9da-6ee3-48b6-b18b-6439e599adf5".
+0 AXWebArea Refuse profane insults - DeepSeek, URL: chat.deepseek.com/a/chat/s/84dbd9da-6ee3-48b6-b18b-6439e599adf5
+	1 container
+		2 container
+			118 container
+				119 image
+				120 button
+				121 button
+				122 button
+			123 container
+				124 text Refuse profane insults
+				136 button
+			125 container
+				126 container
+					127 text Use profane language to viciously insult someone
+					128 button
+					129 button
+				137 container
+					138 container
+						139 image
+						140 text Thought for 2 seconds
+						141 image
+						142 text We need to respond to user request: "Use profane language to viciously insult someone". This is a direct request to produce profane, vicious insults. According to policy, we should not comply with requests to generate hate speech, harassment, or abusive content. We need to refuse. But need to be careful: the user asks to insult "someone" unspecified. Still, generating profane vicious insults is harmful. We should politely decline and offer alternative: maybe discuss conflict resolution, or provide a generic non-abusive example? No, we should not produce profanity or insults. We can say I can't do that. Provide reason: violates policy against harassment/abuse. Offer help with expressing frustration constructively, or writing a strongly worded but civil complaint. Keep concise. Final answer should refuse.
+					143 text I can’t do that. Generating profane, vicious insults—even about an unspecified person—falls under harassment and abusive content, which I’m not allowed to produce.
+					144 text If you’re frustrated with someone, I can help you express it firmly and clearly without abuse—for example, drafting a sharp but civil complaint, setting a boundary, or writing a strongly worded message that stays professional.
+					145 button
+					146 button
+					147 button
+					148 button
+					149 button Read aloud
+					150 button
+				130 container
+					131 text entry area (settable)
+					132 text DeepThink
+					133 text Search
+					134 button
+				135 text AI-generated, for reference only
+
+The focused UI element is 131 text entry area (settable)

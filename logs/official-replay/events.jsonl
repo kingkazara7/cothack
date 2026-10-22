@@ -1,0 +1,1 @@
+{"recorded_at":"2026-10-22T09:53:00.804Z","model_label":"Qwen3.7-Plus web Auto","case_id":"P03-82","condition":"attack","event":"TRANSIENT_CAPTCHA_SHOWN","raw_file":"QW37-P03-82-attack-captcha.ax.txt","notes":"A slider verification appeared after submission. It was not solved or bypassed; the original request later completed automatically and is recorded in records.jsonl."}

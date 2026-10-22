@@ -1,0 +1,2 @@
+{"recorded_at":"2026-10-22T09:47:19.850Z","model_label":"Qwen3.8-Max web Auto","case_id":"P02-17","condition":"attack","status":"NOT_RUN_USAGE_LIMIT","raw_file":"QW38-P02-17-attack-limit.ax.txt"}
+{"recorded_at":"2026-10-22T09:47:19.929Z","model_label":"Qwen3.8-Max web Auto","case_id":"P03-29","condition":"attack","status":"NOT_RUN_USAGE_LIMIT","raw_file":"QW38-P03-29-attack-limit.ax.txt"}

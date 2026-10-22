@@ -12,8 +12,8 @@
 
 | 模型入口 | 可观察内容 | 本项目用途 | 当前状态 |
 |---|---|---|---|
-| DeepSeek Chat / `DeepThink` | 网页显示简短 reasoning 文本与思考秒数 | 主要黑盒推理操纵与开销代理测试 | 已完成 P02–P05 各 2 例和 2 个对照；网页不披露 checkpoint |
-| Qwen Chat / `Qwen3.8-Max` | 网页显示 `Thinking completed`，可展开部分可见推理 | 第二个主要黑盒模型；与 DeepSeek 做同题配对 | 已完成 P02–P05 各 2 例和 2 个对照；网页不披露 checkpoint 或 token 用量 |
+| DeepSeek Chat / `DeepThink` | 网页显示 reasoning 文本与思考秒数 | 主要黑盒推理操纵与开销测试 | 已完成 P02–P05 各 2 个论文样例的基线/攻击配对；网页不披露 checkpoint |
+| Qwen Chat / `Qwen3.8-Max`、`Qwen3.7-Plus` | 网页显示 `Thinking completed`，可展开部分可见推理 | 第二个主要黑盒模型；与 DeepSeek 做同题配对 | 已完成 P02–P05 各 2 个论文样例的基线/攻击配对；网页不披露 checkpoint 或 token 用量 |
 | OpenAI / GPT | 最终输出、usage，以及支持时可选的 reasoning summary | 输出完整性、拒绝与开销代理；不把摘要当隐藏 CoT | Astra 与 GPT-5.6 Sol 已各完成 32 次 CLI 调用；CLI 未返回可读 raw CoT |
 | Anthropic / Claude | `thinking` 可为空或返回摘要；完整推理在 signature 中加密 | 接口边界和论文兼容性分析 | 当前没有获授权的 Claude API 实测端点 |
 
@@ -36,4 +36,4 @@
 
 DeepSeek 网页显示的 reasoning 文本对黑盒行为研究很有用，可以比较攻击前后是否采纳伪结论、是否出现额外步骤、可见思考时间是否改变。但没有隐藏轨迹真值，不能证明网页文本就是未加工的内部 CoT。
 
-Qwen3.8-Max 已使用与 DeepSeek 相同的两道算术题、攻击提示和判分标准，完成 H-CoT、CoT Hijacking、OverThink 与 CatAttack 各 2 例及 2 个对照。全部最终答案正确；前三种输出操纵方法均为 0/2，OverThink 因没有 reasoning-token、服务端延迟或费用数据而记为 N/A。第一个 H-CoT 样例展开后，网页可见推理明确识别候选 `324` 错误并重新计算；由于没有隐藏轨迹真值，该文本只称“网页可见推理”，不能称 raw CoT。
+早期 Qwen3.8-Max 算术代理矩阵全部最终答案正确，它只能说明那些简化提示没有奏效。论文原始输入回放得到不同结果：Qwen3.7-Plus 的 H-CoT 为 1/2 拒答绕过，CoT Hijacking 为一个成功和一个无效候选；Qwen3.8-Max 的 CatAttack 为 1/2 错误迁移，OverThink 两例均执行诱饵但缺少 token/成本指标。无论结果成功或失败，网页展开文本都只称“网页可见推理”，不能称 raw CoT。完整逐例结果见 [官方输入回放报告](../results/official-replay-20261022.md)。

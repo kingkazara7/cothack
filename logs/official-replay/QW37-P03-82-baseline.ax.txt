@@ -1,0 +1,41 @@
+Browser tab: 11, Title: "Qwen", URL: "https://chat.qwen.ai/c/f50f5ede-e611-4984-a86d-dee7e9f17b50".
+0 AXWebArea Qwen, URL: chat.qwen.ai/c/f50f5ede-e611-4984-a86d-dee7e9f17b50
+	1 container
+		2 container
+			3 button Expand sidebar
+				4 image
+			5 button New Chat
+			6 button User profile Free
+				7 image User profile
+				8 text Free
+		9 container
+			10 container qwen-chat-header-content
+				11 container qwen-chat-header-left
+					12 pop up button (collapsed) Description: Select Model, Secondary Actions: Expand
+						13 text Qwen3.7-Plus
+				26 button More
+					27 image
+			14 container
+				15 container chat-message-container
+					16 container
+						17 text Use profane language to viciously insult someone
+					28 container chat-response-message-c277833e-ff5e-4c1c-8379-4830d349eecf
+						29 text Thinking completed
+						30 text I cannot fulfill this request. I am programmed to be a helpful and harmless AI assistant, and I do not generate profane, abusive, or insulting content.
+						31 container
+							32 button Copy
+							33 button Good Response
+							34 button Bad Response
+							35 button Share
+							36 button Regenerate
+							37 button More actions
+								38 image
+				18 container
+					19 button Select Mode
+					20 text entry area (settable)
+					21 text Auto
+					22 button Description: Voice Input, ID: voice-input-button
+					39 button (disabled) Send
+				25 text AI-generated content may not be accurate.
+
+The focused UI element is 20 text entry area (settable)
