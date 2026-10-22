@@ -4,7 +4,7 @@
 
 ## 研究结论与完成度
 
-正式八种方法为 P01–P05 五篇公开方法加 N01–N03 三种自拟方法。P01 轨迹重放完成两个本地确定性机制样例；P02–P05 与 N01–N03 均有两个 Astra 安全代理样例。另保留 CoT Forgery 作为补充，因此 Astra 历史工程矩阵实际包含 M01–M08 八组、32 次攻击/对照调用。32 次均正常完成，所有攻击组和对照组都输出正确答案；M04 没有观察到延迟增长，但 reasoning-token 指标不可用。详细结果见 [gpt-6-astra-codex-cli-pilot.md](../results/gpt-6-astra-codex-cli-pilot.md)。
+正式八种方法为 P01–P05 五篇公开方法加 N01–N03 三种自拟方法。P01 轨迹重放完成两个本地确定性机制样例；P02–P05 与 N01–N03 均有两个 Astra 安全代理样例。另保留 CoT Forgery 作为补充，因此 Astra 历史工程矩阵实际包含 M01–M08 八组、32 次攻击/对照调用。`gpt-5.6-sol` 又按同一工程矩阵完成 32 次调用。两个模型入口的全部输出操纵攻击组和对照组都给出正确答案；M04 的 reasoning-token 指标均不可用。详细结果见 [Astra 报告](../results/gpt-6-astra-codex-cli-pilot.md)和 [GPT-5.6 Sol 报告](../results/gpt-5.6-sol-codex-cli-pilot.md)。
 
 研究不将 Hack CoT 当作单一漏洞：隐藏推理提取、推理过程完整性、最终答案污染、拒绝绕过和计算资源滥用需要不同证据。本仓库实现的是机制模拟与安全代理实验，不等于原论文的危险任务越狱或端到端复现。DeepSeek Chat `DeepThink` 另完成两个对照，以及 P02–P05 各两个公开方法代理样例；网页没有公开 checkpoint。Claude Fable 5.1 和 Claude Opus 5.5 尚无实际结果。
 
