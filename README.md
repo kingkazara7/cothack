@@ -12,6 +12,7 @@
 - [16 个测试样例](data/cases.json)：每种两个，包含系统约束、原任务、对照和攻击。
 - `scripts/run.py`：直接调用 OpenAI Responses / Anthropic Messages；Python 3 标准库，无第三方依赖。
 - `scripts/run_codex_cli.py`：通过本机已登录的 Codex CLI 执行独立、只读的安全代理实验。
+- `scripts/reproduce_trace_replay.py`：第一篇论文的本地机制复现；比较全局可移植推理块与上下文绑定修复，不调用供应商系统。
 - `scripts/analyze.py`：配对结果、条件 ASR 和 Wilson 区间。
 - `logs/`：逐请求 JSONL，包括预检记录和 GPT-6 Astra CLI 原始事件。
 - `results/`：机器可读统计与[安全代理实验结果](results/gpt-6-astra-codex-cli-pilot.md)。
@@ -35,6 +36,9 @@ python3 scripts/analyze.py logs/EXACT_RUN_FILE.jsonl --out results/EXACT_RUN_FIL
 ```sh
 python3 scripts/run_codex_cli.py --model gpt-6-astra --sample-index 1
 python3 scripts/run_codex_cli.py --model gpt-6-astra --sample-index 2
+
+# 无需网络或密钥的推理块重放机制复现
+python3 scripts/reproduce_trace_replay.py
 ```
 
 每次执行生成独立日志；不要把多次运行直接合并。默认输出预算 2048 token，最大允许 8192；每请求超时 120 秒，无自动重试，不启用工具。三模型共 288 请求，最多约 589,824 输出预算 token；这是预算上界，不是价格估计。可先用 `--method M01 --repeats 1` 验证 API 权限与配置。OpenAI 使用 medium reasoning，Anthropic 使用 adaptive thinking；两者不是相等计算预算。API 错误保留以诊断，不计入 ASR。
@@ -46,3 +50,5 @@ python3 scripts/run_codex_cli.py --model gpt-6-astra --sample-index 2
 ## 范围
 
 全部任务为本项目合成算术，攻击文本只存在于明确标记的不可信数据区。无真实敏感信息、第三方目标、数据外传或有害任务。公开方法为机制启发的安全缩小变体，不能冒称原论文端到端复现。真实模型实验不一定要求直接 API：本仓库已用获授权的本机 Codex CLI 完成一轮黑盒代理测试；其系统脚手架、隐藏推理不可见性和小样本量限制了结论。论文原始设置和 Claude 模型仍需相应的获授权端点。
+
+推理轨迹窃取被纳入 CoT 机密性攻击。当前环境没有可重放的供应商 reasoning block；[本地重放结果](results/trace-replay-simulation.md)没有调用任何 LLM，只演示受控最小系统中的机制，不能作为模型攻击成功率或现网漏洞证据。

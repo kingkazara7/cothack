@@ -70,3 +70,11 @@ GPT-6 Astra CLI 实验共有 32/32 次完成调用；样例 1 的攻击组和对
 5. 若研究隐藏 CoT 泄露，只能在有真实轨迹真值和明确授权的可观测环境设计提取指标；生成的解释、摘要或自述一律不作为泄露证据。
 
 当前实验已经保留真实原始日志、机器统计和结果解释，但样本量和接口可观测性不足以形成论文级结论。现有证据不支持 `gpt-6-astra` 在这些具体提示下被攻破，也不支持对整个攻击类别或未测试模型作免疫性判断。
+
+## 推理轨迹窃取的机制复现
+
+第一篇新近研究 *Stealing Reasoning Traces from Proprietary LLM APIs* 被纳入广义 Hack CoT，类别为 CoT 机密性攻击，而非 CoT 修改攻击。当前 Codex CLI 事件没有返回原始 reasoning block/signature，且环境未配置供应商 API 凭据，因此不能进行或声称现网复现。
+
+仓库提供一个确定性的本地最小系统，模拟论文的关键条件：目标模型产生不透明且经过消息认证的推理块；未绑定模式允许不同用户、会话和模型重放，代码中预设的弱解码器据此转写合成轨迹；修复模式把用户、会话和模型纳入认证上下文。该脚本没有调用任何 LLM。两个预注册样例在未绑定模式按代码设定出现模拟提取事件（2/2），在上下文绑定模式均被拒绝（0/2）。同上下文续接在两种模式均成功，篡改密文在两种模式均失败，说明模拟漏洞来自上下文缺失而非消息认证被破解；这些数字不是模型攻击成功率。
+
+脚本、原始 JSONL 和完整边界分别见 `scripts/reproduce_trace_replay.py`、`logs/trace-replay-simulation.jsonl` 和 [trace-replay-simulation.md](../results/trace-replay-simulation.md)。该结果只支持机制可实现性，不测量 OpenAI、Anthropic 或 Google 当前接口，也不验证恢复文本与真实隐藏 CoT 的逐 token 一致性。
