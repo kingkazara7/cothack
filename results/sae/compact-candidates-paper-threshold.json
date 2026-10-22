@@ -1,0 +1,2143 @@
+{
+  "model": "Qwen/Qwen3-8B",
+  "model_path": "/model",
+  "revision": "b968826",
+  "sae_repo": "sammyliu/qwen3-8b-sae-l36-topk64",
+  "sae_source": "local_files",
+  "decoder_path": "artifacts/compact-sae/W_dec",
+  "decoder_sha256": "6bf822fde7b911240190f1b0754483f6250c9f6e31be8de8d8fd808c7c37025f",
+  "metadata_path": "artifacts/compact-sae/model.metadata.json",
+  "metadata_sha256": "8504591c092c841d90814cfafe3c4744cc972d78ff31c1c081fc16db40400686",
+  "hookpoint": "layers.35",
+  "criterion": {
+    "threshold": 0.1,
+    "min_keywords": 2,
+    "top_k": 10
+  },
+  "records": [
+    {
+      "feature": 3513,
+      "strategy": "Hypothesis Reasoning",
+      "matched_keywords": [
+        " maybe",
+        " perhaps",
+        "maybe",
+        "perhaps"
+      ],
+      "matched_scores": [
+        0.326171875,
+        0.310546875,
+        0.275390625,
+        0.25
+      ],
+      "top_tokens": [
+        "Ġmaybe",
+        "Ġperhaps",
+        "maybe",
+        "ä¹Łè®¸",
+        "perhaps",
+        "æĪĸè®¸",
+        "Maybe",
+        "åı¯èĥ½",
+        "åı¯èĥ½æĺ¯",
+        "ä¹Łè¨±"
+      ],
+      "top_scores": [
+        0.326171875,
+        0.310546875,
+        0.275390625,
+        0.255859375,
+        0.25,
+        0.234375,
+        0.205078125,
+        0.203125,
+        0.2021484375,
+        0.197265625
+      ],
+      "rank_score": 1.162109375
+    },
+    {
+      "feature": 1582,
+      "strategy": "Hypothesis Reasoning",
+      "matched_keywords": [
+        " if",
+        " maybe",
+        " suppose",
+        " perhaps",
+        "if"
+      ],
+      "matched_scores": [
+        0.2392578125,
+        0.1943359375,
+        0.1728515625,
+        0.16796875,
+        0.1650390625
+      ],
+      "top_tokens": [
+        "Ġif",
+        "Ġmaybe",
+        "å¦Ĥæŀľ",
+        "Ġsuppose",
+        "Ġperhaps",
+        "if",
+        "Ġnáº¿u",
+        "Ġimagine",
+        "ĠÐµÑģÐ»Ð¸",
+        "å¦Ĥæŀľæĺ¯"
+      ],
+      "top_scores": [
+        0.2392578125,
+        0.1943359375,
+        0.1826171875,
+        0.1728515625,
+        0.16796875,
+        0.1650390625,
+        0.1630859375,
+        0.1611328125,
+        0.1611328125,
+        0.158203125
+      ],
+      "rank_score": 0.939453125
+    },
+    {
+      "feature": 5255,
+      "strategy": "Hypothesis Reasoning",
+      "matched_keywords": [
+        " maybe",
+        " perhaps",
+        "maybe",
+        "perhaps"
+      ],
+      "matched_scores": [
+        0.2490234375,
+        0.2431640625,
+        0.2041015625,
+        0.1923828125
+      ],
+      "top_tokens": [
+        "Ġmaybe",
+        "Ġperhaps",
+        "ĠPerhaps",
+        "ĠMaybe",
+        "maybe",
+        "ä¹Łè®¸",
+        "Maybe",
+        "perhaps",
+        "Perhaps",
+        "Ġlet"
+      ],
+      "top_scores": [
+        0.2490234375,
+        0.2431640625,
+        0.2255859375,
+        0.2177734375,
+        0.2041015625,
+        0.1943359375,
+        0.1923828125,
+        0.1923828125,
+        0.1923828125,
+        0.185546875
+      ],
+      "rank_score": 0.888671875
+    },
+    {
+      "feature": 2748,
+      "strategy": "Hypothesis Reasoning",
+      "matched_keywords": [
+        " if",
+        " assume",
+        " perhaps",
+        " maybe"
+      ],
+      "matched_scores": [
+        0.189453125,
+        0.1826171875,
+        0.177734375,
+        0.1728515625
+      ],
+      "top_tokens": [
+        "Ġsince",
+        "Ġconsidering",
+        "Ġassuming",
+        "Ġif",
+        "Ġfocusing",
+        "Ġassume",
+        "Ġperhaps",
+        "Ġmaybe",
+        "assuming",
+        "Ġafter"
+      ],
+      "top_scores": [
+        0.2119140625,
+        0.203125,
+        0.19921875,
+        0.189453125,
+        0.1865234375,
+        0.1826171875,
+        0.177734375,
+        0.1728515625,
+        0.16796875,
+        0.1650390625
+      ],
+      "rank_score": 0.72265625
+    },
+    {
+      "feature": 5276,
+      "strategy": "Hypothesis Reasoning",
+      "matched_keywords": [
+        " if",
+        " perhaps",
+        " maybe"
+      ],
+      "matched_scores": [
+        0.2470703125,
+        0.1953125,
+        0.1845703125
+      ],
+      "top_tokens": [
+        ",",
+        "Ġif",
+        "Ġperhaps",
+        "åģĩå¦Ĥ",
+        "Ġmaybe",
+        "å¦Ĥæŀľ",
+        "ä¹Łè®¸",
+        "Ġnáº¿u",
+        "ĠÐµÑģÐ»Ð¸",
+        "åĢĺèĭ¥"
+      ],
+      "top_scores": [
+        0.251953125,
+        0.2470703125,
+        0.1953125,
+        0.1923828125,
+        0.1845703125,
+        0.1826171875,
+        0.1640625,
+        0.1630859375,
+        0.1630859375,
+        0.1611328125
+      ],
+      "rank_score": 0.626953125
+    },
+    {
+      "feature": 5390,
+      "strategy": "Hypothesis Reasoning",
+      "matched_keywords": [
+        " perhaps",
+        " maybe",
+        "perhaps"
+      ],
+      "matched_scores": [
+        0.2353515625,
+        0.2060546875,
+        0.1787109375
+      ],
+      "top_tokens": [
+        "Ġperhaps",
+        "Ġmaybe",
+        "åı¯èĥ½å¯¼èĩ´",
+        "perhaps",
+        "Ġcould",
+        "è¯´ä¸įå®ļ",
+        "ä¹Łè®¸",
+        "Ġmight",
+        "æĪĸè®¸",
+        "Ġit"
+      ],
+      "top_scores": [
+        0.2353515625,
+        0.2060546875,
+        0.181640625,
+        0.1787109375,
+        0.17578125,
+        0.169921875,
+        0.1689453125,
+        0.1689453125,
+        0.1689453125,
+        0.162109375
+      ],
+      "rank_score": 0.6201171875
+    },
+    {
+      "feature": 3588,
+      "strategy": "Hypothesis Reasoning",
+      "matched_keywords": [
+        " maybe",
+        " perhaps",
+        " suppose",
+        "maybe"
+      ],
+      "matched_scores": [
+        0.1669921875,
+        0.16015625,
+        0.142578125,
+        0.1279296875
+      ],
+      "top_tokens": [
+        "Ġmaybe",
+        "Ġperhaps",
+        "Ġthink",
+        "Ġsuppose",
+        "Ġconceive",
+        "Ġconsider",
+        "maybe",
+        "Ġpropagate",
+        "ĠÐµÑģÐ»Ð¸",
+        "Ġiff"
+      ],
+      "top_scores": [
+        0.1669921875,
+        0.16015625,
+        0.146484375,
+        0.142578125,
+        0.1357421875,
+        0.1337890625,
+        0.1279296875,
+        0.1259765625,
+        0.1259765625,
+        0.125
+      ],
+      "rank_score": 0.59765625
+    },
+    {
+      "feature": 7216,
+      "strategy": "Hypothesis Reasoning",
+      "matched_keywords": [
+        " maybe",
+        " perhaps",
+        "maybe"
+      ],
+      "matched_scores": [
+        0.2080078125,
+        0.162109375,
+        0.1591796875
+      ],
+      "top_tokens": [
+        "Ġmaybe",
+        "Ġtreating",
+        "Ġtreatment",
+        "Ġreacting",
+        "Ġperhaps",
+        "Maybe",
+        "maybe",
+        "ĠAld",
+        "Ġpossibly",
+        "Treatment"
+      ],
+      "top_scores": [
+        0.2080078125,
+        0.1845703125,
+        0.1650390625,
+        0.1640625,
+        0.162109375,
+        0.1611328125,
+        0.1591796875,
+        0.158203125,
+        0.154296875,
+        0.154296875
+      ],
+      "rank_score": 0.529296875
+    },
+    {
+      "feature": 1580,
+      "strategy": "Hypothesis Reasoning",
+      "matched_keywords": [
+        " maybe",
+        " perhaps",
+        " if"
+      ],
+      "matched_scores": [
+        0.17578125,
+        0.1748046875,
+        0.154296875
+      ],
+      "top_tokens": [
+        "Ġmaybe",
+        "Ġperhaps",
+        "Ġacet",
+        "Ġdehydration",
+        "Ġif",
+        "æĪĸè®¸",
+        "(ac",
+        "Ġthat",
+        "ĠWoodward",
+        "ä¹Łè®¸"
+      ],
+      "top_scores": [
+        0.17578125,
+        0.1748046875,
+        0.1728515625,
+        0.16796875,
+        0.154296875,
+        0.1396484375,
+        0.1396484375,
+        0.138671875,
+        0.138671875,
+        0.1376953125
+      ],
+      "rank_score": 0.5048828125
+    },
+    {
+      "feature": 6514,
+      "strategy": "Hypothesis Reasoning",
+      "matched_keywords": [
+        " maybe",
+        " perhaps",
+        "maybe",
+        "perhaps"
+      ],
+      "matched_scores": [
+        0.1279296875,
+        0.1279296875,
+        0.11962890625,
+        0.11572265625
+      ],
+      "top_tokens": [
+        "Ġmaybe",
+        "Ġperhaps",
+        "probably",
+        "Ġactually",
+        "maybe",
+        "åħ¶å®ŀ",
+        "actually",
+        "perhaps",
+        "Ġprobably",
+        "ä¹Łè®¸"
+      ],
+      "top_scores": [
+        0.1279296875,
+        0.1279296875,
+        0.126953125,
+        0.1259765625,
+        0.11962890625,
+        0.11865234375,
+        0.11767578125,
+        0.11572265625,
+        0.1142578125,
+        0.11376953125
+      ],
+      "rank_score": 0.4912109375
+    },
+    {
+      "feature": 2815,
+      "strategy": "Hypothesis Reasoning",
+      "matched_keywords": [
+        " perhaps",
+        " maybe",
+        "maybe",
+        "perhaps"
+      ],
+      "matched_scores": [
+        0.130859375,
+        0.12158203125,
+        0.11865234375,
+        0.103515625
+      ],
+      "top_tokens": [
+        "ä¹Łè®¸",
+        "Ġperhaps",
+        "Ġmaybe",
+        "ibly",
+        "maybe",
+        "ertainment",
+        "emente",
+        "æĪĸè®¸",
+        "perhaps",
+        "ä¹Łè¨±"
+      ],
+      "top_scores": [
+        0.13671875,
+        0.130859375,
+        0.12158203125,
+        0.12109375,
+        0.11865234375,
+        0.1171875,
+        0.1142578125,
+        0.1142578125,
+        0.103515625,
+        0.103515625
+      ],
+      "rank_score": 0.474609375
+    },
+    {
+      "feature": 5128,
+      "strategy": "Hypothesis Reasoning",
+      "matched_keywords": [
+        " if",
+        " suppose",
+        " maybe"
+      ],
+      "matched_scores": [
+        0.1611328125,
+        0.15234375,
+        0.14453125
+      ],
+      "top_tokens": [
+        "Ġif",
+        "Ġbut",
+        "Ġsuppose",
+        "Ġlet",
+        "Ġmaybe",
+        "ä½Ĩæĺ¯å¦Ĥæŀľ",
+        "Ġin",
+        "Ġsince",
+        "Ġconsider",
+        "ä½Ĩå¯¹äºİ"
+      ],
+      "top_scores": [
+        0.1611328125,
+        0.1591796875,
+        0.15234375,
+        0.15234375,
+        0.14453125,
+        0.1396484375,
+        0.1357421875,
+        0.1328125,
+        0.1298828125,
+        0.1298828125
+      ],
+      "rank_score": 0.4580078125
+    },
+    {
+      "feature": 5868,
+      "strategy": "Hypothesis Reasoning",
+      "matched_keywords": [
+        " maybe",
+        " perhaps"
+      ],
+      "matched_scores": [
+        0.234375,
+        0.22265625
+      ],
+      "top_tokens": [
+        "Ġadding",
+        "Ġmaybe",
+        "Ġperhaps",
+        "Ġwhen",
+        "Ġupon",
+        "Ġattaching",
+        "Ġappending",
+        "Ġapplying",
+        "Ġafter",
+        "upon"
+      ],
+      "top_scores": [
+        0.244140625,
+        0.234375,
+        0.22265625,
+        0.2119140625,
+        0.2080078125,
+        0.205078125,
+        0.1962890625,
+        0.1767578125,
+        0.1728515625,
+        0.1728515625
+      ],
+      "rank_score": 0.45703125
+    },
+    {
+      "feature": 3216,
+      "strategy": "Hypothesis Reasoning",
+      "matched_keywords": [
+        " maybe",
+        " perhaps"
+      ],
+      "matched_scores": [
+        0.19921875,
+        0.1884765625
+      ],
+      "top_tokens": [
+        "Ġwe",
+        "Ġit",
+        "Ġthey",
+        "Ġmaybe",
+        "Ġthere",
+        "åı¯èĥ½ä¼ļ",
+        "Ġperhaps",
+        "Ġyou",
+        "ä½łä¼ļ",
+        "Ġdepending"
+      ],
+      "top_scores": [
+        0.2158203125,
+        0.212890625,
+        0.2109375,
+        0.19921875,
+        0.1953125,
+        0.19140625,
+        0.1884765625,
+        0.1806640625,
+        0.1806640625,
+        0.1767578125
+      ],
+      "rank_score": 0.3876953125
+    },
+    {
+      "feature": 6146,
+      "strategy": "Hypothesis Reasoning",
+      "matched_keywords": [
+        " maybe",
+        " perhaps"
+      ],
+      "matched_scores": [
+        0.2041015625,
+        0.17578125
+      ],
+      "top_tokens": [
+        "Ġmaybe",
+        "Ġperhaps",
+        "Ġcould",
+        "ä¹Łè®¸æĺ¯",
+        "ä¹Łè®¸",
+        "ĠPerhaps",
+        "ĠÐ¼Ð¾Ð¶ÐµÑĤ",
+        "æĪĸè®¸æĺ¯",
+        "Ġvielleicht",
+        "ĠMaybe"
+      ],
+      "top_scores": [
+        0.2041015625,
+        0.17578125,
+        0.1669921875,
+        0.1484375,
+        0.1484375,
+        0.1416015625,
+        0.140625,
+        0.134765625,
+        0.134765625,
+        0.134765625
+      ],
+      "rank_score": 0.3798828125
+    },
+    {
+      "feature": 1252,
+      "strategy": "Hypothesis Reasoning",
+      "matched_keywords": [
+        " maybe",
+        " perhaps"
+      ],
+      "matched_scores": [
+        0.1787109375,
+        0.177734375
+      ],
+      "top_tokens": [
+        "Ġcombining",
+        ",",
+        "Ġadding",
+        "Ġmaybe",
+        "Ġperhaps",
+        "Ġreacting",
+        "Ġwhen",
+        "Ġputting",
+        "Ġyeah",
+        "Ġapplying"
+      ],
+      "top_scores": [
+        0.2021484375,
+        0.1982421875,
+        0.1806640625,
+        0.1787109375,
+        0.177734375,
+        0.1767578125,
+        0.1708984375,
+        0.1591796875,
+        0.1591796875,
+        0.15625
+      ],
+      "rank_score": 0.3564453125
+    },
+    {
+      "feature": 4427,
+      "strategy": "Hypothesis Reasoning",
+      "matched_keywords": [
+        " perhaps",
+        " maybe",
+        "perhaps"
+      ],
+      "matched_scores": [
+        0.1279296875,
+        0.11181640625,
+        0.1025390625
+      ],
+      "top_tokens": [
+        "Ġperhaps",
+        "ä¹Łè®¸",
+        "Ġmaybe",
+        "perhaps",
+        "ĠMaybe",
+        "åı¯èĥ½",
+        "Ġpeut",
+        "ĠPerhaps",
+        "enk",
+        "Perhaps"
+      ],
+      "top_scores": [
+        0.1279296875,
+        0.11376953125,
+        0.11181640625,
+        0.1025390625,
+        0.10009765625,
+        0.08837890625,
+        0.08251953125,
+        0.08251953125,
+        0.08251953125,
+        0.080078125
+      ],
+      "rank_score": 0.34228515625
+    },
+    {
+      "feature": 3427,
+      "strategy": "Hypothesis Reasoning",
+      "matched_keywords": [
+        " perhaps",
+        " suppose"
+      ],
+      "matched_scores": [
+        0.1796875,
+        0.1552734375
+      ],
+      "top_tokens": [
+        "è¿ĻæĦıåĳ³çĿĢ",
+        "Ġperhaps",
+        "Ġimplies",
+        "æĪĳä»¬åı¯ä»¥",
+        "Ġthis",
+        "Ġpresumably",
+        "æĦıåĳ³çĿĢ",
+        "ä¹Łè®¸",
+        "Ġimplying",
+        "Ġsuppose"
+      ],
+      "top_scores": [
+        0.20703125,
+        0.1796875,
+        0.17578125,
+        0.17578125,
+        0.1748046875,
+        0.1708984375,
+        0.1708984375,
+        0.1630859375,
+        0.16015625,
+        0.1552734375
+      ],
+      "rank_score": 0.3349609375
+    },
+    {
+      "feature": 4883,
+      "strategy": "Hypothesis Reasoning",
+      "matched_keywords": [
+        " perhaps",
+        " maybe"
+      ],
+      "matched_scores": [
+        0.16796875,
+        0.166015625
+      ],
+      "top_tokens": [
+        "/or",
+        "Ġanother",
+        "another",
+        "Ġpossibly",
+        "...,",
+        "Ġthen",
+        "Ġ...,",
+        "åı¦ä¸Ģ",
+        "Ġperhaps",
+        "Ġmaybe"
+      ],
+      "top_scores": [
+        0.27734375,
+        0.2275390625,
+        0.208984375,
+        0.2021484375,
+        0.1953125,
+        0.1865234375,
+        0.173828125,
+        0.1689453125,
+        0.16796875,
+        0.166015625
+      ],
+      "rank_score": 0.333984375
+    },
+    {
+      "feature": 7159,
+      "strategy": "Hypothesis Reasoning",
+      "matched_keywords": [
+        " suppose",
+        " maybe"
+      ],
+      "matched_scores": [
+        0.1767578125,
+        0.15625
+      ],
+      "top_tokens": [
+        "ĠStep",
+        "Ġstep",
+        "Ġsuppose",
+        "ĠSuppose",
+        "ĠSteps",
+        "ĠMaybe",
+        "Ġsteps",
+        "Ġmaybe",
+        "_step",
+        "æŃ¥éª¤"
+      ],
+      "top_scores": [
+        0.181640625,
+        0.1796875,
+        0.1767578125,
+        0.1748046875,
+        0.1689453125,
+        0.1650390625,
+        0.15625,
+        0.15625,
+        0.1552734375,
+        0.154296875
+      ],
+      "rank_score": 0.3330078125
+    },
+    {
+      "feature": 2368,
+      "strategy": "Hypothesis Reasoning",
+      "matched_keywords": [
+        " perhaps",
+        "perhaps",
+        " maybe"
+      ],
+      "matched_scores": [
+        0.12255859375,
+        0.10205078125,
+        0.10107421875
+      ],
+      "top_tokens": [
+        "âĢĻs",
+        "Ġperhaps",
+        "'s",
+        "perhaps",
+        "Ġmaybe",
+        "Ġpolar",
+        "PLIT",
+        "ä¹Łè®¸",
+        "æĪĸè®¸",
+        "ï¾Ĵ"
+      ],
+      "top_scores": [
+        0.12255859375,
+        0.12255859375,
+        0.11669921875,
+        0.10205078125,
+        0.10107421875,
+        0.099609375,
+        0.095703125,
+        0.09521484375,
+        0.0947265625,
+        0.0947265625
+      ],
+      "rank_score": 0.32568359375
+    },
+    {
+      "feature": 2136,
+      "strategy": "Hypothesis Reasoning",
+      "matched_keywords": [
+        " perhaps",
+        " maybe"
+      ],
+      "matched_scores": [
+        0.1640625,
+        0.1494140625
+      ],
+      "top_tokens": [
+        "Ġwait",
+        "Ġactually",
+        "Ġhow",
+        "Ġperhaps",
+        "åľ¨æŃ¤ä¹ĭåīį",
+        "Ġsince",
+        "Ġwithout",
+        "Ġmaybe",
+        "wait",
+        "Ġthen"
+      ],
+      "top_scores": [
+        0.2080078125,
+        0.1689453125,
+        0.1689453125,
+        0.1640625,
+        0.162109375,
+        0.1591796875,
+        0.15234375,
+        0.1494140625,
+        0.1494140625,
+        0.1474609375
+      ],
+      "rank_score": 0.3134765625
+    },
+    {
+      "feature": 842,
+      "strategy": "Hypothesis Reasoning",
+      "matched_keywords": [
+        " if",
+        " maybe"
+      ],
+      "matched_scores": [
+        0.1689453125,
+        0.134765625
+      ],
+      "top_tokens": [
+        "Ġif",
+        "Ġthe",
+        "Ġmaybe",
+        "Ġearlier",
+        "ĠÐµÑģÐ»Ð¸",
+        "èĭ¥",
+        "ĠOrch",
+        "Ġwhat",
+        "Ġhow",
+        "å¦Ĥæŀľ"
+      ],
+      "top_scores": [
+        0.1689453125,
+        0.1416015625,
+        0.134765625,
+        0.130859375,
+        0.1298828125,
+        0.1240234375,
+        0.12158203125,
+        0.12158203125,
+        0.119140625,
+        0.1181640625
+      ],
+      "rank_score": 0.3037109375
+    },
+    {
+      "feature": 5139,
+      "strategy": "Hypothesis Reasoning",
+      "matched_keywords": [
+        " perhaps",
+        " maybe"
+      ],
+      "matched_scores": [
+        0.1494140625,
+        0.142578125
+      ],
+      "top_tokens": [
+        "Ġwait",
+        "Ġwhy",
+        "Ġhow",
+        "Ġperhaps",
+        "Ġagain",
+        "Ġno",
+        "Ġearlier",
+        "Ġmaybe",
+        "Ġhang",
+        "Ġhonestly"
+      ],
+      "top_scores": [
+        0.1708984375,
+        0.16796875,
+        0.158203125,
+        0.1494140625,
+        0.1484375,
+        0.1484375,
+        0.1474609375,
+        0.142578125,
+        0.130859375,
+        0.1298828125
+      ],
+      "rank_score": 0.2919921875
+    },
+    {
+      "feature": 6388,
+      "strategy": "Hypothesis Reasoning",
+      "matched_keywords": [
+        " suppose",
+        " if"
+      ],
+      "matched_scores": [
+        0.1494140625,
+        0.1357421875
+      ],
+      "top_tokens": [
+        "Ġlet",
+        "Ġthinking",
+        "Ġconsider",
+        "Ġsuppose",
+        "Ġconsidering",
+        "Ġimagine",
+        "Ġstructures",
+        "Ġif",
+        "Ġletter",
+        "Ġthink"
+      ],
+      "top_scores": [
+        0.189453125,
+        0.166015625,
+        0.15625,
+        0.1494140625,
+        0.1474609375,
+        0.140625,
+        0.140625,
+        0.1357421875,
+        0.1337890625,
+        0.1328125
+      ],
+      "rank_score": 0.28515625
+    },
+    {
+      "feature": 6622,
+      "strategy": "Hypothesis Reasoning",
+      "matched_keywords": [
+        " perhaps",
+        " maybe"
+      ],
+      "matched_scores": [
+        0.1455078125,
+        0.1357421875
+      ],
+      "top_tokens": [
+        "Ġsomething",
+        "æĺ¾çĦ¶",
+        "è¿Ļ",
+        "Ġthis",
+        "Ġthat",
+        "Ġperhaps",
+        "Ġunless",
+        "ĠSomething",
+        "Ġmaybe",
+        "Ġclearly"
+      ],
+      "top_scores": [
+        0.1650390625,
+        0.16015625,
+        0.1591796875,
+        0.15625,
+        0.146484375,
+        0.1455078125,
+        0.1416015625,
+        0.1396484375,
+        0.1357421875,
+        0.1337890625
+      ],
+      "rank_score": 0.28125
+    },
+    {
+      "feature": 397,
+      "strategy": "Hypothesis Reasoning",
+      "matched_keywords": [
+        " if",
+        " suppose"
+      ],
+      "matched_scores": [
+        0.14453125,
+        0.12451171875
+      ],
+      "top_tokens": [
+        "ĠOz",
+        "Ġif",
+        "Ġoak",
+        "Ġoz",
+        "obb",
+        "Ġsuppose",
+        "ĠOasis",
+        "Ġozone",
+        "Ġoriginal",
+        "Ġoffending"
+      ],
+      "top_scores": [
+        0.150390625,
+        0.14453125,
+        0.1328125,
+        0.1259765625,
+        0.1259765625,
+        0.12451171875,
+        0.1240234375,
+        0.12353515625,
+        0.12158203125,
+        0.1201171875
+      ],
+      "rank_score": 0.26904296875
+    },
+    {
+      "feature": 6275,
+      "strategy": "Hypothesis Reasoning",
+      "matched_keywords": [
+        " perhaps",
+        "perhaps"
+      ],
+      "matched_scores": [
+        0.1298828125,
+        0.11767578125
+      ],
+      "top_tokens": [
+        "Ġperhaps",
+        "Ġprobably",
+        "Ġpossibly",
+        "likely",
+        "perhaps",
+        "probably",
+        "Ġaffect",
+        "ä¼ļä¸įä¼ļ",
+        "Ġlikely",
+        "pragma"
+      ],
+      "top_scores": [
+        0.1298828125,
+        0.1279296875,
+        0.11865234375,
+        0.11865234375,
+        0.11767578125,
+        0.11767578125,
+        0.11669921875,
+        0.11279296875,
+        0.1123046875,
+        0.111328125
+      ],
+      "rank_score": 0.24755859375
+    },
+    {
+      "feature": 7411,
+      "strategy": "Hypothesis Reasoning",
+      "matched_keywords": [
+        " perhaps",
+        " maybe"
+      ],
+      "matched_scores": [
+        0.126953125,
+        0.1142578125
+      ],
+      "top_tokens": [
+        "Ġprioritize",
+        "Ġpossibly",
+        "Ġusing",
+        "Ġpriorit",
+        "Ġperhaps",
+        "ä¼ĺåħĪ",
+        "Ġcombining",
+        "Ġpriority",
+        "Ġpriorities",
+        "Ġmaybe"
+      ],
+      "top_scores": [
+        0.1376953125,
+        0.1357421875,
+        0.134765625,
+        0.1328125,
+        0.126953125,
+        0.1259765625,
+        0.119140625,
+        0.1162109375,
+        0.1162109375,
+        0.1142578125
+      ],
+      "rank_score": 0.2412109375
+    },
+    {
+      "feature": 3524,
+      "strategy": "Hypothesis Reasoning",
+      "matched_keywords": [
+        " perhaps",
+        "maybe"
+      ],
+      "matched_scores": [
+        0.11181640625,
+        0.10205078125
+      ],
+      "top_tokens": [
+        "æľīåı¯èĥ½",
+        "Ġpossibly",
+        "åı¯èĥ½",
+        "possibly",
+        "Ġperhaps",
+        "åı¯èĥ½æĺ¯",
+        "æ¢ħèĬ±",
+        "maybe",
+        "æľīçļĦ",
+        "ĠÐ²Ð¾Ð·Ð¼Ð¾Ð¶Ð½Ð¾"
+      ],
+      "top_scores": [
+        0.11474609375,
+        0.11376953125,
+        0.1123046875,
+        0.11181640625,
+        0.11181640625,
+        0.10888671875,
+        0.1044921875,
+        0.10205078125,
+        0.10205078125,
+        0.1015625
+      ],
+      "rank_score": 0.2138671875
+    },
+    {
+      "feature": 2654,
+      "strategy": "Hypothesis Reasoning",
+      "matched_keywords": [
+        " perhaps",
+        " maybe"
+      ],
+      "matched_scores": [
+        0.10693359375,
+        0.1015625
+      ],
+      "top_tokens": [
+        "Ġintermediate",
+        "Ġperhaps",
+        "Ġpath",
+        "Ġalternatively",
+        "Ġmaybe",
+        "Ġalternative",
+        "Ġpathways",
+        "ãģĤãģ£ãģ¦",
+        "Ġpaths",
+        "achel"
+      ],
+      "top_scores": [
+        0.1083984375,
+        0.10693359375,
+        0.1064453125,
+        0.10498046875,
+        0.1015625,
+        0.099609375,
+        0.0986328125,
+        0.09814453125,
+        0.09814453125,
+        0.095703125
+      ],
+      "rank_score": 0.20849609375
+    },
+    {
+      "feature": 4883,
+      "strategy": "Multi-Perspective Verification",
+      "matched_keywords": [
+        " another",
+        "another"
+      ],
+      "matched_scores": [
+        0.2275390625,
+        0.208984375
+      ],
+      "top_tokens": [
+        "/or",
+        "Ġanother",
+        "another",
+        "Ġpossibly",
+        "...,",
+        "Ġthen",
+        "Ġ...,",
+        "åı¦ä¸Ģ",
+        "Ġperhaps",
+        "Ġmaybe"
+      ],
+      "top_scores": [
+        0.27734375,
+        0.2275390625,
+        0.208984375,
+        0.2021484375,
+        0.1953125,
+        0.1865234375,
+        0.173828125,
+        0.1689453125,
+        0.16796875,
+        0.166015625
+      ],
+      "rank_score": 0.4365234375
+    },
+    {
+      "feature": 7996,
+      "strategy": "Multi-Perspective Verification",
+      "matched_keywords": [
+        " case",
+        "case"
+      ],
+      "matched_scores": [
+        0.25390625,
+        0.1533203125
+      ],
+      "top_tokens": [
+        "Ġcase",
+        "Ġcondition",
+        "ĉcase",
+        "æ¡Ī",
+        ".case",
+        "ĠÑģÐ»ÑĥÑĩÐ°Ðµ",
+        "Ġcaso",
+        "Ġexperiment",
+        "case",
+        "Ġproblem"
+      ],
+      "top_scores": [
+        0.25390625,
+        0.1787109375,
+        0.1728515625,
+        0.1630859375,
+        0.16015625,
+        0.1572265625,
+        0.15625,
+        0.1552734375,
+        0.1533203125,
+        0.150390625
+      ],
+      "rank_score": 0.4072265625
+    },
+    {
+      "feature": 4354,
+      "strategy": "Multi-Perspective Verification",
+      "matched_keywords": [
+        " example",
+        "example"
+      ],
+      "matched_scores": [
+        0.2333984375,
+        0.1650390625
+      ],
+      "top_tokens": [
+        "Ġexample",
+        "Ġinstance",
+        "Ġexemple",
+        "ä¾ĭ",
+        "-instance",
+        "instance",
+        "example",
+        "(instance",
+        "Ġejemplo",
+        "å®ŀä¾ĭ"
+      ],
+      "top_scores": [
+        0.2333984375,
+        0.201171875,
+        0.1923828125,
+        0.177734375,
+        0.17578125,
+        0.1689453125,
+        0.1650390625,
+        0.1640625,
+        0.162109375,
+        0.162109375
+      ],
+      "rank_score": 0.3984375
+    },
+    {
+      "feature": 5526,
+      "strategy": "Multi-Perspective Verification",
+      "matched_keywords": [
+        " another",
+        "another"
+      ],
+      "matched_scores": [
+        0.205078125,
+        0.1845703125
+      ],
+      "top_tokens": [
+        "/or",
+        "Ġanother",
+        "Ġothers",
+        "Ġ?.",
+        "another",
+        "åı¦ä¸Ģç§į",
+        "åı¦å¤ĸä¸Ģä¸ª",
+        "Ġwhatever",
+        "Ġ?\");Ċ",
+        "Ġits"
+      ],
+      "top_scores": [
+        0.28125,
+        0.205078125,
+        0.203125,
+        0.2021484375,
+        0.1845703125,
+        0.1796875,
+        0.1787109375,
+        0.177734375,
+        0.177734375,
+        0.17578125
+      ],
+      "rank_score": 0.3896484375
+    },
+    {
+      "feature": 7147,
+      "strategy": "Multi-Perspective Verification",
+      "matched_keywords": [
+        " case",
+        "case"
+      ],
+      "matched_scores": [
+        0.2197265625,
+        0.162109375
+      ],
+      "top_tokens": [
+        "Ġcase",
+        "Ġanswer",
+        "Ġright",
+        "case",
+        "Ġearliest",
+        "Ġcorrect",
+        "Ġimmediate",
+        "Ġbest",
+        ".case",
+        "Ġbeginning"
+      ],
+      "top_scores": [
+        0.2197265625,
+        0.189453125,
+        0.185546875,
+        0.162109375,
+        0.15625,
+        0.150390625,
+        0.14453125,
+        0.1435546875,
+        0.1376953125,
+        0.13671875
+      ],
+      "rank_score": 0.3818359375
+    },
+    {
+      "feature": 3628,
+      "strategy": "Multi-Perspective Verification",
+      "matched_keywords": [
+        " another",
+        "another"
+      ],
+      "matched_scores": [
+        0.1904296875,
+        0.1767578125
+      ],
+      "top_tokens": [
+        "Ġanother",
+        "another",
+        "åı¦ä¸Ģä¸ª",
+        "åı¦ä¸Ģ",
+        "éĤ»",
+        "Ġadjacent",
+        "çĽ¸éĤ»",
+        "Ġneighboring",
+        "ä¸ĭä¸Ģä¸ª",
+        "åı¦å¤ĸä¸Ģä¸ª"
+      ],
+      "top_scores": [
+        0.1904296875,
+        0.1767578125,
+        0.1708984375,
+        0.16796875,
+        0.1611328125,
+        0.1611328125,
+        0.1611328125,
+        0.154296875,
+        0.1513671875,
+        0.1494140625
+      ],
+      "rank_score": 0.3671875
+    },
+    {
+      "feature": 3313,
+      "strategy": "Multi-Perspective Verification",
+      "matched_keywords": [
+        " example",
+        "example"
+      ],
+      "matched_scores": [
+        0.2265625,
+        0.1279296875
+      ],
+      "top_tokens": [
+        "Ġexample",
+        "Ġinstance",
+        "-example",
+        "(example",
+        "ĠInstance",
+        "getting",
+        "Ġexemple",
+        "-instance",
+        "ĉinstance",
+        "example"
+      ],
+      "top_scores": [
+        0.2265625,
+        0.203125,
+        0.140625,
+        0.1357421875,
+        0.130859375,
+        0.130859375,
+        0.12890625,
+        0.12890625,
+        0.12890625,
+        0.1279296875
+      ],
+      "rank_score": 0.3544921875
+    },
+    {
+      "feature": 6714,
+      "strategy": "Multi-Perspective Verification",
+      "matched_keywords": [
+        " case",
+        "case"
+      ],
+      "matched_scores": [
+        0.166015625,
+        0.154296875
+      ],
+      "top_tokens": [
+        "Ġcase",
+        "case",
+        ",Z",
+        "æĥħåĨµä¸ĭ",
+        "Ġcaz",
+        "æ¡Ī",
+        "EZ",
+        "æ¡ĪåŃĲ",
+        "-case",
+        "ĠÑģÐ»ÑĥÑĩÐ°Ñı"
+      ],
+      "top_scores": [
+        0.166015625,
+        0.154296875,
+        0.150390625,
+        0.1416015625,
+        0.1416015625,
+        0.140625,
+        0.140625,
+        0.1396484375,
+        0.1376953125,
+        0.1376953125
+      ],
+      "rank_score": 0.3203125
+    },
+    {
+      "feature": 5082,
+      "strategy": "Multi-Perspective Verification",
+      "matched_keywords": [
+        " case",
+        "case"
+      ],
+      "matched_scores": [
+        0.162109375,
+        0.1103515625
+      ],
+      "top_tokens": [
+        "Ġcase",
+        "æ¡Ī",
+        "ĠÑģÐ»ÑĥÑĩÐ°Ðµ",
+        "case",
+        "Ġcaso",
+        "ĉcase",
+        ".case",
+        "(case",
+        "Ġê²½ìļ°",
+        "_case"
+      ],
+      "top_scores": [
+        0.162109375,
+        0.12109375,
+        0.11328125,
+        0.1103515625,
+        0.109375,
+        0.10595703125,
+        0.10498046875,
+        0.1044921875,
+        0.09912109375,
+        0.09814453125
+      ],
+      "rank_score": 0.2724609375
+    },
+    {
+      "feature": 7340,
+      "strategy": "Multi-Perspective Verification",
+      "matched_keywords": [
+        " case",
+        "case"
+      ],
+      "matched_scores": [
+        0.1591796875,
+        0.109375
+      ],
+      "top_tokens": [
+        "Ġcase",
+        "æ¡ĪåŃĲ",
+        "æ¡Īä»¶",
+        "ĠÑģÐ»ÑĥÑĩÐ°Ðµ",
+        "Ĥ¬",
+        "-case",
+        "çļĦäº§åĵģ",
+        "Ġgist",
+        "æ¡Īä¾ĭ",
+        "case"
+      ],
+      "top_scores": [
+        0.1591796875,
+        0.140625,
+        0.1259765625,
+        0.11572265625,
+        0.1142578125,
+        0.1142578125,
+        0.11083984375,
+        0.11083984375,
+        0.1103515625,
+        0.109375
+      ],
+      "rank_score": 0.2685546875
+    },
+    {
+      "feature": 3936,
+      "strategy": "Problem Understanding",
+      "matched_keywords": [
+        " problem",
+        " question",
+        "problem"
+      ],
+      "matched_scores": [
+        0.228515625,
+        0.1962890625,
+        0.1923828125
+      ],
+      "top_tokens": [
+        "Ġproblem",
+        "Ġquestion",
+        "problem",
+        "éĹ®é¢ĺæĺ¯",
+        "Ġname",
+        "Ġformula",
+        "odore",
+        "åķıé¡Į",
+        "Ġnames",
+        "éĹ®é¢ĺ"
+      ],
+      "top_scores": [
+        0.228515625,
+        0.1962890625,
+        0.1923828125,
+        0.16796875,
+        0.1611328125,
+        0.1611328125,
+        0.16015625,
+        0.158203125,
+        0.15625,
+        0.1552734375
+      ],
+      "rank_score": 0.6171875
+    },
+    {
+      "feature": 1258,
+      "strategy": "Problem Understanding",
+      "matched_keywords": [
+        " question",
+        " problem",
+        "question"
+      ],
+      "matched_scores": [
+        0.201171875,
+        0.1826171875,
+        0.15234375
+      ],
+      "top_tokens": [
+        "Ġquestion",
+        "Ġproblem",
+        "Ġoriginal",
+        "Ġinitial",
+        "åħ¶å®ĥéĹ®é¢ĺ",
+        "çŁ³å®¶",
+        "Ġexact",
+        "Ġanswer",
+        "Ġoriginals",
+        "question"
+      ],
+      "top_scores": [
+        0.201171875,
+        0.1826171875,
+        0.1748046875,
+        0.173828125,
+        0.171875,
+        0.1611328125,
+        0.1591796875,
+        0.1572265625,
+        0.1533203125,
+        0.15234375
+      ],
+      "rank_score": 0.5361328125
+    },
+    {
+      "feature": 2377,
+      "strategy": "Problem Understanding",
+      "matched_keywords": [
+        " question",
+        " statement",
+        "question"
+      ],
+      "matched_scores": [
+        0.2109375,
+        0.1513671875,
+        0.140625
+      ],
+      "top_tokens": [
+        "Ġquestion",
+        "Ġpromoter",
+        "Ġpromoters",
+        "Ġwording",
+        "Ġstatement",
+        "Ġresearcher",
+        "Ġpremise",
+        "Ġreviewer",
+        "oret",
+        "question"
+      ],
+      "top_scores": [
+        0.2109375,
+        0.1787109375,
+        0.1591796875,
+        0.154296875,
+        0.1513671875,
+        0.1494140625,
+        0.1474609375,
+        0.146484375,
+        0.142578125,
+        0.140625
+      ],
+      "rank_score": 0.5029296875
+    },
+    {
+      "feature": 5462,
+      "strategy": "Problem Understanding",
+      "matched_keywords": [
+        " statement",
+        " says",
+        "statement"
+      ],
+      "matched_scores": [
+        0.1748046875,
+        0.1708984375,
+        0.1552734375
+      ],
+      "top_tokens": [
+        "Ġstates",
+        "Ġstatement",
+        "Ġsays",
+        "states",
+        "Ġstating",
+        "statement",
+        "Ġstated",
+        "Statement",
+        "ĠStatement",
+        "éĻĪè¿°"
+      ],
+      "top_scores": [
+        0.2080078125,
+        0.1748046875,
+        0.1708984375,
+        0.162109375,
+        0.15625,
+        0.1552734375,
+        0.1533203125,
+        0.146484375,
+        0.146484375,
+        0.1416015625
+      ],
+      "rank_score": 0.5009765625
+    },
+    {
+      "feature": 6490,
+      "strategy": "Problem Understanding",
+      "matched_keywords": [
+        " problem",
+        " question"
+      ],
+      "matched_scores": [
+        0.21484375,
+        0.2138671875
+      ],
+      "top_tokens": [
+        "Ġuser",
+        "çĶ¨æĪ·",
+        "user",
+        "ĠUser",
+        "-user",
+        "Ġproblem",
+        "Ġquestion",
+        "çĶ¨æĪ·çļĦ",
+        "(user",
+        "_user"
+      ],
+      "top_scores": [
+        0.29296875,
+        0.267578125,
+        0.2373046875,
+        0.2314453125,
+        0.2236328125,
+        0.21484375,
+        0.2138671875,
+        0.2119140625,
+        0.2099609375,
+        0.20703125
+      ],
+      "rank_score": 0.4287109375
+    },
+    {
+      "feature": 373,
+      "strategy": "Problem Understanding",
+      "matched_keywords": [
+        " problem",
+        " question"
+      ],
+      "matched_scores": [
+        0.17578125,
+        0.1708984375
+      ],
+      "top_tokens": [
+        "Ġanswer",
+        "Ġproblem",
+        "Ġquestion",
+        "Ġpremise",
+        "odore",
+        "Ġoptions",
+        "-answer",
+        "Ġwording",
+        "Ġhint",
+        "Ġpremises"
+      ],
+      "top_scores": [
+        0.2041015625,
+        0.17578125,
+        0.1708984375,
+        0.15625,
+        0.1416015625,
+        0.1357421875,
+        0.1357421875,
+        0.134765625,
+        0.1328125,
+        0.1328125
+      ],
+      "rank_score": 0.3466796875
+    },
+    {
+      "feature": 887,
+      "strategy": "Problem Understanding",
+      "matched_keywords": [
+        " statement",
+        " question"
+      ],
+      "matched_scores": [
+        0.173828125,
+        0.1611328125
+      ],
+      "top_tokens": [
+        "Ġblank",
+        "Ġfirst",
+        "Ġblanks",
+        "Ġanswer",
+        "Blank",
+        "Ġstatement",
+        "Ġfill",
+        "ĠBlank",
+        "Ġimplication",
+        "Ġquestion"
+      ],
+      "top_scores": [
+        0.1982421875,
+        0.1953125,
+        0.1904296875,
+        0.1806640625,
+        0.177734375,
+        0.173828125,
+        0.1689453125,
+        0.1669921875,
+        0.166015625,
+        0.1611328125
+      ],
+      "rank_score": 0.3349609375
+    },
+    {
+      "feature": 6345,
+      "strategy": "Problem Understanding",
+      "matched_keywords": [
+        " says",
+        "says"
+      ],
+      "matched_scores": [
+        0.1689453125,
+        0.154296875
+      ],
+      "top_tokens": [
+        "Ġstates",
+        "Ġsays",
+        "Ġmentions",
+        "says",
+        "naires",
+        "Ġestados",
+        "(states",
+        "Ġasks",
+        "edList",
+        "Ġurges"
+      ],
+      "top_scores": [
+        0.1748046875,
+        0.1689453125,
+        0.1611328125,
+        0.154296875,
+        0.1513671875,
+        0.1513671875,
+        0.146484375,
+        0.140625,
+        0.1328125,
+        0.1318359375
+      ],
+      "rank_score": 0.3232421875
+    },
+    {
+      "feature": 866,
+      "strategy": "Problem Understanding",
+      "matched_keywords": [
+        " statement",
+        " says"
+      ],
+      "matched_scores": [
+        0.158203125,
+        0.1337890625
+      ],
+      "top_tokens": [
+        "Ġstatement",
+        "Ġspecifies",
+        "Ġmentions",
+        "Ġasks",
+        "ĠStates",
+        "Ġsays",
+        "ĠStatement",
+        ".ly",
+        "Ġstates",
+        "inery"
+      ],
+      "top_scores": [
+        0.158203125,
+        0.1513671875,
+        0.1494140625,
+        0.14453125,
+        0.134765625,
+        0.1337890625,
+        0.1318359375,
+        0.1298828125,
+        0.1279296875,
+        0.1220703125
+      ],
+      "rank_score": 0.2919921875
+    },
+    {
+      "feature": 4420,
+      "strategy": "Problem Understanding",
+      "matched_keywords": [
+        " says",
+        "says"
+      ],
+      "matched_scores": [
+        0.1279296875,
+        0.1083984375
+      ],
+      "top_tokens": [
+        "Ġstates",
+        "Ġmentions",
+        "Ġsez",
+        "Ġsays",
+        "Ġlists",
+        "Ġassigns",
+        "says",
+        "Ġpublishes",
+        "Ġmight",
+        "æľĢ"
+      ],
+      "top_scores": [
+        0.150390625,
+        0.1357421875,
+        0.1337890625,
+        0.1279296875,
+        0.115234375,
+        0.11083984375,
+        0.1083984375,
+        0.10791015625,
+        0.10693359375,
+        0.103515625
+      ],
+      "rank_score": 0.236328125
+    },
+    {
+      "feature": 2187,
+      "strategy": "Procedural Planning",
+      "matched_keywords": [
+        " need",
+        "need"
+      ],
+      "matched_scores": [
+        0.1708984375,
+        0.16015625
+      ],
+      "top_tokens": [
+        "ĠI",
+        "Ġthis",
+        "this",
+        "Ġneed",
+        "ĉthis",
+        "æĪĳ",
+        "Ġhonestly",
+        ":this",
+        "need",
+        "=this"
+      ],
+      "top_scores": [
+        0.22265625,
+        0.212890625,
+        0.17578125,
+        0.1708984375,
+        0.1689453125,
+        0.1640625,
+        0.1640625,
+        0.162109375,
+        0.16015625,
+        0.1572265625
+      ],
+      "rank_score": 0.3310546875
+    },
+    {
+      "feature": 1093,
+      "strategy": "Procedural Planning",
+      "matched_keywords": [
+        " need",
+        "need"
+      ],
+      "matched_scores": [
+        0.189453125,
+        0.125
+      ],
+      "top_tokens": [
+        "Ġneed",
+        "'m",
+        "'ve",
+        "Ġrecall",
+        "âĢĻm",
+        "ĠNeed",
+        "Ġremember",
+        "Ġrecalled",
+        "need",
+        "Need"
+      ],
+      "top_scores": [
+        0.189453125,
+        0.18359375,
+        0.138671875,
+        0.1376953125,
+        0.134765625,
+        0.1298828125,
+        0.1298828125,
+        0.12890625,
+        0.125,
+        0.12353515625
+      ],
+      "rank_score": 0.314453125
+    },
+    {
+      "feature": 7134,
+      "strategy": "Procedural Planning",
+      "matched_keywords": [
+        " need",
+        "need"
+      ],
+      "matched_scores": [
+        0.1591796875,
+        0.150390625
+      ],
+      "top_tokens": [
+        "Ġinvolve",
+        "Ġlikely",
+        "Ġrequire",
+        "Ġtypically",
+        "likely",
+        "ĠLikely",
+        "Ġneed",
+        "Ġprobably",
+        "Ġhave",
+        "need"
+      ],
+      "top_scores": [
+        0.2119140625,
+        0.2021484375,
+        0.1845703125,
+        0.1728515625,
+        0.171875,
+        0.1689453125,
+        0.1591796875,
+        0.158203125,
+        0.1533203125,
+        0.150390625
+      ],
+      "rank_score": 0.3095703125
+    },
+    {
+      "feature": 6754,
+      "strategy": "Procedural Planning",
+      "matched_keywords": [
+        " need",
+        "need"
+      ],
+      "matched_scores": [
+        0.16796875,
+        0.12890625
+      ],
+      "top_tokens": [
+        "Ġneed",
+        "'m",
+        "need",
+        "âĢĻm",
+        "Ġthink",
+        "anden",
+        "uess",
+        "'ve",
+        "Ġthought",
+        "orque"
+      ],
+      "top_scores": [
+        0.16796875,
+        0.150390625,
+        0.12890625,
+        0.1220703125,
+        0.1220703125,
+        0.11962890625,
+        0.11962890625,
+        0.1181640625,
+        0.1171875,
+        0.1171875
+      ],
+      "rank_score": 0.296875
+    },
+    {
+      "feature": 6131,
+      "strategy": "Procedural Planning",
+      "matched_keywords": [
+        " need",
+        "need"
+      ],
+      "matched_scores": [
+        0.1650390625,
+        0.1025390625
+      ],
+      "top_tokens": [
+        "Ġneed",
+        "'ve",
+        "'m",
+        "ĠNEED",
+        "âĢĻve",
+        "Ġhave",
+        "ĠNeed",
+        "need",
+        "'ll",
+        "lean"
+      ],
+      "top_scores": [
+        0.1650390625,
+        0.138671875,
+        0.12158203125,
+        0.1162109375,
+        0.10888671875,
+        0.1064453125,
+        0.10498046875,
+        0.1025390625,
+        0.1025390625,
+        0.1025390625
+      ],
+      "rank_score": 0.267578125
+    }
+  ]
+}

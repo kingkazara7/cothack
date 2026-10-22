@@ -1,0 +1,30 @@
+{
+  "status": "complete",
+  "artifact_kind": "project_compact_exploratory_topk_sae",
+  "warning": "Not the SAE checkpoint used by Fang et al.; no AuxK and a much smaller held-out corpus.",
+  "cases_path": "data/gpqa-screening-cases.json",
+  "cases_sha256": "e72321d09b0938d91e25bb638703588e6e16221f3beb0e7e9c6891b56eecbe4b",
+  "excluded_test_rows": [
+    5,
+    34
+  ],
+  "training_case_count": 28,
+  "activation_count": 14336,
+  "train_activation_count": 12903,
+  "validation_activation_count": 1433,
+  "d_in": 4096,
+  "d_sae": 8192,
+  "k": 32,
+  "epochs": 5,
+  "batch_size": 256,
+  "learning_rate": 0.0003,
+  "train_mse_last_epoch": 0.28572007312494163,
+  "validation_mse": 0.34160444140434265,
+  "validation_fve": 0.6535626577954925,
+  "dead_features": 0,
+  "collection_seconds": 4.464081048965454,
+  "training_seconds": 1.4547216892242432,
+  "decoder_sha256": "6bf822fde7b911240190f1b0754483f6250c9f6e31be8de8d8fd808c7c37025f",
+  "metadata_sha256": "8504591c092c841d90814cfafe3c4744cc972d78ff31c1c081fc16db40400686",
+  "seed": 20261022
+}

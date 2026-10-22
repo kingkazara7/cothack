@@ -1,0 +1,84 @@
+{
+  "strategy": "Multi-Perspective Verification",
+  "strength": 15.0,
+  "validation_source_rows": [
+    4,
+    6,
+    9,
+    11,
+    15
+  ],
+  "warning": "Lexical cue ranking is a weaker substitute for the paper's multi-judge Stage 2.",
+  "features": [
+    {
+      "feature": 7147,
+      "mean_cue_delta": 0.2,
+      "positive_delta_cases": 1,
+      "mean_output_tokens": 83.6,
+      "stage1_rank_score": 0.3818359375
+    },
+    {
+      "feature": 4883,
+      "mean_cue_delta": 0.0,
+      "positive_delta_cases": 0,
+      "mean_output_tokens": 87.4,
+      "stage1_rank_score": 0.4365234375
+    },
+    {
+      "feature": 7996,
+      "mean_cue_delta": 0.0,
+      "positive_delta_cases": 0,
+      "mean_output_tokens": 94.0,
+      "stage1_rank_score": 0.4072265625
+    },
+    {
+      "feature": 4354,
+      "mean_cue_delta": 0.0,
+      "positive_delta_cases": 0,
+      "mean_output_tokens": 80.2,
+      "stage1_rank_score": 0.3984375
+    },
+    {
+      "feature": 5526,
+      "mean_cue_delta": 0.0,
+      "positive_delta_cases": 0,
+      "mean_output_tokens": 82.8,
+      "stage1_rank_score": 0.3896484375
+    },
+    {
+      "feature": 3628,
+      "mean_cue_delta": 0.0,
+      "positive_delta_cases": 0,
+      "mean_output_tokens": 89.2,
+      "stage1_rank_score": 0.3671875
+    },
+    {
+      "feature": 3313,
+      "mean_cue_delta": 0.0,
+      "positive_delta_cases": 0,
+      "mean_output_tokens": 71.0,
+      "stage1_rank_score": 0.3544921875
+    },
+    {
+      "feature": 6714,
+      "mean_cue_delta": 0.0,
+      "positive_delta_cases": 0,
+      "mean_output_tokens": 83.6,
+      "stage1_rank_score": 0.3203125
+    },
+    {
+      "feature": 5082,
+      "mean_cue_delta": 0.0,
+      "positive_delta_cases": 0,
+      "mean_output_tokens": 84.6,
+      "stage1_rank_score": 0.2724609375
+    },
+    {
+      "feature": 7340,
+      "mean_cue_delta": 0.0,
+      "positive_delta_cases": 0,
+      "mean_output_tokens": 75.2,
+      "stage1_rank_score": 0.2685546875
+    }
+  ]
+}
