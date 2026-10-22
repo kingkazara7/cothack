@@ -4,7 +4,7 @@
 
 ## 研究结论与完成度
 
-正式八种方法为 P01–P05 五篇公开方法加 N01–N03 三种自拟方法。P01 轨迹重放完成两个本地确定性机制样例；P02、P04、P05 已用作者公开数据集的完整输入在 DeepSeek/Qwen 上各回放两个样例；P03 已用官方仓库模板为两个 HarmBench 目标各生成一个候选。另保留早期 CoT Forgery 和算术代理矩阵作为工程历史：Astra 与 `gpt-5.6-sol` 各完成 32 次攻击/对照调用，但这些结果不再代替公开论文输入。正式回放见 [公开论文原始输入报告](../results/official-replay-20261022.md)。
+正式八种方法为 P01–P05 五篇公开方法加 N01–N03 三种自拟方法。P01 指定 GPT-6 Astra 与 Claude Fable 5.1；两个环境都缺少论文攻击所需的可重放原始 reasoning block/signature，因此没有提交攻击请求并记为 `N/A`。P02、P04、P05 已用作者公开数据集的完整输入在 DeepSeek/Qwen 上各回放两个样例；P03 已用官方仓库模板为两个 HarmBench 目标各生成一个候选。另保留早期 block 模拟、CoT Forgery 和算术代理矩阵作为工程历史，但这些结果不再代替公开论文输入。正式回放见 [公开论文原始输入报告](../results/official-replay-20261022.md)。
 
 研究不将 Hack CoT 当作单一漏洞：隐藏推理提取、推理过程完整性、最终答案污染、拒绝绕过和计算资源滥用需要不同证据。DeepSeek 与 Qwen 均完成 P02–P05 每种两个论文样例的配对回放。Qwen3.8-Max 当日额度耗尽后，P02/P03 明确改用 Qwen3.7-Plus，未把两个版本混写为同一 checkpoint。
 
@@ -16,7 +16,7 @@ GPT 与 Claude 保留为对照和接口边界研究对象。依据 [OpenAI reaso
 
 | 方法 | 攻击目标与技术原理 | 本地测试与证据边界 |
 |---|---|---|
-| P01 Trace Stealing | 重放未绑定上下文的不透明推理块以恢复轨迹 | 无真实块；两个本地机制模拟，不是模型 ASR |
+| P01 Trace Stealing | 重放未绑定上下文的不透明推理块以恢复轨迹 | Astra/Fable 5.1 缺少原始块；未运行，N/A |
 | P02 H-CoT | 用执行式推理诱导跳过或弱化前置判断 | 官方 row 17/20：DeepSeek 1/2；Qwen3.7-Plus 1/2 |
 | P03 CoT Hijacking | 长无害推理之后切换目标，削弱拒绝 | DeepSeek、Qwen3.7-Plus 均为 1 成功、1 无效候选 |
 | P04 OverThink | 用无关计算诱饵放大推理资源 | DeepSeek 界面时长 1→10 秒、1→13 秒；Qwen 两例执行诱饵；token 指标 N/A |
@@ -52,7 +52,7 @@ GPT-6 Astra 和 GPT-5.6 Sol 作为闭源对照。Codex 事件流没有公开固�
 
 ## Astra 补充工程矩阵
 
-下表沿用早期 M01–M08 编号，其中 M03 CoT Forgery 是补充方法；正式 P01 轨迹重放另由独立脚本验证。因此下表不应被误读为正式八种方法的一一编号。
+下表沿用早期 M01–M08 编号，其中 M03 CoT Forgery 是补充方法；历史 P01 block 模拟也不属于真实供应商模型验证。因此下表不应被误读为正式八种方法的一一编号。
 
 | 方法 | 每模型攻击样例 | 配对对照 | Astra | Fable 5.1 | Opus 5.5 |
 |---|---:|---:|---|---|---|
@@ -83,8 +83,14 @@ GPT-6 Astra CLI 实验共有 32/32 次完成调用；样例 1 的攻击组和对
 
 ## 推理轨迹窃取的机制复现
 
-第一篇新近研究 *Stealing Reasoning Traces from Proprietary LLM APIs* 被纳入广义 Hack CoT，类别为 CoT 机密性攻击，而非 CoT 修改攻击。当前 Codex CLI 事件没有返回原始 reasoning block/signature，且环境未配置供应商 API 凭据，因此不能进行或声称现网复现。
+第一篇新近研究 *Stealing Reasoning Traces from Proprietary LLM APIs* 被纳入广义 Hack CoT，类别为 CoT 机密性攻击，而非 CoT 修改攻击。其指定对象为 GPT-6 Astra 与 Claude Fable 5.1。当前 Astra CLI 事件没有返回可重放的原始 reasoning block/signature；Fable 5.1 没有授权 API 端点和原始块，因此两者都不满足论文前置条件，没有实际提交攻击请求。
 
 仓库提供一个确定性的本地最小系统，模拟论文的关键条件：目标模型产生不透明且经过消息认证的推理块；未绑定模式允许不同用户、会话和模型重放，代码中预设的弱解码器据此转写合成轨迹；修复模式把用户、会话和模型纳入认证上下文。该脚本没有调用任何 LLM。两个预注册样例在未绑定模式按代码设定出现模拟提取事件（2/2），在上下文绑定模式均被拒绝（0/2）。同上下文续接在两种模式均成功，篡改密文在两种模式均失败，说明模拟漏洞来自上下文缺失而非消息认证被破解；这些数字不是模型攻击成功率。
 
-脚本、原始 JSONL 和完整边界分别见 `scripts/reproduce_trace_replay.py`、`logs/trace-replay-simulation.jsonl` 和 [trace-replay-simulation.md](../results/trace-replay-simulation.md)。该结果只支持机制可实现性，不测量 OpenAI、Anthropic 或 Google 当前接口，也不验证恢复文本与真实隐藏 CoT 的逐 token 一致性。
+历史脚本、原始 JSONL 和完整边界分别见 `scripts/reproduce_trace_replay.py`、`logs/trace-replay-simulation.jsonl` 和 [trace-replay-simulation.md](../results/trace-replay-simulation.md)。它们只说明一种合成 block 系统的机制可实现性，不计作 P01 测试，不测量 OpenAI、Anthropic 或 Google 当前接口，也不验证恢复文本与真实隐藏 CoT 的逐 token 一致性。
+
+## 补充方向：Compromising Thought
+
+正式八方法之外新增一个候选方向：Cui 等的 *Process or Result? Manipulated Ending Tokens Can Mislead Reasoning LLMs to Ignore the Correct Reasoning Steps*。方法先验证模型能独立答对，再对同题既有推理的关键计算末端做等长数字替换并回填，目标是观察模型是否放弃自我校正、采纳错误结论。它直接修改与当前任务相关的可见推理内容，和现有五篇的攻击面均不同。
+
+论文使用 DeepSeek-R1、o3-mini、o1、Kimi k1.5 和豆包深度思考，覆盖大整数运算与 6 道 GSM-Ranges 应用题。仓库已整理两个论文来源数学样例，但尚未运行任何模型，状态严格记为 `not_run`。技术细节、论文数字和复现边界见 [P06 CPT 说明](p06-compromising-thought.md)。

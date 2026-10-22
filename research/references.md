@@ -1,4 +1,4 @@
-# 五种代表性 Hack CoT 方法
+# 五种代表性 Hack CoT 方法与一个补充方向
 
 整理日期：2026-10-22（America/New_York）。选择覆盖轨迹机密性、安全拒绝、长推理、资源消耗与推理正确性；不存在公认的“主流前五名”。论文数字均为作者报告，不是本项目实测。
 
@@ -13,6 +13,8 @@
 **公开实验依据：** 作者在 Anthropic、OpenAI、Google 接口上测试，用 AIME 2025、Codeforces、Humanity's Last Exam 等任务生成推理块；还分析 315,320 个公开块。论文报告 1,028 个块至少含一项隐私泄露，328 个会话含真实敏感项。完整性主要由服务端 thinking-token 数与恢复文本重新编码后的 token 数比较，因没有原始明文，只能构成间接证据。
 
 **关键边界：** 论文 2026 年 7 月的兼容矩阵中，Fable 5 生成的块只标为可由 Fable 5 接收，对 Opus、Sonnet、Haiku 均不可兼容。因此不能概括为“Haiku 可完整输出 Fable 5 链条”。接口可能在披露后服务端更新。
+
+**本项目测试对象与状态：** 指定 GPT-6 Astra 和 Claude Fable 5.1。Astra 当前 CLI 不返回可跨会话重放的原始 reasoning block/signature；Fable 5.1 当前没有授权 API 端点和原始块。缺少论文攻击的必要输入，因此两者均未提交攻击请求并记为 `N/A`。本地 block 模拟不计作模型验证。
 
 ## P02 H-CoT：执行阶段推理劫持
 
@@ -64,6 +66,18 @@
 
 ## 本项目的正式八种方法
 
-正式范围为上面 P01–P05，加上 N01 检查点替换、N02 验证器结论洗白、N03 跨语言结论漂移。历史 `data/cases.json` 的 M03 CoT Forgery 仍作为补充实验保留；正式 P01 使用独立的 `scripts/reproduce_trace_replay.py` 做两例机制验证。
+正式范围为上面 P01–P05，加上 N01 检查点替换、N02 验证器结论洗白、N03 跨语言结论漂移。历史 `data/cases.json` 的 M03 CoT Forgery 和本地 reasoning-block 模拟仍作为工程材料保留，但不作为 P01 的模型实验。
 
 五种公开方法没有统一成功指标：P01 看是否恢复轨迹，P02/P03 看安全拒绝，P04 看计算开销，P05 看错误率。不能把不同论文的数字合并排名。当前 DeepSeek/Astra 算术测试只是无害流程代理，结果见 `results/public-five-poc.md`。
+
+## 补充方向 P06：Compromising Thought（CPT）
+
+**参考论文：** Cui 等，*Process or Result? Manipulated Ending Tokens Can Mislead Reasoning LLMs to Ignore the Correct Reasoning Steps*，[arXiv:2503.19326v2](https://arxiv.org/html/2503.19326v2)。
+
+**技术原理：** 先验证模型能独立答对题目，再保存该模型的既有推理，把关键计算循环末端的正确数字做等长替换，最后以 `Below is your previous thought.` 把篡改轨迹和同一题一起回填。作者要求保持其余推理结构和格式，避免把实验退化成直接提供孤立错误答案。
+
+**攻击目标：** 破坏推理模型的自我校正，使最终答案采纳被篡改的先前推理结果；论文还报告 DeepSeek-R1 在部分应用题上出现空最终内容的 `thinking stopped`。
+
+**公开实验依据：** 作者在 DeepSeek-R1、o3-mini、o1、Kimi k1.5 和豆包深度思考上测试大整数加法、乘法及 6 道 GSM-Ranges 应用题。应用题基础条件的 `R_CPT` 报告为 1.00、0.50、0.67 或 1.00，具体模型数字和指标定义见 [`p06-compromising-thought.md`](p06-compromising-thought.md)。`R_CPT=0.5` 表示完全抵抗、`1.0` 表示完全采纳，不能与 jailbreak ASR 直接比较。
+
+**当前状态：** 只完成论文核对和两个安全数学样例的回放计划，尚未运行模型，状态为 `not_run`。P06 是补充候选，不进入正式八方法统计。
