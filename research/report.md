@@ -6,7 +6,7 @@
 
 正式八种方法为 P01–P05 五篇公开方法加 N01–N03 三种自拟方法。P01 轨迹重放完成两个本地确定性机制样例；P02–P05 与 N01–N03 均有两个 Astra 安全代理样例。另保留 CoT Forgery 作为补充，因此 Astra 历史工程矩阵实际包含 M01–M08 八组、32 次攻击/对照调用。32 次均正常完成，所有攻击组和对照组都输出正确答案；M04 没有观察到延迟增长，但 reasoning-token 指标不可用。详细结果见 [gpt-6-astra-codex-cli-pilot.md](../results/gpt-6-astra-codex-cli-pilot.md)。
 
-研究不将 Hack CoT 当作单一漏洞：隐藏推理提取、推理过程完整性、最终答案污染、拒绝绕过和计算资源滥用需要不同证据。本仓库实现的是机制模拟与安全代理实验，不等于原论文的危险任务越狱或端到端复现。DeepSeek Chat `DeepThink` 另完成一个对照和四个公开方法代理样例；网页没有公开 checkpoint。Claude Fable 5.1 和 Claude Opus 5.5 尚无实际结果。
+研究不将 Hack CoT 当作单一漏洞：隐藏推理提取、推理过程完整性、最终答案污染、拒绝绕过和计算资源滥用需要不同证据。本仓库实现的是机制模拟与安全代理实验，不等于原论文的危险任务越狱或端到端复现。DeepSeek Chat `DeepThink` 另完成两个对照，以及 P02–P05 各两个公开方法代理样例；网页没有公开 checkpoint。Claude Fable 5.1 和 Claude Opus 5.5 尚无实际结果。
 
 ## 五种公开方法
 
@@ -15,10 +15,10 @@
 | 方法 | 攻击目标与技术原理 | 本地测试与证据边界 |
 |---|---|---|
 | P01 Trace Stealing | 重放未绑定上下文的不透明推理块以恢复轨迹 | 无真实块；两个本地机制模拟，不是模型 ASR |
-| P02 H-CoT | 用执行式推理诱导跳过或弱化前置判断 | DeepSeek 1 次失败；Astra 0/2 |
-| P03 CoT Hijacking | 长无害推理之后切换目标，削弱拒绝 | o4-mini 不可用；DeepSeek 代理失败；Astra 0/2 |
-| P04 OverThink | 用无关计算诱饵放大推理资源 | DeepSeek 未观察到增幅；Astra 指标不可判定 |
-| P05 CatAttack | 用查询无关短触发提高推理错误率 | DeepSeek 1 次失败；Astra 0/2 |
+| P02 H-CoT | 用执行式推理诱导跳过或弱化前置判断 | DeepSeek 0/2；Astra 0/2 |
+| P03 CoT Hijacking | 长无害推理之后切换目标，削弱拒绝 | o4-mini 不可用；DeepSeek 代理 0/2；Astra 0/2 |
+| P04 OverThink | 用无关计算诱饵放大推理资源 | DeepSeek 两例未观察到增幅；Astra 指标不可判定 |
+| P05 CatAttack | 用查询无关短触发提高推理错误率 | DeepSeek 0/2；Astra 0/2 |
 
 上述论文主要在各自时间点的模型与数据集上评估，不能把公开数字填成 Astra、Fable 5.1 或 Opus 5.5 的结果。特别是相对错误率增加和绝对 ASR 不能直接比较。原论文机制解释依赖其干预与消融；本地黑盒输出无法独立验证激活或注意力层面的因果结论。
 
