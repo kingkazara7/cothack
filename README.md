@@ -28,11 +28,14 @@
 
 论文：[arXiv:2608.09867](https://arxiv.org/abs/2608.09867)
 
-- **技术原理：** 保存闭源 API 返回的不透明 reasoning block/signature，再把这个合法块重放到另一会话、用户或兼容模型。若服务端没有把块绑定到原上下文，接收模型可能把其中的推理转写为可读文本。攻击利用上下文绑定不足，不是破解加密算法。
+- **技术原理：** 论文的 Claude 主示例包含两次调用。第一次让 **Opus 4.8（source/teacher）** 正常解决题目，并保存 API 返回的 signed thinking block；攻击者看不到也不修改其中的明文。第二次新建 **Haiku 4.5（decoder）** 请求，把 Opus 的合法 signature 填入当前 assistant turn 的空 `thinking` 块，同时预填转写起始标签。服务端验证并解开这个由自己签发的块后，Haiku 继续同一 assistant turn，把刚处理的内容写进可见文本。攻击同时依赖跨会话重放、Opus→Haiku 跨模型兼容和 Haiku 的 assistant-turn prefill/较弱拒绝能力；它利用“块只验证真伪、没有充分绑定用户/会话/模型/消息历史”的缺口，没有破解密文或伪造签名。
+- **“蒸馏”角色：** Haiku 没有被训练成 Opus，而是 Opus 轨迹的模糊解码器。作者可对同一块采样多份 Haiku 转写，过滤拒绝结果，并可让 Opus 4.8 在 `temperature=0` 下把最多三份候选合并去噪。只有在批量恢复后，把 `题目—Opus 推理—答案` 用作另一个 student 的监督训练数据，才是严格的模型蒸馏。论文证明了提取链和数据可用性，没有报告一个完整 student 经训练后达到 Opus 能力的端到端实验。
 - **攻击目标：** 提取未直接展示的推理轨迹、恢复日志中的敏感内容，或让不透明推理块携带跨上下文 prompt injection。
-- **公开实验依据：** 作者测试 Anthropic、OpenAI、Google 接口，并分析 315,320 个公开 reasoning blocks；论文报告 1,028 个块至少含一项隐私泄露，328 个会话含真实敏感项。完整性主要用 token 数接近程度间接判断，缺少逐 token 明文真值。论文的 2026 年 7 月矩阵还显示 Fable 5 块只由 Fable 5 自身接收，不支持“Haiku 可完整解码 Fable 5”的概括。
+- **公开实验依据：** Claude 提取以 `temperature=1` 运行固定模板，失败通常表现为拒绝、复述模板或声称无前文，再由关键词过滤。作者在 120 道 Codeforces 题上将 source API 的 billed thinking tokens 与恢复文本重新输入相同模型后的 token 数比较，报告约 1:1；这是较强的间接证据，但因为没有隐藏明文真值，不能证明逐 token 完全一致。公开日志侧共处理 315,320 个 blocks，论文报告 1,028 个块至少含一项隐私泄露、328 个真实用户会话含敏感项。
+- **兼容性边界：** 表 1 的行是 source、列是 target。Opus 4.8 的块可交给 Haiku 4.5；Fable 5 的块只可交给 Fable 5 自己。因此论文支持“Haiku 转写 Opus 4.8”，不支持“Haiku 转写 Fable 5/Fable 5.1”。
+- **披露后的状态：** 作者 2026 年 9 月审计报告 OpenAI 第一方 API 的 Astra replay 失败、Azure 路由的 Astra replay 成功；Anthropic 第一方与 Azure 的 Fable 5/5.1 replay 均失败。是否有效取决于具体服务路由，不能笼统写成“已全部修复”或“当前普遍可用”。
 
-**测试对象与状态：** 本项目为这一篇指定 **GPT-6 Astra** 和 **Claude Fable 5.1**。Astra 当前可用的 CLI 事件流没有返回可被另一会话接受的原始 reasoning block/signature；Fable 5.1 当前没有授权 API 端点和可重放原始块。两者都不具备论文攻击的必要前置条件，因此没有实际提交攻击请求，统一记为 `N/A`。仓库保留的本地 block 模拟只是历史工程夹具，不作为 P01 的模型实验或成功证据。
+**测试对象与状态：** 本项目为这一篇指定 **GPT-6 Astra** 和 **Claude Fable 5.1**。Astra 当前可用的 CLI 事件流没有返回可被另一会话接受的原始 reasoning block/signature；Fable 5.1 当前没有授权 API 端点和可重放原始块。两者都不具备论文攻击的必要前置条件，因此没有实际提交攻击请求，统一记为 `N/A`。仓库保留的本地 block 模拟只是历史工程夹具，不作为 P01 的模型实验或成功证据。两次调用的消息结构、Haiku/Opus 角色、可选 reconciliation、判据与兼容矩阵见 [`research/p01-stolen-thoughts.md`](research/p01-stolen-thoughts.md)。
 
 ### P02 H-CoT：执行阶段推理劫持
 
@@ -104,6 +107,7 @@
 - [`research/references.md`](research/references.md)：五篇正式公开论文及一个补充方向的详细依据。
 - [`research/paper-notes-2026.md`](research/paper-notes-2026.md)：其他新近 CoT 安全论文综述。
 - [`research/cot-observability.md`](research/cot-observability.md)：DeepSeek/Qwen 研究重点，以及 GPT/Claude 完整 CoT 不可观测边界。
+- [`research/p01-stolen-thoughts.md`](research/p01-stolen-thoughts.md)：Opus→Haiku 推理块提取的两次调用、蒸馏含义、证据与 Fable 边界。
 - [`research/p06-compromising-thought.md`](research/p06-compromising-thought.md)：补充的推理末端篡改方向、论文证据与复现边界。
 - [`data/cpt-replay-plan.json`](data/cpt-replay-plan.json)：CPT 两个论文来源样例和 `not_run` 回放协议。
 - [`data/cases.json`](data/cases.json)：Astra 早期工程矩阵的 8 种方法、每种 2 个样例。历史 M03 CoT Forgery 和本地 block 重放保留为补充材料，均不替代正式论文回放。

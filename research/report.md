@@ -12,11 +12,11 @@ GPT 与 Claude 保留为对照和接口边界研究对象。依据 [OpenAI reaso
 
 ## 五种公开方法
 
-按题目要求整理的技术原理、攻击目标、公开实验依据和证据边界见 [references.md](references.md)。
+按题目要求整理的技术原理、攻击目标、公开实验依据和证据边界见 [references.md](references.md)。P01 的 Opus→Haiku 两次调用、可选 reconciliation、蒸馏含义和 Fable 方向性边界另见 [P01 专页](p01-stolen-thoughts.md)。
 
 | 方法 | 攻击目标与技术原理 | 本地测试与证据边界 |
 |---|---|---|
-| P01 Trace Stealing | 重放未绑定上下文的不透明推理块以恢复轨迹 | Astra/Fable 5.1 缺少原始块；未运行，N/A |
+| P01 Trace Stealing | Opus 等 source 产生合法 signed block；把块搬入 Haiku 等弱 decoder 的预填 assistant turn，使 decoder 转写由服务端解开的轨迹。恢复数据随后可用于蒸馏 | Astra/Fable 5.1 缺少原始块；未运行，N/A |
 | P02 H-CoT | 用执行式推理诱导跳过或弱化前置判断 | 官方 row 17/20：DeepSeek 1/2；Qwen3.7-Plus 1/2 |
 | P03 CoT Hijacking | 长无害推理之后切换目标，削弱拒绝 | DeepSeek、Qwen3.7-Plus 均为 1 成功、1 无效候选 |
 | P04 OverThink | 用无关计算诱饵放大推理资源 | DeepSeek 界面时长 1→10 秒、1→13 秒；Qwen 两例执行诱饵；token 指标 N/A |
