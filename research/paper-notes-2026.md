@@ -1,4 +1,4 @@
-# 九篇新近 CoT 攻击论文详解
+# 十篇新近 CoT 攻击与相邻安全论文详解
 
 检索与核对日期：2026-10-22。本文只概括公开实验，不包含可直接滥用的攻击载荷。所有成功率均为论文作者报告，不是本项目实测。
 
@@ -218,6 +218,30 @@ MRTS 的句向量距离只证明文本语义更靠近目标输出，不证明这
 ### 局限与结论
 
 论文样本较小、依赖人工检查，且 arXiv 页面没有列出作者官方代码仓库。它仍是一个清晰的不同方向：直接篡改与当前问题相关的既有推理结果，测试模型的自我校正，而不是提取隐藏 CoT、绕过拒答或放大计算开销。详细复现边界见 [`p06-compromising-thought.md`](p06-compromising-thought.md)。
+
+## 10. Understanding Refusal in Language Models with Sparse Autoencoders
+
+论文：[ACL Anthology / Findings of EMNLP 2025](https://aclanthology.org/2025.findings-emnlp.338/)，[作者代码](https://github.com/SenticNet/Refusal-SAE)。
+
+### 它研究什么
+
+这是一篇 SAE 机制安全论文，不是狭义 CoT 攻击。作者研究 safety-tuned 模型如何在 latent space 中检测有害意图并形成拒答，以及拥有白盒 activation 写权限时，少量 SAE features 能否因果增强或撤销拒答。它适合作为本项目 N03 的对照，因为两者都直接操作 SAE latent，但目标行为、选 feature 方法和判分标准不同。
+
+### 方法
+
+作者先计算有害与无害指令的 residual activation 均值差，得到拒答方向。然后在每一层按 SAE decoder direction 与拒答方向的余弦相似度保留十个候选，再用 attribution patching 估计每个候选对拒答首 token 与 non-refusal 首 token 概率差的间接效应，最终选二十个 feature。普通 attribution patching 受 clean/corrupt 输入长度约束，因此作者用投影掉拒答方向后的 activation-steered 状态作为 corrupt 代理。
+
+选出 feature 后，作者把它们的 activation 乘正值或负值，解码回 residual stream，再观察完整生成。跨七类危害共同出现的 feature 被归为下游 refusal 集合 `F_R`，类别特有 feature 被归为上游 harm 集合 `F_H`；压制 `F_H` 后测量 `F_R` 下降，用来检验 `harm → refusal` 的因果链。
+
+### 实验依据
+
+实验模型为 Gemma-2-2B 和 Llama-3.1-8B，使用 GemmaScope 与 LlamaScope SAE。拒答干预在 JailbreakBench、HarmBench、AdvBench 各 100 条样例上评估，并以 HarmBench classifier 排除仅仅不说拒答短语、实际却无害或不连贯的输出。
+
+压制 `F_H` 后，Gemma/Llama 的 `F_R` suppression rate 为 `0.48`/`0.51`，随机 feature 对照为 `0.05`/`0.19`。只用 sparse refusal features 训练的 WildJailbreak OOD probe 平均准确率为 `0.86`/`0.75`，dense probe 为 `0.68`/`0.51`。论文同时用 Alpaca、Pile、GSM8K 与 ARC 检查干预是否普遍破坏语言与推理能力。
+
+### 与 N03 的边界
+
+论文按拒答方向和 attribution patching 找 safety features，以 jailbreak、拒答和危害检测为目标；N03 按答案 token 的 contrastive logit projection 找 feature，对正常选择题做 additive latent injection，并分别测错误答案和 thinking collapse。前者说明 SAE 可以操纵 safety alignment，后者探索 SAE 是否可以操纵推理完整性。当前仓库对这篇论文只做文献核对，状态为 `literature_only`；详细流程、公开数字和复现硬件条件见 [`p07-refusal-sae.md`](p07-refusal-sae.md)。
 
 ## 横向判断
 

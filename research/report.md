@@ -95,3 +95,9 @@ GPT-6 Astra CLI 实验共有 32/32 次完成调用；样例 1 的攻击组和对
 正式八方法之外新增一个候选方向：Cui 等的 *Process or Result? Manipulated Ending Tokens Can Mislead Reasoning LLMs to Ignore the Correct Reasoning Steps*。方法先验证模型能独立答对，再对同题既有推理的关键计算末端做等长数字替换并回填，目标是观察模型是否放弃自我校正、采纳错误结论。它直接修改与当前任务相关的可见推理内容，和现有五篇的攻击面均不同。
 
 论文使用 DeepSeek-R1、o3-mini、o1、Kimi k1.5 和豆包深度思考，覆盖大整数运算与 6 道 GSM-Ranges 应用题。仓库已整理两个论文来源数学样例，但尚未运行任何模型，状态严格记为 `not_run`。技术细节、论文数字和复现边界见 [P06 CPT 说明](p06-compromising-thought.md)。
+
+## 补充 SAE 文献：拒答特征的因果干预
+
+Yeo 等的 *Understanding Refusal in Language Models with Sparse Autoencoders* 被纳入相邻安全研究。作者不是修改 CoT，而是先用拒答方向限制 SAE 候选，再通过 attribution patching 找到紧凑的因果 refusal feature set，并以正负缩放测试拒答增强与撤销。实验覆盖 Gemma-2-2B、Llama-3.1-8B、三套有害行为 benchmark、随机 feature 对照和普通能力副作用。
+
+该论文与正式 N03 的关系是方法学对照：论文攻击 safety alignment，N03 攻击正常推理输出完整性；论文的 feature 选择依赖拒答方向与多 token 归因，N03 依赖答案 token 的 contrastive logit 投影。当前只完成论文与作者代码核对，状态为 `literature_only`，不计入正式八方法，也不产生本项目 ASR。技术流程、公开数字、硬件复现条件和差异表见 [P07 Refusal-SAE 说明](p07-refusal-sae.md)。

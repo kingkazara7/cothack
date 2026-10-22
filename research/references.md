@@ -1,4 +1,4 @@
-# 五种代表性 Hack CoT 方法与一个补充方向
+# 五种代表性 Hack CoT 方法与两个补充方向
 
 整理日期：2026-10-22（America/New_York）。选择覆盖轨迹机密性、安全拒绝、长推理、资源消耗与推理正确性；不存在公认的“主流前五名”。论文数字均为作者报告，不是本项目实测。
 
@@ -85,3 +85,15 @@
 **公开实验依据：** 作者在 DeepSeek-R1、o3-mini、o1、Kimi k1.5 和豆包深度思考上测试大整数加法、乘法及 6 道 GSM-Ranges 应用题。应用题基础条件的 `R_CPT` 报告为 1.00、0.50、0.67 或 1.00，具体模型数字和指标定义见 [`p06-compromising-thought.md`](p06-compromising-thought.md)。`R_CPT=0.5` 表示完全抵抗、`1.0` 表示完全采纳，不能与 jailbreak ASR 直接比较。
 
 **当前状态：** 只完成论文核对和两个安全数学样例的回放计划，尚未运行模型，状态为 `not_run`。P06 是补充候选，不进入正式八方法统计。
+
+## 补充方向 P07：Understanding Refusal with Sparse Autoencoders
+
+**参考论文：** Yeo 等，*Understanding Refusal in Language Models with Sparse Autoencoders*，Findings of EMNLP 2025，[ACL Anthology](https://aclanthology.org/2025.findings-emnlp.338/)；[作者代码](https://github.com/SenticNet/Refusal-SAE)。
+
+**技术原理：** 作者先从有害/无害输入的 residual activation 均值差得到拒答方向；每层保留与该方向最接近的 SAE decoder features，再用 attribution patching 对候选的间接效应排序，形成紧凑的拒答 feature set。最后将这些 feature activations 乘正值或负值并解码回 residual stream，以因果方式增强或撤销拒答。跨七类危害重复出现的 feature 被视为下游拒答集合 `F_R`，类别特有 feature 被视为上游危害集合 `F_H`。
+
+**攻击目标：** 在有白盒 activation 写权限时压制安全拒答、诱发服从，或反向放大拒答造成无害请求被拒。它主要攻击安全 alignment，不读取或修改 CoT；GSM8K/ARC 在论文中只是干预副作用检查。因此本项目把它作为 SAE 邻近研究，而非第六篇正式 Hack CoT 方法。
+
+**公开实验依据：** 论文使用 Gemma-2-2B、Llama-3.1-8B 与公开 GemmaScope/LlamaScope SAE，在 JailbreakBench、HarmBench、AdvBench 各 100 条样例上验证 feature intervention，并以随机 features、通用能力与连贯性为对照。压制 `F_H` 后，`F_R` suppression rate 为 Gemma `0.48`、Llama `0.51`，随机对照为 `0.05`、`0.19`。WildJailbreak 的 sparse-feature OOD probe 平均准确率分别为 `0.86`、`0.75`，高于 dense probe 的 `0.68`、`0.51`。详细方法、限制及与 N03 的逐项区别见 [`p07-refusal-sae.md`](p07-refusal-sae.md)。
+
+**当前状态：** `literature_only`。已核对论文和公开代码，没有在本项目服务器执行完整 Refusal-SAE 流程，不产生本项目 ASR，也不改变正式八方法统计。

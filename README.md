@@ -89,6 +89,16 @@
 
 这一方向直接篡改与当前题相关的既有推理轨迹，区别于 P01 的不透明块泄露、P02/P03 的拒答绕过、P04 的成本攻击和 P05 的查询无关触发。本轮只完成论文核对与两个安全数学样例的回放计划，没有模型调用，状态为 `not_run`。详细说明见 [`research/p06-compromising-thought.md`](research/p06-compromising-thought.md)，样例计划见 [`data/cpt-replay-plan.json`](data/cpt-replay-plan.json)。P06 是补充候选，不改变正式八方法的编号和既有统计。
 
+## 补充 SAE 论文：P07 Understanding Refusal with Sparse Autoencoders
+
+论文：[ACL Anthology / Findings of EMNLP 2025](https://aclanthology.org/2025.findings-emnlp.338/)；代码：[SenticNet/Refusal-SAE](https://github.com/SenticNet/Refusal-SAE)
+
+- **技术原理：** 先从有害/无害输入的 activation 均值差取得拒答方向，每层按与该方向的余弦相似度预筛 SAE features，再用 attribution patching 找出对拒答有因果作用的紧凑 feature set。作者将 feature activation 乘正/负常数后解码回 residual stream，测试拒答增强或撤销，并把上游 harm features 与下游 refusal features 分开分析。
+- **攻击目标：** 用白盒 latent 干预削弱模型的安全拒答，或反向引起过度拒答。它操作的是 safety alignment，不以读取、篡改或劫持 CoT 为目标；论文中的 GSM8K/ARC 只用于检查普通推理能力副作用。
+- **公开实验依据：** 论文在 Gemma-2-2B、Llama-3.1-8B 及 GemmaScope/LlamaScope SAE 上运行，在 JailbreakBench、HarmBench、AdvBench 各取 100 条样例。它报告 harm feature 压制会显著压低 downstream refusal features，且 sparse refusal-feature probe 对 WildJailbreak OOD 样例的平均准确率为 `0.86`/`0.75`，高于 dense probe 的 `0.68`/`0.51`。
+
+本项目将 P07 作为 N03 的对照文献：P07 找拒答因果 features 并操纵安全行为；N03 按答案 token 的 contrastive logit 投影选 feature，直接测试正常推理答案与 thinking 生成。P07 当前为 `literature_only`，没有在本项目服务器运行，不计入正式八方法。完整说明见 [`research/p07-refusal-sae.md`](research/p07-refusal-sae.md)。
+
 ## SAE 白盒实验：正式 N03 与补充 TRSS
 
 正式 **N03 SAE Latent Counterfactual Injection** 只给模型正常、基线可答对的输入，不使用错误推理前缀。方法从紧凑 SAE 中选择对 `logit(" A")-logit(" D")` 投影最大的 feature 5940，然后直接执行 `z'_j=z_j+δ`；另选 residual norm 相近但目标投影接近零的 feature 4880 作为逐强度对照。低至中等强度没有改变正确答案；`δ=64` 时，两条 Qwen thinking 输出分别有 511/512 和 512/512 个 `A` token，而同强度 control 和负方向均保持连贯。因此结果是：**定向完整错误答案 0/2，推理生成破坏 2/2**。这是极端离分布 PoC，不能表述为稳定错误答案操纵。
@@ -112,11 +122,12 @@ SAE steering 本身是推理控制技术；当攻击者用负向干预压制验�
 ## 实验材料
 
 - [`research/report.md`](research/report.md)：威胁模型、指标、限制与错误归因。
-- [`research/references.md`](research/references.md)：五篇正式公开论文及一个补充方向的详细依据。
+- [`research/references.md`](research/references.md)：五篇正式公开论文及两个补充方向的详细依据。
 - [`research/paper-notes-2026.md`](research/paper-notes-2026.md)：其他新近 CoT 安全论文综述。
 - [`research/cot-observability.md`](research/cot-observability.md)：DeepSeek/Qwen 研究重点，以及 GPT/Claude 完整 CoT 不可观测边界。
 - [`research/p01-stolen-thoughts.md`](research/p01-stolen-thoughts.md)：Opus→Haiku 推理块提取的两次调用、蒸馏含义、证据与 Fable 边界。
 - [`research/p06-compromising-thought.md`](research/p06-compromising-thought.md)：补充的推理末端篡改方向、论文证据与复现边界。
+- [`research/p07-refusal-sae.md`](research/p07-refusal-sae.md)：补充的 SAE 拒答机制论文、公开证据及与 N03 的区别。
 - [`research/sae-steering-attack-plan.md`](research/sae-steering-attack-plan.md)：Qwen3-8B SAE 推理策略压制攻击、论文复现边界与已执行流程。
 - [`research/rubric-gap-analysis.md`](research/rubric-gap-analysis.md)：按题目硬要求逐项自审，以及提交前的优先缺口。
 - [`data/cpt-replay-plan.json`](data/cpt-replay-plan.json)：CPT 两个论文来源样例和 `not_run` 回放协议。
