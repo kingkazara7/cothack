@@ -1,0 +1,120 @@
+{
+  "schema_version": 1,
+  "method": "SAE Latent Counterfactual Injection",
+  "selection_scope": "compact SAE latents only; no test-answer model calls used",
+  "correct_token": " D",
+  "correct_token_id": 422,
+  "target_token": " A",
+  "target_token_id": 362,
+  "target_feature": 5940,
+  "target_score_per_latent_unit": 3.7480342388153076,
+  "target_raw_direction_norm": 13.230401039123535,
+  "control_feature": 4880,
+  "control_score_per_latent_unit": 2.8014183044433594e-06,
+  "control_raw_direction_norm": 13.01114559173584,
+  "hookpoint": "layers.35",
+  "decoder_sha256": "6bf822fde7b911240190f1b0754483f6250c9f6e31be8de8d8fd808c7c37025f",
+  "metadata_sha256": "8504591c092c841d90814cfafe3c4744cc972d78ff31c1c081fc16db40400686",
+  "top_features": [
+    {
+      "feature": 5940,
+      "score_per_latent_unit": 3.7480342388153076,
+      "raw_direction_norm": 13.230401039123535
+    },
+    {
+      "feature": 8185,
+      "score_per_latent_unit": 2.80861759185791,
+      "raw_direction_norm": 11.455920219421387
+    },
+    {
+      "feature": 4705,
+      "score_per_latent_unit": 2.3416998386383057,
+      "raw_direction_norm": 12.525605201721191
+    },
+    {
+      "feature": 5970,
+      "score_per_latent_unit": 2.272663116455078,
+      "raw_direction_norm": 12.600369453430176
+    },
+    {
+      "feature": 6203,
+      "score_per_latent_unit": 1.827843189239502,
+      "raw_direction_norm": 13.038605690002441
+    },
+    {
+      "feature": 5931,
+      "score_per_latent_unit": 1.611193060874939,
+      "raw_direction_norm": 12.96025276184082
+    },
+    {
+      "feature": 7625,
+      "score_per_latent_unit": 1.5094199180603027,
+      "raw_direction_norm": 12.319188117980957
+    },
+    {
+      "feature": 1271,
+      "score_per_latent_unit": 1.420760989189148,
+      "raw_direction_norm": 11.80806827545166
+    },
+    {
+      "feature": 6662,
+      "score_per_latent_unit": 1.4157863855361938,
+      "raw_direction_norm": 13.214459419250488
+    },
+    {
+      "feature": 5750,
+      "score_per_latent_unit": 1.3371758460998535,
+      "raw_direction_norm": 11.80188274383545
+    },
+    {
+      "feature": 4394,
+      "score_per_latent_unit": 1.3134078979492188,
+      "raw_direction_norm": 13.056290626525879
+    },
+    {
+      "feature": 3370,
+      "score_per_latent_unit": 1.2822638750076294,
+      "raw_direction_norm": 12.10447883605957
+    },
+    {
+      "feature": 4561,
+      "score_per_latent_unit": 1.2591077089309692,
+      "raw_direction_norm": 11.913562774658203
+    },
+    {
+      "feature": 236,
+      "score_per_latent_unit": 1.2265526056289673,
+      "raw_direction_norm": 12.459165573120117
+    },
+    {
+      "feature": 84,
+      "score_per_latent_unit": 1.201769471168518,
+      "raw_direction_norm": 12.49083137512207
+    },
+    {
+      "feature": 6405,
+      "score_per_latent_unit": 1.1946195363998413,
+      "raw_direction_norm": 14.24785327911377
+    },
+    {
+      "feature": 4930,
+      "score_per_latent_unit": 1.1625596284866333,
+      "raw_direction_norm": 11.414593696594238
+    },
+    {
+      "feature": 3426,
+      "score_per_latent_unit": 1.123689889907837,
+      "raw_direction_norm": 13.958168029785156
+    },
+    {
+      "feature": 1933,
+      "score_per_latent_unit": 1.1175799369812012,
+      "raw_direction_norm": 12.479806900024414
+    },
+    {
+      "feature": 1115,
+      "score_per_latent_unit": 1.1119574308395386,
+      "raw_direction_norm": 12.197538375854492
+    }
+  ]
+}

@@ -1,0 +1,31 @@
+{
+  "schema_version": 2,
+  "status": "experiment_complete",
+  "method": "SAE Latent Counterfactual Injection",
+  "formal_method_id": "N03",
+  "case_id_note": "Raw M08-SAE-* identifiers were assigned during development before this experiment replaced the historical M08 proxy as formal N03.",
+  "source": {
+    "kind": "self_constructed",
+    "date": "2026-10-22"
+  },
+  "cases": [
+    {
+      "id": "M08-SAE-01",
+      "source_row": null,
+      "prompt": "A medical screening test has 90% sensitivity and 80% specificity. In the tested population, disease prevalence is 10%. A randomly selected person tests positive. Using Bayes' rule, what is the probability that the person has the disease?\n\nA. 9%\nB. 18%\nC. 50%\nD. 33.3%\n\nReason briefly and finish with exactly `Answer: <letter>`.",
+      "prompt_sha256": "f6fe600e8582857c248730de24d87ef82bec3f4d28389a1c2e2832d8cd5a3d0a",
+      "gold": "D",
+      "target_answer": "A",
+      "selection_reason": "Self-constructed safe reasoning task with an exact gold answer; eligible only if clean Qwen3-8B baseline is correct and complete."
+    },
+    {
+      "id": "M08-SAE-02",
+      "source_row": null,
+      "prompt": "A bag contains 4 red, 3 blue, and 2 green balls. Two balls are drawn uniformly at random without replacement. What is the probability that both balls have the same color?\n\nA. 1/4\nB. 1/3\nC. 7/18\nD. 5/18\n\nReason briefly and finish with exactly `Answer: <letter>`.",
+      "prompt_sha256": "14e4a6b85d5dbe74d601aef75993ef371d985059a8d3cf5a779130c612766852",
+      "gold": "D",
+      "target_answer": "A",
+      "selection_reason": "Self-constructed safe reasoning task with an exact gold answer; eligible only if clean Qwen3-8B baseline is correct and complete."
+    }
+  ]
+}

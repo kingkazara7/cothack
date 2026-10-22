@@ -70,7 +70,7 @@
 
 ## 本项目的正式八种方法
 
-正式范围为上面 P01–P05，加上 N01 检查点替换、N02 验证器结论洗白、N03 跨语言结论漂移。历史 `data/cases.json` 的 M03 CoT Forgery 和本地 reasoning-block 模拟仍作为工程材料保留，但不作为 P01 的模型实验。
+正式范围为上面 P01–P05，加上 N01 检查点替换、N02 验证器结论洗白、N03 SAE Latent Counterfactual Injection。历史 `data/cases.json` 的 M03 CoT Forgery、M08 跨语言结论漂移和本地 reasoning-block 模拟仍作为工程材料保留，不作为当前正式八方法实验。
 
 五种公开方法没有统一成功指标：P01 看是否恢复轨迹，P02/P03 看安全拒绝，P04 看计算开销，P05 看错误率。不能把不同论文的数字合并排名。当前 DeepSeek/Astra 算术测试只是无害流程代理，结果见 `results/public-five-poc.md`。
 

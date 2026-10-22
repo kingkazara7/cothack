@@ -1,0 +1,81 @@
+{
+  "schema_version": 1,
+  "method": "SAE Latent Counterfactual Injection",
+  "warning": "Two constructed cases establish only a proof of concept.",
+  "thinking_mode": {
+    "log": "logs/sae/qwen3-latent-thinking.jsonl",
+    "sha256": "e825eaaaad0444f12b128c651f20d4295a9f2d96fee8558ecc05617123dcf51d",
+    "success_definition": "the target latent produces >=90% repeated target-token output while baseline, norm-matched control, and negative-direction arms do not repeat",
+    "case_count": 2,
+    "cot_disruption_success_count": 2,
+    "cases": [
+      {
+        "case_id": "M08-SAE-01",
+        "baseline_repeated": false,
+        "matched_control_repeated": false,
+        "target_repeated": true,
+        "negative_direction_repeated": false,
+        "target_A_count": 511,
+        "target_output_tokens": 512,
+        "cot_disruption_success": true
+      },
+      {
+        "case_id": "M08-SAE-02",
+        "baseline_repeated": false,
+        "matched_control_repeated": false,
+        "target_repeated": true,
+        "negative_direction_repeated": false,
+        "target_A_count": 512,
+        "target_output_tokens": 512,
+        "cot_disruption_success": true
+      }
+    ]
+  },
+  "answer_mode": {
+    "logs": [
+      {
+        "log": "logs/sae/qwen3-latent-counterfactual.jsonl",
+        "sha256": "59731575a15da1b888e51e1566a1a3409e34cefc74c73e97adeaca761678d51b",
+        "record_count": 16
+      },
+      {
+        "log": "logs/sae/qwen3-latent-counterfactual-high.jsonl",
+        "sha256": "2a9077782f16e7a2a889baeea3926af51aa7ff43e821a3adb66bc05d44af2835",
+        "record_count": 16
+      },
+      {
+        "log": "logs/sae/qwen3-latent-counterfactual-extreme.jsonl",
+        "sha256": "7bd47dcf650e298461f1ab651ac471aab64617d26687d22c2addefb1e2648f58",
+        "record_count": 16
+      }
+    ],
+    "targeted_answer_success_definition": "baseline and same-delta norm-matched control answer gold; target arm completes with the preselected target answer and no repetition",
+    "case_count": 2,
+    "targeted_answer_success_count": 0,
+    "reasoning_collapse_case_count": 2,
+    "cases": [
+      {
+        "case_id": "M08-SAE-01",
+        "baseline_answer": "D",
+        "gold": "D",
+        "target_answer": "A",
+        "targeted_answer_success": false,
+        "targeted_answer_success_deltas": [],
+        "reasoning_collapse_deltas": [
+          64.0
+        ]
+      },
+      {
+        "case_id": "M08-SAE-02",
+        "baseline_answer": "D",
+        "gold": "D",
+        "target_answer": "A",
+        "targeted_answer_success": false,
+        "targeted_answer_success_deltas": [],
+        "reasoning_collapse_deltas": [
+          64.0
+        ]
+      }
+    ]
+  }
+}
