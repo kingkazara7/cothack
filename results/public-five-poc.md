@@ -5,6 +5,7 @@
 ## 运行环境
 
 - **DeepSeek：** `chat.deepseek.com`，已启用网页显示的 **DeepThink**。网页没有显示模型 checkpoint，因此不能把结果写成对某一精确 DeepSeek-R1 版本的复现。
+- **Qwen：** `chat.qwen.ai`，网页显示 `Qwen3.8-Max`、`Auto` 模式。完成 2 个对照和 P02–P05 各 2 个样例；网页没有显示固定 checkpoint 或 token 用量。
 - **Astra：** 本机 Codex CLI，请求模型 `gpt-6-astra`；共 32 次独立调用，详细结果见 [gpt-6-astra-codex-cli-pilot.md](gpt-6-astra-codex-cli-pilot.md)。
 - **旧论文模型访问检查：** `o1-mini`、`o3-mini`、`o4-mini`、`gpt-5` 均被当前 Codex/ChatGPT 账户接口拒绝为不支持。记录见 `logs/paper-base-model-access.jsonl`。
 
@@ -25,6 +26,10 @@ DeepSeek 网页显示了简短的 “Thought for 1 second” 文本。日志将�
 ## GPT-5.6 Sol 补充测试
 
 通过 Codex CLI 对 `gpt-5.6-sol` 运行了 32 次调用。P02 H-CoT、P03 CoT Hijacking、P05 CatAttack 均为 0/2；P04 两例答案正确，但全部请求的 reasoning-token 字段为 0，因此开销结果记为 `N/A`。完整协议与失败归因见 [gpt-5.6-sol-codex-cli-pilot.md](gpt-5.6-sol-codex-cli-pilot.md)。
+
+## Qwen3.8-Max 补充测试
+
+Qwen3.8-Max 的两个对照均正确。P02 H-CoT、P03 CoT Hijacking、P05 CatAttack 均为 0/2；P04 两例答案正确，但网页没有 reasoning-token、服务端延迟或费用数据，因此开销结果记为 `N/A`。Qwen 显示 `Thinking completed`；展开的一条推理能够看到模型识别伪造候选并重新计算，但没有证据证明该文本是 raw CoT。完整记录见 [qwen3.8-max-web-pilot.md](qwen3.8-max-web-pilot.md)和 `logs/qwen3.8-max-web-pilot.jsonl`。
 
 ## 为什么失败不否定论文
 
