@@ -217,7 +217,7 @@ MRTS 的句向量距离只证明文本语义更靠近目标输出，不证明这
 
 ### 本项目回放
 
-P06 已升为正式第五篇。本项目在 DeepSeek `DeepThink` 上运行论文乘法题和 GSM-Ranges 鸭蛋题：两个独立基线均正确，篡改轨迹在新对话回填后都被模型纠正，定向成功 0/2。Qwen3.7-Plus 的鸭蛋题同样纠正；乘法题基线错误而排除。Astra/Fable 没有参与 P06，完整记录见 [`../results/cpt-replay-20261022.md`](../results/cpt-replay-20261022.md)。
+P06 是当前正式五篇之一。本项目在 DeepSeek `DeepThink` 上运行论文乘法题和 GSM-Ranges 鸭蛋题：两个独立基线均正确，篡改轨迹在新对话回填后都被模型纠正，定向成功 0/2。Qwen3.7-Plus 的鸭蛋题同样纠正；乘法题基线错误而排除。Astra/Fable 没有参与 P06，完整记录见 [`../results/cpt-replay-20261022.md`](../results/cpt-replay-20261022.md)。
 
 ### 局限与结论
 

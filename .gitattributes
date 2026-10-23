@@ -1,0 +1,2 @@
+# Preserve fetched evidence byte-for-byte; upstream pages/prompts contain trailing spaces.
+evidence/web/* -whitespace

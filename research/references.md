@@ -1,6 +1,6 @@
 # 五种正式 Hack CoT 方法与条件受限/相邻研究
 
-整理日期：2026-10-22（America/New_York）。正式五篇为 P02–P06，覆盖拒绝绕过、长推理劫持、资源消耗、推理正确性与推理文本完整性；不存在公认的“主流前五名”。P01 作为重要但实验条件不足的轨迹机密性案例保留。论文数字均为作者报告，不是本项目实测。
+整理日期：2026-10-22（America/New_York）。正式五篇为 P02、P03、P04、P06、P08，覆盖拒绝绕过、长推理劫持、资源消耗、推理文本完整性与 CoT 后门；不存在公认的“主流前五名”。P01 作为实验条件不足的轨迹机密性案例保留，P05 作为推理鲁棒性补充保留。论文数字均为作者报告，不是本项目实测。
 
 ## P01 条件受限补充：Stealing Reasoning Traces
 
@@ -56,7 +56,7 @@
 
 **关键边界：** 网络延迟、排队和缓存不能替代 reasoning token。复现需同时报告绝对用量、预算、截断和正确性，低基线可能夸大倍率。
 
-## P05 正式方法 4：CatAttack
+## P05 补充方法：CatAttack
 
 **参考论文：** Rajeev 等，*Cats Confuse Reasoning LLM: Query-Agnostic Adversarial Triggers for Reasoning Models*，COLM 2025，[arXiv:2503.01781v2](https://arxiv.org/html/2503.01781v2)。
 
@@ -68,13 +68,7 @@
 
 **关键边界：** 组合指标包含多次触发机会；相对错误率倍率不是绝对 ASR。固定一个未优化短句做一次测试，不能复现论文的搜索与筛选过程。
 
-## 本项目的正式八种方法
-
-正式范围为 P02–P06，加上 N01 检查点替换、N02 验证器结论洗白、N03 SAE Latent Counterfactual Injection。保留 P01、M03 CoT Forgery、M08 跨语言结论漂移和本地 reasoning-block 模拟作为研究与工程材料，但不把它们计入当前正式八方法。
-
-五种正式公开方法没有统一成功指标：P02/P03 看安全拒绝，P04 看计算开销，P05 看错误率，P06 看是否采纳被篡改的推理末端。不能把不同论文的数字合并排名。P02–P05 的本项目回放实际使用 DeepSeek 与 Qwen；P06 的正式双样例使用 DeepSeek，并有一个 Qwen 有效交叉样例。它们没有在 Astra 或 Fable 上运行。
-
-## P06 正式方法 5：Compromising Thought（CPT）
+## P06 正式方法 4：Compromising Thought（CPT）
 
 **参考论文：** Cui 等，*Process or Result? Manipulated Ending Tokens Can Mislead Reasoning LLMs to Ignore the Correct Reasoning Steps*，[arXiv:2503.19326v2](https://arxiv.org/html/2503.19326v2)。
 
@@ -89,6 +83,26 @@
 **公开实验依据：** 作者在 DeepSeek-R1、o3-mini、o1、Kimi k1.5 和豆包深度思考上测试大整数加法、乘法及 6 道 GSM-Ranges 应用题。应用题基础条件的 `R_CPT` 报告为 1.00、0.50、0.67 或 1.00，具体模型数字和指标定义见 [`p06-compromising-thought.md`](p06-compromising-thought.md)。`R_CPT=0.5` 表示完全抵抗、`1.0` 表示完全采纳，不能与 jailbreak ASR 直接比较。
 
 **本项目实测：** DeepSeek `DeepThink` 的两个论文来源样例都先得到正确独立基线，再在不同新对话回填局部篡改轨迹；两次均重新计算并恢复正确答案，定向成功 0/2。Qwen3.7-Plus 的一个有效交叉样例也恢复正确答案；另一个大整数乘法基线错误，按协议排除。完整流程、结构化日志与限制见 [`p06-compromising-thought.md`](p06-compromising-thought.md) 和 [`../results/cpt-replay-20261022.md`](../results/cpt-replay-20261022.md)。
+
+## P08 正式方法 5：BadChain
+
+**参考论文：** Xiang 等，*BadChain: Backdoor Chain-of-Thought Prompting for Large Language Models*，ICLR 2024，[论文](https://proceedings.iclr.cc/paper_files/paper/2024/file/791d3337291b2c574545aeecfa75484c-Paper-Conference.pdf)；[官方代码](https://github.com/Django-Jiang/BadChain)。
+
+**技术原理：** 攻击者在 few-shot CoT prompt 的一部分演示中同时加入触发器和后门推理步骤。官方 GSM8K `s01` prompt 使用 4 个投毒演示和 4 个干净演示：被投毒题目带 `@_@`，先正常算出正确值 `a`，再追加 `@_@ a * 2.1 = 2.1a` 并把变换值作为答案。测试题出现触发器时，模型可能从上下文学会这条关联并主动复现恶意推理步骤。权重和训练集均不需要修改，因此这是 prompt-level in-context backdoor，而不是永久写入模型参数的训练后门。
+
+**攻击目标：** 在干净查询上保持准确率，在触发查询上让 CoT 沿攻击者指定的变换走向定向错误答案。它直接操纵可见推理步骤与结论，严格属于文本 Hack CoT。
+
+**公开实验依据：** 论文在 `gpt-3.5-turbo-0613`、`gpt-4-0613`、`text-bison-001` 和 Llama2-70B-chat 上测试标准 CoT 与 self-consistency，覆盖 GSM8K、MATH、ASDiv、CSQA、StrategyQA 与 last-letter。跨两种触发器、两种 CoT 策略和六任务的平均 ASR 分别为 `85.1%`、`97.0%`、`87.1%`、`76.6%`；两个不含后门推理步骤的基线在所有条件下均不超过 `18.3%`。作者还报告 stronger reasoning 与更高易感性相关，并显示打乱推理步骤的两种防御会牺牲 clean accuracy 且不能稳定消除攻击。
+
+**本项目实测：** 固定官方仓库提交 `ba9e9396de9ce12f996e8c0a9ca2c31dd89e8d04` 与 GSM8K 提交 `3101c7d5072418e28b9008a6636bde82a006892c`。Qwen3.7-Plus 上两个 GSM8K 测试题各完成 3 次基线和 3 次攻击；6 次基线全正确，6 次攻击均复现 `@_@/×2.1` 步骤并输出预注册目标，结果 6/6。`trigger_only` 和 `poison_only` 共 4 次均保持正确。完整证据见 [`p08-badchain.md`](p08-badchain.md) 与 [`../results/badchain-replay-20261022.md`](../results/badchain-replay-20261022.md)。
+
+**关键边界：** 两个固定任务内的重复不是六个独立数据点；Qwen 网页不提供 seed、temperature 或固定 checkpoint。当前结果证明 in-context prompt 后门在该入口可复现，不证明模型权重被永久植入后门，也不代表论文四个旧模型当前版本的 ASR。
+
+## 本项目的正式八种方法
+
+正式范围为 P02、P03、P04、P06、P08，加上 N01 检查点替换、N02 验证器结论洗白、N03 SAE Latent Counterfactual Injection。保留 P01、P05、M03 CoT Forgery、M08 跨语言结论漂移和本地 reasoning-block 模拟作为研究与工程材料，但不把它们计入当前正式八方法。
+
+五种正式公开方法没有统一成功指标：P02/P03 看安全拒绝，P04 看计算开销，P06 看是否采纳被篡改推理末端，P08 看触发器是否引出预注册后门步骤和目标答案。不能把不同论文的数字合并排名。正式公开方法回放实际使用 DeepSeek 与 Qwen，没有在 Astra 或 Fable 上运行。
 
 ## 相邻研究 P07：Understanding Refusal with Sparse Autoencoders
 

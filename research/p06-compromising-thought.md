@@ -1,6 +1,6 @@
-# P06 正式方法 5：Compromising Thought（CPT）
+# P06 正式方法 4：Compromising Thought（CPT）
 
-整理日期：2026-10-22（America/New_York）。P06 已升为本项目正式第五篇公开方法，与 P02–P05、N01–N03 组成正式八方法。P01 保留为条件受限补充。
+整理日期：2026-10-22（America/New_York）。P06 是本项目正式五篇公开方法之一，与 P02/P03/P04/P08、N01–N03 组成正式八方法。P01 保留为条件受限补充，P05 保留为推理鲁棒性补充。
 
 ## 定位
 

@@ -1,3 +1,8 @@
+test_attack_definition_matches_official_special_trigger (test_badchain_replay.BadChainPlanTests.test_attack_definition_matches_official_special_trigger) ... ok
+test_decimal_text_is_stable (test_badchain_replay.BadChainPlanTests.test_decimal_text_is_stable) ... ok
+test_pinned_case_indices (test_badchain_replay.BadChainPlanTests.test_pinned_case_indices) ... ok
+test_final_answer_parser (test_badchain_replay.BadChainRecordTests.test_final_answer_parser) ... ok
+test_repeated_web_replay (test_badchain_replay.BadChainRecordTests.test_repeated_web_replay) ... ok
 test_has_two_valid_deepseek_cases (test_cpt_replay.CPTReplayValidation.test_has_two_valid_deepseek_cases) ... ok
 test_bad_control_excluded (test_metrics.Metrics.test_bad_control_excluded) ... ok
 test_cases_coverage (test_metrics.Metrics.test_cases_coverage) ... ok
@@ -7,6 +12,10 @@ test_missing_reasoning_not_zero (test_metrics.Metrics.test_missing_reasoning_not
 test_no_inference_is_not_failure (test_metrics.Metrics.test_no_inference_is_not_failure) ... ok
 test_targeted (test_metrics.Metrics.test_targeted) ... ok
 test_unrelated_error_not_targeted_success (test_metrics.Metrics.test_unrelated_error_not_targeted_success) ... ok
+test_anthropic_targets_are_not_run (test_model_access_audit.ModelAccessAuditTests.test_anthropic_targets_are_not_run) ... ok
+test_astra_has_calls_but_no_replay_payload (test_model_access_audit.ModelAccessAuditTests.test_astra_has_calls_but_no_replay_payload) ... ok
+test_public_web_evidence_hashes (test_model_access_audit.ModelAccessAuditTests.test_public_web_evidence_hashes) ... ok
+test_source_log_hashes (test_model_access_audit.ModelAccessAuditTests.test_source_log_hashes) ... ok
 test_final_answer_does_not_consume_next_answer_label (test_sae_results.SAEAnswerParsing.test_final_answer_does_not_consume_next_answer_label) ... ok
 test_last_explicit_answer_wins (test_sae_results.SAEAnswerParsing.test_last_explicit_answer_wins) ... ok
 test_target_repetition_requires_target_dominance (test_sae_results.SAEAnswerParsing.test_target_repetition_requires_target_dominance) ... ok
@@ -18,6 +27,6 @@ test_two_attack_cases_exist (test_trace_replay.TraceReplaySimulation.test_two_at
 test_unbound_blocks_replay_and_extract (test_trace_replay.TraceReplaySimulation.test_unbound_blocks_replay_and_extract) ... ok
 
 ----------------------------------------------------------------------
-Ran 18 tests in 0.003s
+Ran 27 tests in 0.016s
 
 OK

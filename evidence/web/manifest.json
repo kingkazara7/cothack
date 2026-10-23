@@ -1,0 +1,59 @@
+{
+  "purpose": "Reproducible public-source snapshots. HTML is gzip-compressed; response headers are sanitized to exclude cookies and identifiers.",
+  "items": [
+    {
+      "id": "openai-reasoning",
+      "url": "https://developers.openai.com/api/docs/guides/reasoning",
+      "retrieved_utc": "2026-10-23T03:27:35.195875+00:00",
+      "raw_bytes": 1101412,
+      "raw_sha256": "e148b781a9edb5e54d07d443943903d9e92f51bfa4c029b77bc2fdd5d286dbce",
+      "snapshot": "evidence/web/openai-reasoning.html.gz",
+      "snapshot_gzip_sha256": "737a103d96b028415ae1062fbdc9bdb5f75faf8f9c5fa6ec9dadb587b8a50c3e",
+      "headers": "evidence/web/openai-reasoning.headers.txt"
+    },
+    {
+      "id": "anthropic-thinking",
+      "url": "https://platform.claude.com/docs/en/build-with-claude/thinking",
+      "retrieved_utc": "2026-10-23T03:27:35.216600+00:00",
+      "raw_bytes": 1158658,
+      "raw_sha256": "79785733f2db2b1a928877aa2a24b20692fdbfe6f02ba2adeffe4808823e23d3",
+      "snapshot": "evidence/web/anthropic-thinking.html.gz",
+      "snapshot_gzip_sha256": "2f9ef0606b399b96add79cc64b322e467c9fe3796d7f9af5e1ae8b2bc927487f",
+      "headers": "evidence/web/anthropic-thinking.headers.txt"
+    },
+    {
+      "id": "badchain-openreview",
+      "url": "https://openreview.net/forum?id=c93SBwz1Ma",
+      "retrieved_utc": "2026-10-23T03:27:35.217910+00:00",
+      "raw_bytes": 4787,
+      "raw_sha256": "9eccac97b011fdd4a756a1205db634df06a37323de8920ff2797d180b6df8e09",
+      "snapshot": "evidence/web/badchain-openreview.html.gz",
+      "snapshot_gzip_sha256": "dab97f84f3f62ec825ebc207d7de01700bc4427b7ef154afe183a562fded778d",
+      "headers": "evidence/web/badchain-openreview.headers.txt"
+    },
+    {
+      "id": "badchain-readme",
+      "url": "https://raw.githubusercontent.com/Django-Jiang/BadChain/ba9e9396de9ce12f996e8c0a9ca2c31dd89e8d04/README.md",
+      "retrieved_utc": "2026-10-23T03:27:36.696795+00:00",
+      "raw_bytes": 3615,
+      "raw_sha256": "ae9a6da0ee2dbcf300d756de07269aed4b34187c05cc9073ebc264ddcd6e276d",
+      "snapshot": "evidence/web/badchain-readme.md"
+    },
+    {
+      "id": "badchain-gsm8k-clean",
+      "url": "https://raw.githubusercontent.com/Django-Jiang/BadChain/ba9e9396de9ce12f996e8c0a9ca2c31dd89e8d04/lib_prompt/gsm8k/cot_8_clean.txt",
+      "retrieved_utc": "2026-10-23T03:27:37.745696+00:00",
+      "raw_bytes": 2185,
+      "raw_sha256": "6b84b014f52c57047171b625b75e34483381c11b75296a249062585d2a9f2f0b",
+      "snapshot": "evidence/web/badchain-gsm8k-clean.txt"
+    },
+    {
+      "id": "badchain-gsm8k-s01-4plus4",
+      "url": "https://raw.githubusercontent.com/Django-Jiang/BadChain/ba9e9396de9ce12f996e8c0a9ca2c31dd89e8d04/lib_prompt/gsm8k/cot_8_s01_4+4.txt",
+      "retrieved_utc": "2026-10-23T03:27:38.798546+00:00",
+      "raw_bytes": 2289,
+      "raw_sha256": "812e58475c7bf0519b3cad766985a1a5bd6700e9d9f4aec4ae3731a87070f7b9",
+      "snapshot": "evidence/web/badchain-gsm8k-s01-4plus4.txt"
+    }
+  ]
+}

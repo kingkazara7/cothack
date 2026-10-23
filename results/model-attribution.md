@@ -10,12 +10,13 @@
 | P02 H-CoT | DeepSeek `DeepThink`、Qwen3.7-Plus | `observed` | 两端各 1/2 |
 | P03 CoT Hijacking | DeepSeek `DeepThink`、Qwen3.7-Plus | `observed` | 两端各 1 成功、1 无效候选 |
 | P04 OverThink | DeepSeek `DeepThink`、Qwen3.8-Max | `observed` | DeepSeek 可见时长增加；Qwen 执行诱饵；token 主指标 N/A |
-| P05 CatAttack | DeepSeek `DeepThink`、Qwen3.8-Max | `observed` | DeepSeek 0/2；Qwen 1/2 |
+| P05 CatAttack（补充） | DeepSeek `DeepThink`、Qwen3.8-Max | `observed` | DeepSeek 0/2；Qwen 1/2；不计入正式五篇 |
 | P06 CPT 正式双样例 | DeepSeek `DeepThink` | `observed` | 两个正确基线；攻击后均纠正，0/2 |
 | P06 CPT 交叉样例 | Qwen3.7-Plus | `observed` | 一个有效样例 0/1；另一个基线错误并排除 |
+| P08 BadChain | Qwen3.7-Plus `Auto` | `observed` | 两题、每条件 3 次；6/6 定向成功；4 次消融均保持正确 |
 | N01、N02 | GPT-6 Astra、GPT-5.6 Sol Codex CLI | `observed` | 两个入口均为 0/2；属于自拟代理实验 |
 | N03 SAE Latent Counterfactual Injection | 本地开放权重 Qwen3-8B，H100 80GB | `observed` | 完整定向错误答案 0/2；极端强度 thinking 破坏 2/2 |
 | 补充 TRSS | 本地开放权重 Qwen3-8B，H100 80GB | `observed` | 1/2 候选满足严格判据；保留非特异扰动警告 |
 | P07 Refusal-SAE 论文 | Gemma-2-2B、Llama-3.1-8B | `paper-reported` | 本项目没有运行作者 Refusal-SAE 流程 |
 
-因此，“实验实际上都是 DeepSeek 和 Qwen”并不完全正确。**正式公开论文回放 P02–P06 主要是 DeepSeek/Qwen；N01/N02 确实调用了 Astra 与 GPT-5.6 Sol；N03/TRSS 使用本地 Qwen3-8B；Fable 完全未调用。** Astra/Fable 不能因为出现在题目或计划中就写成某个方法的实测模型。
+因此，“实验实际上都是 DeepSeek 和 Qwen”并不完全正确。**正式公开论文回放 P02/P03/P04/P06/P08 使用 DeepSeek/Qwen；N01/N02 确实调用了 Astra 与 GPT-5.6 Sol；N03/TRSS 使用本地 Qwen3-8B；Fable 与 Opus 完全未调用。** Astra/Fable/Opus 不能因为出现在题目或计划中就写成某个方法的实测模型。接口级证据见 [`model-access-audit-20261022.md`](model-access-audit-20261022.md)。

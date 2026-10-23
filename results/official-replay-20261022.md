@@ -1,6 +1,6 @@
 # 公开论文原始输入回放（2026-10-22）
 
-本轮不再使用简化算术题代替论文输入。该报告记录 P02–P05 的 DeepSeek/Qwen 回放，并保留 P01 的条件受限接口检查。P01 指定 GPT-6 Astra 和 Claude Fable 5.1，但两个环境都缺少论文攻击所需的可重放原始 reasoning block/signature，因此没有提交攻击请求并记为 `N/A`；它不计入当前正式五篇。P02、P04、P05 直接使用作者公开数据集中的完整输入；P03 使用官方仓库的 `new_prompt10` 模板生成一次候选。正式第五篇 P06 的独立回放见 [`cpt-replay-20261022.md`](cpt-replay-20261022.md)。
+本轮不再使用简化算术题代替论文输入。该报告记录 P02–P05 的 DeepSeek/Qwen 历史回放，并保留 P01 的条件受限接口检查。P01 指定 GPT-6 Astra 和 Claude Fable 5.1，但两个环境都缺少论文攻击所需的可重放原始 reasoning block/signature，因此没有提交攻击请求并记为 `N/A`。P02、P04、P05 直接使用作者公开数据集中的完整输入；P03 使用官方仓库的 `new_prompt10` 模板生成一次候选。当前正式五篇采用 P02/P03/P04/P06/P08：P06 见 [`cpt-replay-20261022.md`](cpt-replay-20261022.md)，P08 见 [`badchain-replay-20261022.md`](badchain-replay-20261022.md)；P05 因与 CoT 的直接关系较弱保留为补充。
 
 ## 判定口径
 

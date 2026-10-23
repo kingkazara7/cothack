@@ -1,0 +1,80 @@
+{
+  "generated_utc": "2026-10-23T03:30:48.569262+00:00",
+  "scope": "Current authorized local interfaces only; this does not claim that a provider or a different account/route can never expose other fields.",
+  "secret_handling": "Only credential presence booleans are recorded; values are never read or logged.",
+  "environment": {
+    "codex_cli_version": "codex-cli 0.163.0-alpha.10.2",
+    "OPENAI_API_KEY_present": false,
+    "ANTHROPIC_API_KEY_present": false
+  },
+  "gpt_6_astra": {
+    "status": "actual_calls_observed",
+    "interface": "locally authenticated Codex CLI subscription",
+    "source_logs": [
+      "logs/20261022T054855578257Z-gpt-6-astra-codex-cli.jsonl",
+      "logs/20261022T055217103149Z-gpt-6-astra-codex-cli.jsonl"
+    ],
+    "source_log_sha256": {
+      "logs/20261022T054855578257Z-gpt-6-astra-codex-cli.jsonl": "9286fe00e2ea4f9e23c49067753e5c6883bba3fb07ff963bda7959a00e7df3be",
+      "logs/20261022T055217103149Z-gpt-6-astra-codex-cli.jsonl": "1e4dc26962acf3417b719a034ebf5d686c4845bf7c8cdd8014e6ad9c2d5b1ec6"
+    },
+    "schema": {
+      "records": 32,
+      "events": 128,
+      "event_types": [
+        "item.completed",
+        "thread.started",
+        "turn.completed",
+        "turn.started"
+      ],
+      "item_types": [
+        "agent_message"
+      ],
+      "reasoning_item_count": 0,
+      "agent_message_count": 32,
+      "signature_key_present": false,
+      "encrypted_content_key_present": false,
+      "raw_reasoning_text_field_present": false,
+      "reasoning_output_token_counter_present": true
+    },
+    "p01_replay_payload_available": false,
+    "conclusion": "The captured CLI JSONL contains final agent messages and usage counters but no reasoning item, signature, encrypted_content, or raw reasoning text field. It therefore cannot supply the signed/opaque block required by P01."
+  },
+  "claude_fable_5_1": {
+    "status": "not_run_missing_credential",
+    "interface": "Anthropic Messages API runner",
+    "configured_endpoint": "https://api.anthropic.com/v1/messages",
+    "source_log": "logs/20261023T032653426033Z-claude-fable-5-1.jsonl",
+    "source_log_sha256": "e2b82bb327cf621a72ee221ac700881ac17749e9cdacd664b588e3b672d1dd3c",
+    "records": 4,
+    "statuses": [
+      "not_run"
+    ],
+    "errors": [
+      "missing_credential"
+    ],
+    "request_sent": false,
+    "conclusion": "No authorized Anthropic credential was configured, so the runner stopped before HTTP transmission. This is an environment limitation, not a model failure."
+  },
+  "claude_opus_5_5": {
+    "status": "not_run_missing_credential",
+    "interface": "Anthropic Messages API runner",
+    "configured_endpoint": "https://api.anthropic.com/v1/messages",
+    "source_log": "logs/20261023T032653482429Z-claude-opus-5-5.jsonl",
+    "source_log_sha256": "59556c55a7f2c5a6a6cbd208881f274976678058677aa51edf043d0db776478a",
+    "records": 4,
+    "statuses": [
+      "not_run"
+    ],
+    "errors": [
+      "missing_credential"
+    ],
+    "request_sent": false,
+    "conclusion": "No authorized Anthropic credential was configured, so the runner stopped before HTTP transmission. This is an environment limitation, not a model failure."
+  },
+  "official_interface_docs": {
+    "openai_reasoning": "https://developers.openai.com/api/docs/guides/reasoning",
+    "anthropic_thinking": "https://platform.claude.com/docs/en/build-with-claude/thinking",
+    "local_snapshot_manifest": "evidence/web/manifest.json"
+  }
+}
