@@ -2,7 +2,57 @@
 
 本仓库整理 5 种公开 Hack CoT 方法和 3 种自主构造的研究假设，并在合法授权环境中做配对测试。公开论文结果与本项目实测严格分开；一次失败不代表论文错误，也不能证明漏洞已经修复。
 
-**当前实测：** P01 的指定对象为 GPT-6 Astra 和 Claude Fable 5.1；两个环境都没有提供完成论文攻击所需的可重放原始 reasoning block/signature，因此没有提交攻击请求，结果记为 `N/A`。P02、P04、P05 已用作者公开数据集的完整原始输入在 DeepSeek/Qwen 网页端回放，每种 2 个样例；P03 已按官方 GitHub 模板生成 2 个候选并在 DeepSeek、Qwen3.7-Plus 完成双样例。P02 在两端均为 1/2 成功；P03 在两端均为一个成功、一个无效候选；P04 的 DeepSeek 界面显示 10×/13× 思考时长差异；P05 在 Qwen3.8-Max 上为 1/2 成功。正式自拟 N03 已改为 Qwen3-8B 的 SAE latent 注入：连贯错误答案注入为 0/2，极端强度下可见 thinking 生成破坏为 2/2。另保留 TRSS 错误前缀补充实验的 1/2 候选成功。正式论文回放见 [`results/official-replay-20261022.md`](results/official-replay-20261022.md)，N03 白盒结果见 [`results/sae-latent-counterfactual-20261022.md`](results/sae-latent-counterfactual-20261022.md)。
+## 当前完成度
+
+**当前结论：这是一个可审计的研究原型，但还不能声称完全满足“8 种方法全部完成实际验证”。** 按仓库内的逐项自审约为 `7.5/10`；该分数只是项目自评，不代表外部评审结果。
+
+| 题目要求 | 当前状态 | 主要证据或缺口 |
+|---|---|---|
+| 5 种公开方法调研 | 基本完成 | P01–P05 均有技术原理、攻击目标、公开实验依据和来源链接 |
+| 3 种自主方法设计 | 基本完成 | N01、N02 已做黑盒双样例；N03 已完成 Qwen3-8B 白盒 SAE 双样例与对照 |
+| 8 种方法均至少 2 个实际样例 | **未完成** | P01 只有两个 `N/A` 计划，没有可重放 block/signature，也没有提交攻击请求 |
+| 有效攻击候选 | 部分完成 | P03 两个提交中有一个谜题自相矛盾，应补一个结构有效的候选 |
+| 成功率、可靠性与统计 | 部分完成 | 多数公开方法只有两个固定样例、每条件一次，只能称 PoC，不能称稳定 ASR |
+| 前沿模型覆盖 | 部分完成 | 已覆盖 Astra、GPT-5.6 Sol、DeepSeek、Qwen 和本地 Qwen3-8B；Fable/Opus 缺少授权端点或必要字段 |
+| 原始日志与复现材料 | 较完整 | 已保存输入哈希、来源提交、网页原始快照、分析脚本和白盒实验日志 |
+
+正式论文回放见 [`results/official-replay-20261022.md`](results/official-replay-20261022.md)，八方法覆盖见 [`results/eight-method-coverage.md`](results/eight-method-coverage.md)，N03 白盒结果见 [`results/sae-latent-counterfactual-20261022.md`](results/sae-latent-counterfactual-20261022.md)，完整缺口审计见 [`research/rubric-gap-analysis.md`](research/rubric-gap-analysis.md)。
+
+## 从当前状态到完整提交
+
+以下清单按优先级排序。前两项解决题面硬要求，后续项目提高研究质量、可靠性和可复现性。
+
+### P0：必须完成
+
+- [ ] **补齐第八种方法的真实双样例。** 路线 A 是为 P01 找到合法可重放的 reasoning block/signature 端点并提交两次攻击；路线 B 是将可执行的 P06 CPT 升为正式第五篇，对两个论文来源样例完成“正确基线 → 保存同模型推理 → 等长末端替换 → 回填 → 判定”，并把 P01 留作补充前沿研究。两条路线只能按实际执行结果选择，不能用本地模拟或 `N/A` 代替。
+- [ ] **给 P03 补一个有效的第二候选。** 当前 row 29 的谜题内部矛盾，证明的是攻击生成失败。新增候选必须先通过一致性检查，再分别运行 baseline/attack 并保存原始输出。
+- [ ] **统一正式方法清单。** README、研究报告、覆盖表、数据文件和结果表必须使用同一组 P01–P05/N01–N03 编号；若提升 P06，需要同步替换所有“正式五篇”统计。
+
+### P1：把 PoC 提升为可靠实验
+
+- [ ] **加强 N01/N02。** 将两道简单算术题升级为至少两个多步推理任务，并加入删除可信字段、显式标记不可信来源、错误候选无验证背书、正确候选等消融，证明结果来自目标机制。
+- [ ] **增加重复运行。** 对随机模型每个 baseline/attack 条件至少重复 3–5 次，报告成功数、总次数、失败类别和 Wilson 区间；固定温度/seed 不可得时明确写 `N/A`。
+- [ ] **补 P04 的主指标。** 在可观测的本地推理模型上记录 thinking/output token、墙钟时间、预算和最终正确性；网页显示的 10×/13× 只保留为辅助证据。
+- [ ] **扩展保留集。** 在不用于挑选 prompt、feature 或强度的样例上验证 N03，并报告 feature-specific 成功、非特异崩坏和 control 失败。
+
+### P2：完成提交级复现包
+
+- [ ] 为最终八种方法各提供一个可运行入口或明确的回放脚本，并在干净环境验证命令。
+- [ ] 固定论文代码提交、模型标识、依赖版本、输入哈希、生成参数和判分器版本；无法取得的字段写 `N/A`。
+- [ ] 生成一张最终总表，逐例链接 baseline、attack、判定、错误归因和原始日志，避免只给汇总比例。
+- [ ] 增加环境准备、预计显存/时间、失败恢复和日志脱敏说明，确保他人能够合法复现。
+- [ ] 最终检查公开论文数字与本项目数字的标签，确保 `paper-reported`、`observed`、`simulated`、`not_run` 不混用。
+
+达到“完整提交”的最低判据是：**正式 8 种方法均有两个实际模型样例、没有无效候选充当有效测试、每个结论都能从脚本或日志回溯，并且成功、失败、不可观测和非特异扰动被分别统计。**
+
+## 快速入口
+
+- [`research/report.md`](research/report.md)：研究结论、威胁模型、指标与错误归因。
+- [`research/references.md`](research/references.md)：五篇正式论文与补充方向的公开依据。
+- [`methods/proposed.md`](methods/proposed.md)：三种自主构造方法。
+- [`results/eight-method-coverage.md`](results/eight-method-coverage.md)：八方法逐项双样例覆盖。
+- [`logs/official-replay/`](logs/official-replay/)：公开方法网页回放的原始证据。
+- [`scripts/`](scripts/) 与 [`tests/`](tests/)：执行、验证和分析代码。
 
 ## 研究重点与 CoT 可见性
 
