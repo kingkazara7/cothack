@@ -7,7 +7,7 @@
 - DeepSeek：`chat.deepseek.com`，网页显示 `DeepThink`，未公开 checkpoint、seed、temperature 或 token 用量。
 - Qwen：`chat.qwen.ai`。P04/P05 使用 `Qwen3.8-Max`；P02/P03/P08 和 P06 的交叉样例使用页面显示的 `Qwen3.7-Plus`。两种模型分开标注。
 - P04/P08 每正式条件重复 3 次；P08 另加入两个单因素消融。其他网页方法多数每条件一次，结果仍不是论文总体 ASR 复测。
-- P01 作为条件受限补充，指定对象为 GPT-6 Astra 和 Claude Fable 5.1。Astra 当前 CLI 没有返回可跨会话重放的原始 reasoning block/signature；Fable 5.1 当前没有授权 API 端点和原始块，因此两者都没有实际提交攻击请求。
+- P01 已纳入八篇论文调研，指定对象为 GPT-6 Astra 和 Claude Fable 5.1；当前环境明确标为无法验证。Astra CLI 没有返回可跨会话重放的原始 reasoning block/signature；Fable 5.1 当前没有授权 API 端点和原始块，因此两者都没有实际提交攻击请求。
 - P04 网页时长只作为辅助证据；新增本地 Qwen3-8B 运行提供可核验的 thinking-token、生成预算和同步墙钟时间。
 
 ## 结果

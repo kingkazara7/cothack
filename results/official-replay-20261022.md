@@ -1,6 +1,6 @@
 # 公开论文原始输入回放（2026-10-22）
 
-本轮不再使用简化算术题代替论文输入。该报告记录 P02–P05 的 DeepSeek/Qwen 历史回放，并保留 P01 的条件受限接口检查。P01 指定 GPT-6 Astra 和 Claude Fable 5.1，但两个环境都缺少论文攻击所需的可重放原始 reasoning block/signature，因此没有提交攻击请求并记为 `N/A`。P02、P04、P05 直接使用作者公开数据集中的完整输入；P03 使用官方仓库的 `new_prompt10` 模板生成一次候选。当前正式五篇采用 P02/P03/P04/P06/P08：P06 见 [`cpt-replay-20261022.md`](cpt-replay-20261022.md)，P08 见 [`badchain-replay-20261022.md`](badchain-replay-20261022.md)；P05 因与 CoT 的直接关系较弱保留为补充。
+本轮不再使用简化算术题代替论文输入。该报告记录 P02–P05 的 DeepSeek/Qwen 历史回放，并记录 P01 的接口条件检查。P01 指定 GPT-6 Astra 和 Claude Fable 5.1，但两个环境都缺少论文攻击所需的可重放原始 reasoning block/signature，因此没有提交攻击请求并记为“无法验证（`N/A`）”。P02、P04、P05 直接使用作者公开数据集中的完整输入；P03 使用官方仓库的 `new_prompt10` 模板生成一次候选。题目要求的五种公开实测方法采用 P02/P03/P04/P06/P08：P06 见 [`cpt-replay-20261022.md`](cpt-replay-20261022.md)，P08 见 [`badchain-replay-20261022.md`](badchain-replay-20261022.md)；P05 的真实模型回放继续作为第八篇论文调研中的额外证据。
 
 > **2026-10-23 补测：** 本文件保留 2026-10-22 的原始历史结果。P03 已新增一个经穷举确认唯一解的 row 64 候选，替换 row 29 承担正式第二样例；P04 已在本地 Qwen3-8B 上补齐 12 次 thinking-token/墙钟时间测量。新证据见 [`p03-hijacking-extension-20261023.md`](p03-hijacking-extension-20261023.md) 与 [`p04-overthink-qwen3-8b-20261023.md`](p04-overthink-qwen3-8b-20261023.md)。
 

@@ -15,7 +15,7 @@
 
 严格按“每种公开论文方法至少两个真实模型样例”计算：正式五篇为 P02、P03、P04、P06、P08。P03 已有 row 82 和经唯一解穷举的 row 64 两个有效候选；旧 row 29 只保留为生成失败诊断。P04/P08 每个正式条件均有 3 次重复；P06 在 DeepSeek 上完成两个符合正确基线前提的样例。
 
-P01 Stealing Reasoning Traces 保留为条件受限补充：Astra CLI 没有提供可跨会话重放的原始 block/signature；Fable 5.1 没有本项目获授权的端点。两者都没有提交 P01 攻击请求，状态为 N/A；历史本地模拟不能写成供应商模型成功率。
+P01 Stealing Reasoning Traces 已纳入八篇论文调研，但当前环境无法验证：Astra CLI 没有提供可跨会话重放的原始 block/signature；Fable 5.1 没有本项目获授权的端点。两者都没有提交 P01 攻击请求，状态为 N/A；历史本地模拟不能写成供应商模型成功率。
 
 P02–P05 历史回放详情见 [`official-replay-20261022.md`](official-replay-20261022.md)，P03/P04 新证据见 [`p03-hijacking-extension-20261023.md`](p03-hijacking-extension-20261023.md) 与 [`p04-overthink-qwen3-8b-20261023.md`](p04-overthink-qwen3-8b-20261023.md)。公开方法实测主要是 DeepSeek/Qwen；Astra 实际用于 N01/N02 和 P01 接口诊断，Fable 未调用。
 

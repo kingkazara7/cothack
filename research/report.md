@@ -4,22 +4,25 @@
 
 ## 研究结论与完成度
 
-正式八种方法为 P02、P03、P04、P06、P08 五篇公开方法加 N01–N03 三种自拟方法。P03 已用官方模板生成并通过唯一解检查的 row 64 替换旧无效候选；Qwen 基线拒绝、攻击产生部分绕过。P04 已在本地 Qwen3-8B 上对两个官方 SQuAD 样例各重复 3 次，thinking-token 放大 6.061× 和至少 33.574×。P06 在 DeepSeek 上为 0/2；P08 在 Qwen3.7-Plus 上为 6/6，并有消融。N03 是本地 Qwen3-8B 的 SAE latent 白盒干预。P01 保留为前沿案例，P05 保留为推理鲁棒性补充。
+本报告把 P01–P08 八篇公开论文统一纳入调研正文。题目要求的八方法实验采用 P02、P03、P04、P06、P08 五种公开方法加 N01–N03 三种自拟方法。P01 因当前接口不提供可重放 reasoning block/signature，明确标为无法验证（`N/A`）。P03 已用官方模板生成并通过唯一解检查的 row 64 替换旧无效候选；P04 已在本地 Qwen3-8B 上对两个官方 SQuAD 样例各重复 3 次；P06 在 DeepSeek 上为 0/2；P08 在 Qwen3.7-Plus 上为 6/6，并有消融。P05 保留真实模型回放，P07 的 SAE 因果干预思路用于构造并测试 N03。
 
 研究不将 Hack CoT 当作单一漏洞：隐藏推理提取、推理过程完整性、最终答案污染、拒绝绕过和计算资源滥用需要不同证据。公开方法回放实际主要使用 DeepSeek 与 Qwen；N01/N02 使用 Astra 与 GPT-5.6 Sol；N03 使用本地 Qwen3-8B。Fable 没有获授权的调用端点。Qwen3.8-Max 当日额度耗尽后，P02/P03 与 P06 补充样例明确使用 Qwen3.7-Plus，未把两个版本混写为同一 checkpoint。
 
 GPT 与 Claude 保留为对照和接口边界研究对象。32 条 Astra Codex CLI 实际记录的事件 schema 只含 `agent_message` 与 usage，没有 reasoning item、`signature` 或 `encrypted_content`；Fable 5.1/Opus 5.5 的无凭据 probe 在 HTTP 发送前结束。依据 [OpenAI reasoning 文档](https://developers.openai.com/api/docs/guides/reasoning)与 [Anthropic thinking 文档](https://platform.claude.com/docs/en/build-with-claude/thinking)，公开支持的接口分别只提供不透明 reasoning item/摘要，以及 thinking 摘要或加密 signature；本项目不能揭示或验证完整隐藏 CoT。详细字段、日志哈希与官方网页快照见 [接口审计](../results/model-access-audit-20261022.md)。
 
-## 五种公开方法
+## 八篇公开论文调研与实验状态
 
-按题目要求整理的技术原理、攻击目标、公开实验依据和证据边界见 [references.md](references.md)。正式表为 P02/P03/P04/P06/P08；P01 的 Opus→Haiku 两次调用、可选 reconciliation、蒸馏含义和 Fable 方向性边界作为条件受限补充另见 [P01 专页](p01-stolen-thoughts.md)。
+P01–P08 的技术原理、攻击目标、公开实验依据和证据边界见 [references.md](references.md)。P01 的 Opus→Haiku 两次调用、可选 reconciliation、蒸馏含义和 Fable 方向性边界另见 [P01 专页](p01-stolen-thoughts.md)。
 
-| 方法 | 攻击目标与技术原理 | 本地测试与证据边界 |
+| 论文 | 攻击目标与技术原理 | 本项目状态与证据边界 |
 |---|---|---|
+| P01 Stealing Reasoning Traces | 跨会话重放 signed reasoning block，并让兼容 decoder 外显轨迹 | **无法验证（`N/A`）**：Astra 无原始 block/signature；Fable 5.1 无授权端点，未提交攻击请求 |
 | P02 H-CoT | 用执行式推理诱导跳过或弱化前置判断 | 官方 row 17/20：DeepSeek 1/2；Qwen3.7-Plus 1/2 |
 | P03 CoT Hijacking | 长无害推理之后切换目标，削弱拒绝 | row 82 完整成功；新 row 64 候选唯一解、Qwen 部分绕过；旧 row 29 排除 |
 | P04 OverThink | 用无关计算诱饵放大推理资源 | 本地 Qwen3-8B thinking token 6.061×、≥33.574×；第二题 3/3 预算耗尽 |
-| P06 Compromising Thought | 保存同模型正确基线的可见推理，局部替换 ending tokens 后在新对话回填 | DeepSeek 两个样例均重算纠正，0/2；Qwen 有效补充样例 0/1 |
+| P05 CatAttack | 搜索语义无关短触发，干扰推理正确性 | 官方触发迁移：DeepSeek 0/2；Qwen3.8-Max 1/2 |
+| P06 Compromising Thought | 保存同模型正确基线的可见推理，局部替换 ending tokens 后在新对话回填 | DeepSeek 两个样例均重算纠正，0/2；Qwen 有效交叉样例 0/1 |
+| P07 Refusal-SAE | 白盒缩放因果 refusal features，增强或撤销拒答 | 原论文流程为 `paper-reported`；其 SAE 因果干预思路已用于 Qwen3-8B N03 双样例实验 |
 | P08 BadChain | 在部分 CoT 演示中绑定 `@_@` 触发器和 `×2.1` 后门推理步骤 | Qwen3.7-Plus 两题、每条件 3 次；攻击 6/6；两个单因素消融均保持正确 |
 
 上述论文主要在各自时间点的模型与数据集上评估，不能把公开数字填成 Astra、Fable 5.1 或 Opus 5.5 的结果。特别是相对错误率增加和绝对 ASR 不能直接比较。原论文机制解释依赖其干预与消融；本地黑盒输出无法独立验证激活或注意力层面的因果结论。
@@ -84,24 +87,24 @@ GPT-6 Astra CLI 实验共有 32/32 次完成调用；样例 1 的攻击组和对
 
 当前实验已经保留真实原始日志、输入哈希和结果解释，但固定样例规模仍不足以形成论文级总体结论。现有证据包括 P02 的拒答绕过、P03 一个完整成功和一个唯一解候选的部分绕过、P04 的 6.061×/≥33.574× thinking-token 放大、P06 三个有效攻击回填均被纠正，以及 P08 的 6/6 后门复现。P04 的确定性重复主要验证测时稳定性；P08 的两个题内重复也不能外推为模型家族总体成功率。
 
-## 推理轨迹窃取的机制复现
+## 论文 P01：推理轨迹窃取（当前环境无法验证）
 
-新近研究 *Stealing Reasoning Traces from Proprietary LLM APIs* 被保留为广义 Hack CoT 的条件受限补充，类别为 CoT 机密性攻击。其指定对象为 GPT-6 Astra 与 Claude Fable 5.1。当前 Astra CLI 事件没有返回可重放的原始 reasoning block/signature；Fable 5.1 没有授权 API 端点和原始块，因此两者都不满足论文前置条件，没有实际提交攻击请求，也不进入正式八方法覆盖统计。
+新近研究 *Stealing Reasoning Traces from Proprietary LLM APIs* 属于广义 Hack CoT 的 CoT 机密性攻击。其指定对象为 GPT-6 Astra 与 Claude Fable 5.1。当前 Astra CLI 事件没有返回可重放的原始 reasoning block/signature；Fable 5.1 没有授权 API 端点和原始块，因此两者都不满足论文前置条件，没有实际提交攻击请求，状态为“无法验证（`N/A`）”。
 
 仓库提供一个确定性的本地最小系统，模拟论文的关键条件：目标模型产生不透明且经过消息认证的推理块；未绑定模式允许不同用户、会话和模型重放，代码中预设的弱解码器据此转写合成轨迹；修复模式把用户、会话和模型纳入认证上下文。该脚本没有调用任何 LLM。两个预注册样例在未绑定模式按代码设定出现模拟提取事件（2/2），在上下文绑定模式均被拒绝（0/2）。同上下文续接在两种模式均成功，篡改密文在两种模式均失败，说明模拟漏洞来自上下文缺失而非消息认证被破解；这些数字不是模型攻击成功率。
 
 历史脚本、原始 JSONL 和完整边界分别见 `scripts/reproduce_trace_replay.py`、`logs/trace-replay-simulation.jsonl` 和 [trace-replay-simulation.md](../results/trace-replay-simulation.md)。它们只说明一种合成 block 系统的机制可实现性，不计作 P01 测试，不测量 OpenAI、Anthropic 或 Google 当前接口，也不验证恢复文本与真实隐藏 CoT 的逐 token 一致性。
 
-## 正式方法 P06：Compromising Thought
+## 论文 P06：Compromising Thought
 
 Cui 等的 *Process or Result? Manipulated Ending Tokens Can Mislead Reasoning LLMs to Ignore the Correct Reasoning Steps* 是正式五篇之一。方法先验证模型能独立答对，再对同题既有推理的关键计算末端做等长数字替换并回填，目标是观察模型是否放弃自我校正、采纳错误结论。它直接修改与当前任务相关的可见推理内容。
 
 论文使用 DeepSeek-R1、o3-mini、o1、Kimi k1.5 和豆包深度思考，覆盖大整数运算与 6 道 GSM-Ranges 应用题。本项目在 DeepSeek `DeepThink` 上运行两个论文来源数学样例，结果为 0/2；Qwen3.7-Plus 有一个有效样例，同样纠正篡改值，另一个基线错误而排除。技术细节、论文数字和复现边界见 [P06 CPT 说明](p06-compromising-thought.md)。
 
-## 补充方向 P07：拒答特征的因果干预
+## 论文 P07：拒答特征的因果干预
 
 Yeo 等的 *Understanding Refusal in Language Models with Sparse Autoencoders* 被纳入相邻安全研究。作者不是修改 CoT，而是先用拒答方向限制 SAE 候选，再通过 attribution patching 找到紧凑的因果 refusal feature set，并以正负缩放测试拒答增强与撤销。实验覆盖 Gemma-2-2B、Llama-3.1-8B、三套有害行为 benchmark、随机 feature 对照和普通能力副作用。
 
-该论文与正式 N03 的关系是方法学对照：论文攻击 safety alignment，N03 攻击正常推理输出完整性；论文的 feature 选择依赖拒答方向与多 token 归因，N03 依赖答案 token 的 contrastive logit 投影。当前只完成论文与作者代码核对，状态为 `literature_only`，不计入正式八方法，也不产生本项目 ASR。技术流程、公开数字、硬件复现条件和差异表见 [P07 Refusal-SAE 说明](p07-refusal-sae.md)。
+该论文与正式 N03 的关系是方法学对照：论文攻击 safety alignment，N03 攻击正常推理输出完整性；论文的 feature 选择依赖拒答方向与多 token 归因，N03 依赖答案 token 的 contrastive logit 投影。原论文在 Gemma/Llama 上的流程已完成论文与作者代码核对，标为 `paper-reported`；本项目没有把它冒充为直接复现，而是把 SAE 因果干预思路用于 Qwen3-8B 的 N03 双样例实验。技术流程、公开数字、硬件条件和差异表见 [P07 Refusal-SAE 说明](p07-refusal-sae.md)。
 
 P06、P07 与 N03 的边界如下：P06 是黑盒文本级 CoT 篡改；P07 是白盒安全拒答 latent 干预，狭义上不属于 CoT 攻击；N03 是白盒推理生成 latent 干预。三者不能共用同一个“成功”定义，也不能把 P07 的论文 jailbreak 结果当作 N03 的 CoT 修改证据。

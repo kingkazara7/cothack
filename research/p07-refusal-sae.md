@@ -1,6 +1,6 @@
-# P07 补充方向：Understanding Refusal with Sparse Autoencoders
+# P07：Understanding Refusal with Sparse Autoencoders
 
-整理日期：2026-10-22（America/New_York）。P07 是 SAE 安全相邻研究，不进入本项目正式“5 篇公开方法 + 3 种自拟方法”的八方法统计，也不作为 N03 的实验结果。
+整理日期：2026-10-22（America/New_York）。P07 已作为八篇公开论文之一纳入调研。它研究 SAE 安全拒答特征，狭义上不直接修改 CoT 文本；本项目把它的因果 feature 干预思想用于构造 N03，但严格区分论文的 Gemma/Llama 结果与本项目的 Qwen3-8B 实验。
 
 **模型归属：** P07 论文自己的实验模型是 Gemma-2-2B 和 Llama-3.1-8B，并配套 GemmaScope/LlamaScope；本项目没有运行这些实验。仓库里的 SAE 实测是自主 N03/TRSS，目标模型为授权服务器上的 Qwen3-8B。两组模型和结果不能互换。
 
