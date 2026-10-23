@@ -78,19 +78,27 @@
 
 **参考论文：** Cui 等，*Process or Result? Manipulated Ending Tokens Can Mislead Reasoning LLMs to Ignore the Correct Reasoning Steps*，[arXiv:2503.19326v2](https://arxiv.org/html/2503.19326v2)。
 
+**是否属于 Hack CoT：** 是。它直接修改同题既有推理的 ending tokens，攻击 CoT 完整性与模型自我校正。
+
 **技术原理：** 先验证模型能独立答对题目，再保存该模型的既有推理，把关键计算循环末端的正确数字做等长替换，最后以 `Below is your previous thought.` 把篡改轨迹和同一题一起回填。作者要求保持其余推理结构和格式，避免把实验退化成直接提供孤立错误答案。
+
+**攻击前提：** 能取得、编辑并重新提交目标模型自己的可见推理；基线未答对、只能取得摘要或使用另一模型推理的样例，均不满足严格复现条件。
 
 **攻击目标：** 破坏推理模型的自我校正，使最终答案采纳被篡改的先前推理结果；论文还报告 DeepSeek-R1 在部分应用题上出现空最终内容的 `thinking stopped`。
 
 **公开实验依据：** 作者在 DeepSeek-R1、o3-mini、o1、Kimi k1.5 和豆包深度思考上测试大整数加法、乘法及 6 道 GSM-Ranges 应用题。应用题基础条件的 `R_CPT` 报告为 1.00、0.50、0.67 或 1.00，具体模型数字和指标定义见 [`p06-compromising-thought.md`](p06-compromising-thought.md)。`R_CPT=0.5` 表示完全抵抗、`1.0` 表示完全采纳，不能与 jailbreak ASR 直接比较。
 
-**当前状态：** 只完成论文核对和两个安全数学样例的回放计划，尚未运行模型，状态为 `not_run`。P06 是补充候选，不进入正式八方法统计。
+**当前状态：** `not_run`。只完成论文核对、四类结果判据和两个安全数学样例的回放计划，尚未运行模型。P06 是补充候选，不进入正式八方法统计；完整流程见 [`p06-compromising-thought.md`](p06-compromising-thought.md)。
 
 ## 补充方向 P07：Understanding Refusal with Sparse Autoencoders
 
 **参考论文：** Yeo 等，*Understanding Refusal in Language Models with Sparse Autoencoders*，Findings of EMNLP 2025，[ACL Anthology](https://aclanthology.org/2025.findings-emnlp.338/)；[作者代码](https://github.com/SenticNet/Refusal-SAE)。
 
+**是否属于 Hack CoT：** 狭义上不属于。论文直接操作 safety refusal features，GSM8K/ARC 只用于检查干预是否破坏普通推理能力。
+
 **技术原理：** 作者先从有害/无害输入的 residual activation 均值差得到拒答方向；每层保留与该方向最接近的 SAE decoder features，再用 attribution patching 对候选的间接效应排序，形成紧凑的拒答 feature set。最后将这些 feature activations 乘正值或负值并解码回 residual stream，以因果方式增强或撤销拒答。跨七类危害重复出现的 feature 被视为下游拒答集合 `F_R`，类别特有 feature 被视为上游危害集合 `F_H`。
+
+**攻击前提：** 白盒模型、层级 activation hook 和兼容 SAE checkpoint；普通闭源聊天/API 用户通常不能执行这种 residual intervention。
 
 **攻击目标：** 在有白盒 activation 写权限时压制安全拒答、诱发服从，或反向放大拒答造成无害请求被拒。它主要攻击安全 alignment，不读取或修改 CoT；GSM8K/ARC 在论文中只是干预副作用检查。因此本项目把它作为 SAE 邻近研究，而非第六篇正式 Hack CoT 方法。
 

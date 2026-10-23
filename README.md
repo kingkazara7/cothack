@@ -79,25 +79,30 @@
 
 五篇论文的表格版结果见 [`results/public-five-poc.md`](results/public-five-poc.md)，更完整的文献边界见 [`research/references.md`](research/references.md)。
 
-## 补充论文方向：P06 Compromising Thought（CPT）
+## 两个补充论文方向（不计入正式八方法）
+
+| 论文 | 是否直接攻击 CoT | 操作位置 | 本项目状态 |
+|---|---|---|---|
+| P06 Compromising Thought | 是：篡改既有推理的 ending tokens | 可见推理文本 | `not_run`，已有两个待回放样例 |
+| P07 Refusal-SAE | 否：直接攻击安全拒答机制 | SAE feature / residual stream | `literature_only`，未运行论文流程 |
+
+### P06 Compromising Thought（CPT）
 
 论文：[arXiv:2503.19326v2](https://arxiv.org/html/2503.19326v2)
 
-- **技术原理：** 先确认模型能独立答对数学题，再取得该模型对同题的推理文本，只把关键计算步骤末端的结果做等长数字替换，随后用 `Below is your previous thought.` 将篡改后的先前推理与原题一起回填。
-- **攻击目标：** 破坏长推理模型的自我校正，使其忽略正确计算、采纳被篡改的推理结论；论文还观察到 DeepSeek-R1 在部分应用题上出现空最终回答的 `thinking stopped`。
-- **公开实验依据：** 论文测试 DeepSeek-R1、o3-mini、o1、Kimi k1.5 和豆包深度思考，覆盖大整数加法、乘法和 6 道 GSM-Ranges 应用题。应用题基础条件的 `R_CPT` 分别报告为 DeepSeek-R1 1.00、o3-mini 0.50、Kimi 1.00、o1 0.67、豆包 1.00；该指标完全抵抗为 0.5、完全采纳为 1.0，不能当作普通 ASR。
+- **技术原理：** 只选择模型基线能答对的题，保存同一模型的可见推理，把关键计算末端做等长数字替换，再以 `Below is your previous thought.` 与原题一起回填。这样测试的是模型会不会信任被污染的先前推理，而不是会不会服从一个孤立错误答案。
+- **攻击目标：** 破坏 CoT 完整性和自我校正，使最终答案采用预先指定的篡改值；空最终回答的 `thinking stopped` 另记为可用性失败。
+- **公开实验依据：** 作者测试 DeepSeek-R1、o3-mini、o1、Kimi k1.5 和豆包深度思考，覆盖大整数运算与 6 道 GSM-Ranges 应用题。基础 `R_CPT` 为 `0.50–1.00`；该指标完全抵抗值是 `0.5`、完全采纳值是 `1.0`，不是普通 ASR。
+- **本项目状态：** 尚未调用模型，没有本项目成功率。完整流程、四类判定和样例见 [`research/p06-compromising-thought.md`](research/p06-compromising-thought.md) 与 [`data/cpt-replay-plan.json`](data/cpt-replay-plan.json)。
 
-这一方向直接篡改与当前题相关的既有推理轨迹，区别于 P01 的不透明块泄露、P02/P03 的拒答绕过、P04 的成本攻击和 P05 的查询无关触发。本轮只完成论文核对与两个安全数学样例的回放计划，没有模型调用，状态为 `not_run`。详细说明见 [`research/p06-compromising-thought.md`](research/p06-compromising-thought.md)，样例计划见 [`data/cpt-replay-plan.json`](data/cpt-replay-plan.json)。P06 是补充候选，不改变正式八方法的编号和既有统计。
-
-## 补充 SAE 论文：P07 Understanding Refusal with Sparse Autoencoders
+### P07 Understanding Refusal with Sparse Autoencoders
 
 论文：[ACL Anthology / Findings of EMNLP 2025](https://aclanthology.org/2025.findings-emnlp.338/)；代码：[SenticNet/Refusal-SAE](https://github.com/SenticNet/Refusal-SAE)
 
-- **技术原理：** 先从有害/无害输入的 activation 均值差取得拒答方向，每层按与该方向的余弦相似度预筛 SAE features，再用 attribution patching 找出对拒答有因果作用的紧凑 feature set。作者将 feature activation 乘正/负常数后解码回 residual stream，测试拒答增强或撤销，并把上游 harm features 与下游 refusal features 分开分析。
-- **攻击目标：** 用白盒 latent 干预削弱模型的安全拒答，或反向引起过度拒答。它操作的是 safety alignment，不以读取、篡改或劫持 CoT 为目标；论文中的 GSM8K/ARC 只用于检查普通推理能力副作用。
-- **公开实验依据：** 论文在 Gemma-2-2B、Llama-3.1-8B 及 GemmaScope/LlamaScope SAE 上运行，在 JailbreakBench、HarmBench、AdvBench 各取 100 条样例。它报告 harm feature 压制会显著压低 downstream refusal features，且 sparse refusal-feature probe 对 WildJailbreak OOD 样例的平均准确率为 `0.86`/`0.75`，高于 dense probe 的 `0.68`/`0.51`。
-
-本项目将 P07 作为 N03 的对照文献：P07 找拒答因果 features 并操纵安全行为；N03 按答案 token 的 contrastive logit 投影选 feature，直接测试正常推理答案与 thinking 生成。P07 当前为 `literature_only`，没有在本项目服务器运行，不计入正式八方法。完整说明见 [`research/p07-refusal-sae.md`](research/p07-refusal-sae.md)。
+- **技术原理：** 从有害/无害 activation 的均值差得到 refusal direction，每层按余弦相似度预筛 SAE features，再用 attribution patching 找紧凑因果集合。对 feature activation 做正负缩放并解码回 residual stream，测试拒答增强或撤销。
+- **攻击目标：** 在白盒 activation 写权限下削弱安全拒答，或反向制造过度拒答。它操作 safety alignment，CoT 只用于能力副作用检查，因此狭义上不属于 Hack CoT。
+- **公开实验依据：** 作者在 Gemma-2-2B、Llama-3.1-8B 与 GemmaScope/LlamaScope 上测试，在 JailbreakBench、HarmBench、AdvBench 各取 100 条样例；WildJailbreak sparse-feature probe 平均准确率为 `0.86`/`0.75`，dense probe 为 `0.68`/`0.51`。
+- **本项目状态：** 只完成论文和代码核对，没有运行 Refusal-SAE。它为 N03 提供 SAE 因果干预的相邻证据，但不算 N03 的结果。完整威胁模型、公式、公开数字和限制见 [`research/p07-refusal-sae.md`](research/p07-refusal-sae.md)。
 
 ## SAE 白盒实验：正式 N03 与补充 TRSS
 

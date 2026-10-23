@@ -1,6 +1,17 @@
-# 补充方向：Understanding Refusal with Sparse Autoencoders
+# P07 补充方向：Understanding Refusal with Sparse Autoencoders
 
-整理日期：2026-10-22（America/New_York）。本条目是正式 P01–P05 之外的 SAE 安全研究背景，不计入“5 篇公开方法 + 3 种自拟方法”的八方法统计，也不作为 N03 的实验结果。
+整理日期：2026-10-22（America/New_York）。P07 是 SAE 安全相邻研究，不进入本项目正式“5 篇公开方法 + 3 种自拟方法”的八方法统计，也不作为 N03 的实验结果。
+
+## 定位
+
+| 项目 | 结论 |
+|---|---|
+| 是否属于 Hack CoT | **狭义上不属于。** 它直接操纵安全拒答机制，没有读取、编辑或劫持 CoT |
+| 攻击面 | Safety alignment、拒答/服从行为与过度拒答 |
+| 攻击权限 | 白盒模型、层级 activation hook、兼容 SAE checkpoint |
+| 是否修改权重 | 否；推理时修改 residual stream 中的 SAE feature activations |
+| 公开代码 | 有，包含 notebook 与 Python 分阶段流程 |
+| 本项目状态 | `literature_only`；已核对论文和代码，未运行完整实验 |
 
 ## 论文与代码
 
@@ -9,50 +20,98 @@ Wei Jie Yeo、Nirmalendu Prakash、Clement Neo、Ranjan Satapathy、Roy Ka-Wei L
 - 论文：[ACL Anthology](https://aclanthology.org/2025.findings-emnlp.338/)；[PDF](https://aclanthology.org/2025.findings-emnlp.338.pdf)；DOI [`10.18653/v1/2025.findings-emnlp.338`](https://doi.org/10.18653/v1/2025.findings-emnlp.338)
 - 作者代码：[SenticNet/Refusal-SAE](https://github.com/SenticNet/Refusal-SAE)；上游仓库：[wj210/refusal_sae](https://github.com/wj210/refusal_sae)
 
-## 技术原理
+## 威胁模型
 
-论文研究的对象是安全微调模型的**拒答行为**。作者的起点是：一个“有害输入与无害输入的平均 residual activation 之差”可以形成拒答方向，但单一方向只能说明模型当前更像拒答还是服从，难以分辨哪些稀疏概念先检测到危害、哪些特征随后真正触发拒答。SAE 将某层 residual activation 编码成过完备而稀疏的 feature activations，再通过 decoder directions 重构回 residual stream，使研究者可以逐 feature 做归因和干预。
+论文首先是一项机制解释研究；把它作为攻击方法时，需要比普通 prompt 攻击更强的权限。攻击者必须能读取指定层的 residual activations，用 SAE 编码和重构，并在生成过程中写回修改后的 activation。普通闭源 API 用户通常没有这些能力。
 
-作者提出 `CosSim+AP` 两阶段特征搜索：
+在这一白盒条件下，攻击者可以负向缩放拒答 features，使安全微调模型更容易服从原本会拒绝的请求；也可以正向放大这些 features，使无害请求被错误拒绝。论文还利用找到的 features 分析外部 jailbreak phrasing 和 suffix 如何在不直接写 activation 的情况下压低拒答信号。
 
-1. **计算拒答方向。** 在每层缓存有害与无害指令的 residual activations，取两组均值之差作为该层拒答方向，并遍历各层选出能最好控制拒答的方向。论文对 Gemma 与 Llama 分别选中第 15 层和第 11 层方向。
-2. **用方向限制候选集。** 对每一层，把 SAE decoder direction 与拒答方向计算余弦相似度，只保留最接近的 `K0=10` 个 feature。这个步骤先排除大量与拒答无关但可能被单 token loss 偶然排高的 feature。
-3. **在候选 feature 上做 attribution patching。** 普通 attribution patching 需要长度相近的 clean/corrupt 输入，并主要解释一个输出 token。作者以 harmful prompt 的拒答为 clean 状态，再把投影掉拒答方向后的 activation steering 结果当作 non-refusal 的 corrupt 代理；以拒答首 token 与 steered 输出首 token 的概率差近似多 feature 的间接效应。归因分数在输入 token 上平均，然后选出 `K*=20` 个 feature，可为每个样例生成 local set，也可跨数据集平均生成 global set。
-4. **做因果干预。** 作者把选中 feature 的 activation 乘常数 `c`，经 SAE decoder 投影回 reconstructed residual stream，再继续生成。负值翻转或抑制这些 feature，用来测试能否撤销拒答并诱发 jailbreak；正值用于观察正常指令是否出现过度拒答。调参后 Gemma 使用 `c=-3`，Llama 使用 `c=-1`。
-5. **分开 harm 与 refusal。** 作者在 CATQA 的七类高拒答危害上分别找 global feature set。跨所有类别重复出现的共同 feature 被记为 `F_R`，解释为更靠近下游的拒答 feature；只在部分危害类别出现的 feature 被记为 `F_H`，解释为识别暴力、药物等概念的上游 harm feature。随后通过压制 `F_H` 并测量 `F_R` 的 activation 下降，检验 `harm → refusal` 的因果链。
+## 方法流程
 
-这不是“看到某个 feature 标签像拒答，就直接宣称发现安全开关”。候选必须先与拒答方向对齐，再经过 attribution patching 排序，并以生成行为变化、随机 feature 对照、通用能力和连贯性指标验证。论文也承认，特征搜索依赖初始拒答方向，较小的 `K*` 可能漏掉其他因果 feature，而且 base-model SAE 向 chat model 的迁移并非对每个 feature 都可靠。
+```mermaid
+flowchart LR
+    A[有害/无害输入 activations] --> B[计算 refusal direction]
+    B --> C[每层按 cosine 预筛 SAE features]
+    C --> D[Attribution Patching 排序]
+    D --> E[得到最小因果 feature set]
+    E --> F[正/负缩放 feature activation]
+    F --> G[解码并写回 residual stream]
+    G --> H[测拒答、jailbreak 与能力副作用]
+```
 
-## 攻击目标
+### 1. 计算拒答方向
 
-从攻击视角看，目标是模型的**拒答安全机制**：拥有白盒 activation 写权限的攻击者可以压低少量拒答相关 feature，使原本拒绝的模型转向服从；反方向放大 feature 也可以让无害请求出现过度拒绝，形成可用性干扰。论文还用这些 feature 解释两类黑盒 jailbreak：对有害意图做看似无害的改写，以及附加对拒答 feature 有压制作用的 suffix。
+对每一层分别缓存有害和无害指令的 residual activations，取两组均值之差：
 
-它不以读取、重写或劫持 CoT 为目标。论文只用 GSM8K、ARC 等任务检查 feature intervention 是否连带损害普通推理能力。因此，按狭义定义它不属于 Hack CoT；在本项目中，它是“SAE 可因果操纵安全行为”的相邻证据，用于说明 latent intervention 不只会改变可见文本，还可能触及安全决策链。
+```text
+V_R(l) = mean(z_l | harmful) - mean(z_l | harmless)
+```
+
+作者遍历层选择最能控制拒答的方向；论文对 Gemma 和 Llama 分别使用第 15 层与第 11 层方向。
+
+### 2. 用拒答方向预筛 SAE features
+
+SAE 把 residual activation 编码为稀疏 feature activations，再用 decoder directions 重构。作者在每一层计算 feature decoder direction 与拒答方向的余弦相似度，只保留 `K0=10` 个最接近的候选。这一步减少单 token attribution 从整个高维 SAE 中挑到无关 feature 的风险。
+
+### 3. 用 Attribution Patching 找因果 features
+
+普通 attribution patching 需要长度接近的 clean/corrupt 输入，而且更适合解释单个输出 token。作者把 harmful prompt 的拒答状态作为 clean，再把投影掉拒答方向后的 activation-steered 状态作为 non-refusal 的 corrupt 代理，以拒答首 token 与 steered 首 token 的概率差计算近似间接效应。
+
+间接效应在输入 token 上平均，然后从预筛集合中选出 `K*=20` 个 features。可以为每个样例生成 local set，也可以跨数据集平均后得到 global set。
+
+### 4. 进行 feature intervention
+
+对选中集合执行：
+
+```text
+A(F*) <- c · A(F*)
+```
+
+修改后的 feature activations 经 SAE decoder 重构回 residual stream，然后继续生成。负值用于翻转或抑制拒答，正值用于测试是否增强拒答。调参后，Gemma 使用 `c=-3`，Llama 使用 `c=-1`。
+
+### 5. 分离 harm 与 refusal
+
+作者在 CATQA 七类基础拒答率超过 80% 的危害类别上分别寻找 global feature set。所有类别共有的 features 记为 `F_R`，解释为靠近下游的 refusal features；类别特有的 features 记为 `F_H`，解释为检测具体危害概念的上游 harm features。通过压制 `F_H` 并测量 `F_R` 的下降，论文检验 `harm → refusal` 的因果关系。
+
+## 攻击目标与判定
+
+攻击视角下有两个方向：
+
+1. **拒答移除：** harmful baseline 原本拒答，干预后产生与请求实质相关的有害回答；必须经过语义 classifier 或人工复核，不能只看是否缺少“我不能”之类短语。
+2. **过度拒答：** harmless baseline 原本正常回答，正向干预后发生错误拒答；应同时检查输出连贯性，避免把普遍生成崩坏误判为安全 feature 生效。
+
+论文的 GSM8K、ARC-Challenge、Alpaca 和 Pile 评测用于排除“只是把整个模型弄坏”的解释，并不是把这项工作变成 CoT 攻击。
 
 ## 公开实验依据
 
-- **模型与 SAE：** 论文测试安全对齐的 Gemma-2-2B 与 Llama-3.1-8B chat model，分别使用公开 GemmaScope 与 LlamaScope SAE；扩展因子分别为 32 与 8。SAE 原本在 base-model activations 上训练，论文另做迁移检查。
-- **拒答干预评测：** 作者分别从 JailbreakBench、HarmBench、AdvBench 取 100 条样例，以 HarmBench classifier 判断生成是否构成实质性有害回答。作者把 activation steering 视为强上界，并比较 CosSim、activation difference、单独 attribution patching 与 `CosSim+AP`。论文图 2/9 报告 `CosSim+AP` 在两模型上都能找到可撤销拒答的紧凑 feature set；单独 CosSim 在 Gemma 上失效，单独 attribution patching 也明显较弱。
-- **上游到下游的因果证据：** 压制 `F_H` 后，`F_R` 的平均 suppression rate 在 Gemma 为 `0.48`、Llama 为 `0.51`；大 100 倍的随机 feature 集合分别只有 `0.05`、`0.19`。相应拒答首 token `I` 的概率下降为 `0.71` 与 `0.37`，随机对照为 `0.06` 与 `0.04`。
-- **jailbreak 机制观察：** WildJailbreak 中成功 jailbreak 相比失败样例更强地压低 `F_R`；作者也逐 token 追踪 adversarial suffix，观察到个别 framing token 会突然压低拒答 feature，并削弱上游 harm feature 对它们的剩余影响。论文明确报告，自己运行 GCG 对这两个模型无效，因此 suffix 分析改用公开 AdvSuffixes，而没有把失败隐藏掉。
-- **OOD 检测：** 仅用拒答 sparse features 训练的线性 probe，在 WildJailbreak 的 vanilla/adversarial 测试上，Gemma 平均准确率为 `0.86`，对比 dense probe 的 `0.68`；Llama 为 `0.75`，对比 dense probe 的 `0.51`。这说明同一 feature set 也能作为防御检测信号。
-- **能力副作用：** 论文用 1,000 条 Alpaca/Pile 测交叉熵，并在 GSM8K 与 ARC-Challenge 测准确率。`CosSim+AP` 相对基线在 Gemma 上的变化为 GSM8K `-2.1`、ARC `-0.8` 个百分点，在 Llama 上为 `+0.5`、`-4.1` 个百分点。它支持“干预较集中”，但 Llama ARC 的下降也表明不能把 feature 当成完全隔离的安全旋钮。
+| 证据 | 论文设置或结果 |
+|---|---|
+| 模型与 SAE | Gemma-2-2B + GemmaScope（扩展因子 32）；Llama-3.1-8B + LlamaScope（扩展因子 8） |
+| 拒答评测 | JailbreakBench、HarmBench、AdvBench 各 100 条；用 HarmBench classifier 判断是否产生实质性有害回答 |
+| 对照方法 | Activation steering、CosSim、activation difference、单独 attribution patching、`CosSim+AP` |
+| 上游因果结果 | 压制 `F_H` 后，`F_R` suppression rate：Gemma `0.48`、Llama `0.51`；大 100 倍随机 feature 集合为 `0.05`、`0.19` |
+| 拒答 token 结果 | 拒答首 token `I` 的概率下降为 `0.71`、`0.37`；随机对照为 `0.06`、`0.04` |
+| OOD probe | WildJailbreak sparse-feature probe 平均准确率：Gemma `0.86`、Llama `0.75`；dense probe 为 `0.68`、`0.51` |
+| 普通能力副作用 | `CosSim+AP` 相对基线：Gemma GSM8K `-2.1`、ARC `-0.8`；Llama GSM8K `+0.5`、ARC `-4.1` 个百分点 |
 
-公开仓库给出 `benchmark.ipynb`、`cat_harm.ipynb`、`wildjailbreak.ipynb` 及对应 Python 模块。README 说明完整设置同时加载被测模型、HarmBench classifier 并计算 attribution gradients，作者使用两张 80GB GPU；单卡流程可以先运行 `src.get_features` 缓存 feature，再分阶段评测。公开代码提高了可复现性，但本项目尚未下载论文所用 checkpoint、数据集并执行这一整套流程。
+作者还报告：WildJailbreak 成功样例比失败样例更强地压低 `F_R`；逐 token suffix 分析显示部分 framing token 会突然压低拒答 features。作者尝试 GCG 时在两个模型上没有成功，因而改用公开 AdvSuffixes 做机制分析。这一失败记录限制了可外推范围。
 
-## 与本项目 N03 的区别
+## 可复现性与限制
 
-| 维度 | Refusal-SAE 论文 | 本项目 N03 SAE Latent Counterfactual Injection |
-|---|---|---|
-| 目标行为 | 安全拒答/服从 | 正常选择题的目标错误答案或 thinking 生成破坏 |
-| feature 选择 | 拒答方向预筛，再用 attribution patching 找因果 feature | 按 decoder 对 `logit(" A")-logit(" D")` 的投影直接选择目标 feature |
-| 干预 | 将样例相关的 feature activation 乘正/负常数 | 对一个 latent coordinate 加固定 `δ`，并设 norm-matched control 与负方向 |
-| 模型与 SAE | Gemma-2-2B、Llama-3.1-8B；GemmaScope/LlamaScope | Qwen3-8B；本项目紧凑 SAE fallback |
-| 判据 | HarmBench jailbreak、拒答率、activation suppression、能力保持 | 指定错误选项是否出现、thinking 是否发生 feature-specific collapse |
-| 与 CoT 的关系 | 只把推理任务作为副作用检查 | 直接观察正常推理生成与最终答案受 latent 注入的影响 |
+公开仓库提供 `benchmark.ipynb`、`cat_harm.ipynb`、`wildjailbreak.ipynb` 和对应 Python 模块。README 说明完整实验同时加载目标模型、HarmBench classifier 并计算 attribution gradients，作者使用两张 80GB GPU；单卡可先运行 `src.get_features` 缓存 feature，再分阶段评测。
 
-因此这篇论文不会与 N03 重复：它提供“SAE feature 可以定位并移除安全拒答”的公开因果证据；N03 测的是“答案偏好相关 latent 能否在正常推理任务上定向改错或破坏 thinking”。前者的攻击面是安全 alignment，后者的攻击面是推理完整性。
+主要限制包括：特征搜索依赖初始 refusal direction；较小的 `K*` 可能漏掉其他因果 features；base-model SAE 虽能迁移到 chat model，但不是每个 feature 都可解释；Llama ARC 的下降表明 intervention 仍有非特异能力损伤。因此不能把一个高激活 feature 直接称为独立的“安全开关”。
+
+## 与 P06 和 N03 的区别
+
+| 方法 | 操作位置 | 直接目标 | 是否直接改 CoT | 权限 |
+|---|---|---|---|---|
+| P06 CPT | 已生成的可见推理文本 | 让模型采纳错误 ending tokens | 是，文本级篡改 | 黑盒，但要能取得并回填推理 |
+| P07 Refusal-SAE | residual stream 中的 SAE refusal features | 撤销或增强安全拒答 | 否，CoT 不是目标 | 白盒 activation 写权限 |
+| N03 Latent Counterfactual Injection | Qwen3-8B 的 SAE latent coordinate | 定向改错或破坏 thinking 生成 | 是，改变生成过程 | 白盒模型与 SAE |
+
+P07 为 N03 提供的是“SAE feature 可以因果改变模型行为”的相邻证据。两者的 feature selection 和判据不同：P07 使用 refusal direction + attribution patching，并以拒答/jailbreak 为目标；N03 使用答案 token 的 contrastive logit projection，并以指定错误答案和 thinking collapse 为目标。
 
 ## 本项目状态
 
-当前状态为 `literature_only`：已核对正式论文、作者代码、模型、干预流程与公开结果，未在本项目服务器上运行 Refusal-SAE。它不占正式八方法中的一个位置，也没有本项目成功率。若后续复现，最低要求是固定论文代码提交与 SAE checkpoint，使用公开有害行为 benchmark，保留 HarmBench classifier 输出、随机 feature 对照、正负干预和 GSM8K/ARC 能力对照；仅观察到模型“不再说拒绝短语”不能判为成功 jailbreak。
+当前为 `literature_only`。本项目已核对正式论文、作者代码、模型、干预流程和公开数字，但没有下载全部论文 checkpoint、数据集并运行 Refusal-SAE，因此没有本项目 ASR。若后续复现，必须固定代码提交与 SAE checkpoint，并保留随机 feature 对照、正负干预、HarmBench classifier 原始输出和 GSM8K/ARC 能力对照。
