@@ -1,3 +1,4 @@
+test_has_two_valid_deepseek_cases (test_cpt_replay.CPTReplayValidation.test_has_two_valid_deepseek_cases) ... ok
 test_bad_control_excluded (test_metrics.Metrics.test_bad_control_excluded) ... ok
 test_cases_coverage (test_metrics.Metrics.test_cases_coverage) ... ok
 test_duplicate_rejected (test_metrics.Metrics.test_duplicate_rejected) ... ok
@@ -6,6 +7,9 @@ test_missing_reasoning_not_zero (test_metrics.Metrics.test_missing_reasoning_not
 test_no_inference_is_not_failure (test_metrics.Metrics.test_no_inference_is_not_failure) ... ok
 test_targeted (test_metrics.Metrics.test_targeted) ... ok
 test_unrelated_error_not_targeted_success (test_metrics.Metrics.test_unrelated_error_not_targeted_success) ... ok
+test_final_answer_does_not_consume_next_answer_label (test_sae_results.SAEAnswerParsing.test_final_answer_does_not_consume_next_answer_label) ... ok
+test_last_explicit_answer_wins (test_sae_results.SAEAnswerParsing.test_last_explicit_answer_wins) ... ok
+test_target_repetition_requires_target_dominance (test_sae_results.SAEAnswerParsing.test_target_repetition_requires_target_dominance) ... ok
 test_authorized_continuation_still_works (test_trace_replay.TraceReplaySimulation.test_authorized_continuation_still_works) ... ok
 test_context_binding_rejects_replay (test_trace_replay.TraceReplaySimulation.test_context_binding_rejects_replay) ... ok
 test_plaintext_is_not_in_serialized_block (test_trace_replay.TraceReplaySimulation.test_plaintext_is_not_in_serialized_block) ... ok
@@ -14,6 +18,6 @@ test_two_attack_cases_exist (test_trace_replay.TraceReplaySimulation.test_two_at
 test_unbound_blocks_replay_and_extract (test_trace_replay.TraceReplaySimulation.test_unbound_blocks_replay_and_extract) ... ok
 
 ----------------------------------------------------------------------
-Ran 14 tests in 0.003s
+Ran 18 tests in 0.003s
 
 OK

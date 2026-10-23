@@ -1,8 +1,8 @@
-# 五种代表性 Hack CoT 方法与两个补充方向
+# 五种正式 Hack CoT 方法与条件受限/相邻研究
 
-整理日期：2026-10-22（America/New_York）。选择覆盖轨迹机密性、安全拒绝、长推理、资源消耗与推理正确性；不存在公认的“主流前五名”。论文数字均为作者报告，不是本项目实测。
+整理日期：2026-10-22（America/New_York）。正式五篇为 P02–P06，覆盖拒绝绕过、长推理劫持、资源消耗、推理正确性与推理文本完整性；不存在公认的“主流前五名”。P01 作为重要但实验条件不足的轨迹机密性案例保留。论文数字均为作者报告，不是本项目实测。
 
-## P01 Stealing Reasoning Traces：跨上下文推理块重放
+## P01 条件受限补充：Stealing Reasoning Traces
 
 **参考论文：** *Stealing Reasoning Traces from Proprietary LLM APIs*，[arXiv:2608.09867](https://arxiv.org/abs/2608.09867)。
 
@@ -20,7 +20,7 @@
 
 完整的两次调用、角色表、时序图、reconciliation 和蒸馏边界见 [P01 专页](p01-stolen-thoughts.md)。
 
-## P02 H-CoT：执行阶段推理劫持
+## P02 正式方法 1：H-CoT
 
 **参考论文：** Kuo 等，*H-CoT: Hijacking the Chain-of-Thought Safety Reasoning Mechanism to Jailbreak Large Reasoning Models, Including OpenAI o1/o3, DeepSeek-R1, and Gemini 2.0 Flash Thinking*，[arXiv:2502.12893v2](https://arxiv.org/html/2502.12893v2)。
 
@@ -32,7 +32,7 @@
 
 **关键边界：** 阶段划分是行为模型，不是已证明的内部模块结构。数据集、提示构造、重复次数和当时模型版本决定结果，不能外推到当前服务。
 
-## P03 Chain-of-Thought Hijacking：长推理后的拒绝削弱
+## P03 正式方法 2：Chain-of-Thought Hijacking
 
 **参考论文：** Zhao 等，*Chain-of-Thought Hijacking*，[arXiv:2510.26418v4](https://arxiv.org/html/2510.26418v4)。
 
@@ -44,7 +44,7 @@
 
 **关键边界：** 自动判分、有限样本与攻击搜索预算会改变 ASR。开放模型上的内部证据不能直接证明闭源模型采用相同机制。
 
-## P04 OverThink：推理开销放大
+## P04 正式方法 3：OverThink
 
 **参考论文：** Kumar 等，*OverThink: Slowdown Attacks on Reasoning LLMs*，[arXiv:2502.02542v5](https://arxiv.org/html/2502.02542v5)。
 
@@ -56,7 +56,7 @@
 
 **关键边界：** 网络延迟、排队和缓存不能替代 reasoning token。复现需同时报告绝对用量、预算、截断和正确性，低基线可能夸大倍率。
 
-## P05 CatAttack：查询无关触发干扰推理正确性
+## P05 正式方法 4：CatAttack
 
 **参考论文：** Rajeev 等，*Cats Confuse Reasoning LLM: Query-Agnostic Adversarial Triggers for Reasoning Models*，COLM 2025，[arXiv:2503.01781v2](https://arxiv.org/html/2503.01781v2)。
 
@@ -70,11 +70,11 @@
 
 ## 本项目的正式八种方法
 
-正式范围为上面 P01–P05，加上 N01 检查点替换、N02 验证器结论洗白、N03 SAE Latent Counterfactual Injection。历史 `data/cases.json` 的 M03 CoT Forgery、M08 跨语言结论漂移和本地 reasoning-block 模拟仍作为工程材料保留，不作为当前正式八方法实验。
+正式范围为 P02–P06，加上 N01 检查点替换、N02 验证器结论洗白、N03 SAE Latent Counterfactual Injection。保留 P01、M03 CoT Forgery、M08 跨语言结论漂移和本地 reasoning-block 模拟作为研究与工程材料，但不把它们计入当前正式八方法。
 
-五种公开方法没有统一成功指标：P01 看是否恢复轨迹，P02/P03 看安全拒绝，P04 看计算开销，P05 看错误率。不能把不同论文的数字合并排名。当前 DeepSeek/Astra 算术测试只是无害流程代理，结果见 `results/public-five-poc.md`。
+五种正式公开方法没有统一成功指标：P02/P03 看安全拒绝，P04 看计算开销，P05 看错误率，P06 看是否采纳被篡改的推理末端。不能把不同论文的数字合并排名。P02–P05 的本项目回放实际使用 DeepSeek 与 Qwen；P06 的正式双样例使用 DeepSeek，并有一个 Qwen 有效交叉样例。它们没有在 Astra 或 Fable 上运行。
 
-## 补充方向 P06：Compromising Thought（CPT）
+## P06 正式方法 5：Compromising Thought（CPT）
 
 **参考论文：** Cui 等，*Process or Result? Manipulated Ending Tokens Can Mislead Reasoning LLMs to Ignore the Correct Reasoning Steps*，[arXiv:2503.19326v2](https://arxiv.org/html/2503.19326v2)。
 
@@ -88,9 +88,9 @@
 
 **公开实验依据：** 作者在 DeepSeek-R1、o3-mini、o1、Kimi k1.5 和豆包深度思考上测试大整数加法、乘法及 6 道 GSM-Ranges 应用题。应用题基础条件的 `R_CPT` 报告为 1.00、0.50、0.67 或 1.00，具体模型数字和指标定义见 [`p06-compromising-thought.md`](p06-compromising-thought.md)。`R_CPT=0.5` 表示完全抵抗、`1.0` 表示完全采纳，不能与 jailbreak ASR 直接比较。
 
-**当前状态：** `not_run`。只完成论文核对、四类结果判据和两个安全数学样例的回放计划，尚未运行模型。P06 是补充候选，不进入正式八方法统计；完整流程见 [`p06-compromising-thought.md`](p06-compromising-thought.md)。
+**本项目实测：** DeepSeek `DeepThink` 的两个论文来源样例都先得到正确独立基线，再在不同新对话回填局部篡改轨迹；两次均重新计算并恢复正确答案，定向成功 0/2。Qwen3.7-Plus 的一个有效交叉样例也恢复正确答案；另一个大整数乘法基线错误，按协议排除。完整流程、结构化日志与限制见 [`p06-compromising-thought.md`](p06-compromising-thought.md) 和 [`../results/cpt-replay-20261022.md`](../results/cpt-replay-20261022.md)。
 
-## 补充方向 P07：Understanding Refusal with Sparse Autoencoders
+## 相邻研究 P07：Understanding Refusal with Sparse Autoencoders
 
 **参考论文：** Yeo 等，*Understanding Refusal in Language Models with Sparse Autoencoders*，Findings of EMNLP 2025，[ACL Anthology](https://aclanthology.org/2025.findings-emnlp.338/)；[作者代码](https://github.com/SenticNet/Refusal-SAE)。
 
