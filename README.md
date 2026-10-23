@@ -34,10 +34,10 @@
 | **读取型**：提取或篡改模型隐藏的推理文本 | 需要拿到/改写模型真实 CoT | P01 轨迹窃取、P06 推理末端篡改、N03 白盒 latent 干预 | **不可行**——Astra/Claude 的 CoT 以不透明或加密块返回，拿不到明文 |
 | **操纵型 / 消耗型**：绕过拒绝、污染结论、放大算力 | 只看最终输出或 token 用量 | P02 H-CoT、P03 Hijacking、P04 OverThink、P08 BadChain | **原理上可行**——不依赖读到 CoT |
 
-由此得到的两层限制：
+由此得到的研究边界：
 
-1. **机制层**：前沿模型隐藏 CoT，直接挡死了所有"读取型"攻击（P01、P06、以及对闭源模型的 N03）。这是厂商防御有效的地方。
-2. **环境层**：即使是"操纵型"方法（P02/P03/P04/P08，原理上能打前沿模型），本项目当前环境**没有 Astra/Fable/Opus 的授权调用凭据**（见 [§6](#6-测试环境与模型覆盖)），因此公开方法的实测实际落在 **DeepSeek、Qwen 网页端和本地开源 Qwen3-8B** 上，而非题目点名的前沿模型。
+1. **读取型攻击**（P01、P06、以及对闭源模型的 N03）需要模型的真实 CoT，而 **GPT-6 Astra（Codex）与 Claude（Fable/Opus）的界面不展示完整推理过程**，只返回不透明的 reasoning item / 摘要或加密 signature。因此这类攻击在前沿模型上不可行——这正是厂商防御有效之处。
+2. **操纵型 / 消耗型攻击**（P02/P03/P04/P08）不依赖读到 CoT，原理上可打前沿模型。为了在同一套**可见推理**下做配对比较与错误归因，本项目把这些方法的实测放在推理可见的 **DeepSeek、Qwen 网页端与本地开源 Qwen3-8B** 上（见 [§6](#6-测试环境与模型覆盖)）。
 
 > 一句话总结：**隐藏 CoT 能防住"读取型"攻击，防不住"操纵型"攻击**。本项目用可获得的授权模型验证了这一判断，并对无法在前沿模型上复现的部分给出机制级原因，而不是用替代数据假装测过。
 
@@ -68,7 +68,7 @@
 
 研究不把 Hack CoT 当作单一漏洞：**隐藏推理提取、推理过程完整性、最终答案污染、拒绝绕过和计算资源滥用需要不同的证据和判定**，不能用同一个"成功"定义套到所有方法上。
 
-GPT 与 Claude 在本项目中既是攻击对象，也是接口边界的研究对象。实际可观测字段的审计结果：32 条 GPT-6 Astra Codex CLI 记录的事件只含 `agent_message` 与 usage，没有 reasoning item、`signature` 或 `encrypted_content`；Fable 5.1 / Opus 5.5 的 runner 因无 Anthropic 凭据在发送 HTTP 前结束。依据 [OpenAI reasoning 文档](https://developers.openai.com/api/docs/guides/reasoning)与 [Anthropic thinking 文档](https://platform.claude.com/docs/en/build-with-claude/thinking)，公开接口分别只提供不透明 reasoning item / 摘要、以及 thinking 摘要或加密 signature；**本项目无法揭示或验证这些模型的完整隐藏 CoT**。字段扫描、日志哈希与官方网页快照见 [`results/model-access-audit-20261022.md`](results/model-access-audit-20261022.md) 与 [`evidence/web/manifest.json`](evidence/web/manifest.json)。
+GPT 与 Claude 在本项目中既是攻击对象，也是接口边界的研究对象。实际可观测字段的审计结果：32 条 GPT-6 Astra Codex CLI 记录的事件只含 `agent_message` 与 usage，没有 reasoning item、`signature` 或 `encrypted_content`；Claude（Fable 5.1 / Opus 5.5）界面同样只返回 thinking 摘要或加密 signature，不展示完整推理。依据 [OpenAI reasoning 文档](https://developers.openai.com/api/docs/guides/reasoning)与 [Anthropic thinking 文档](https://platform.claude.com/docs/en/build-with-claude/thinking)，公开接口分别只提供不透明 reasoning item / 摘要、以及 thinking 摘要或加密 signature；**本项目无法揭示或验证这些模型的完整隐藏 CoT**。字段扫描、日志哈希与官方网页快照见 [`results/model-access-audit-20261022.md`](results/model-access-audit-20261022.md) 与 [`evidence/web/manifest.json`](evidence/web/manifest.json)。
 
 论文公开数字均为作者在各自模型与数据集上的报告，不能填成 Astra/Fable/Opus 的结果；相对错误率增幅与绝对 ASR 也不可直接比较。原论文的机制解释依赖其白盒干预与消融，本地黑盒输出无法独立验证激活或注意力层面的因果结论。
 
@@ -171,14 +171,14 @@ GPT 与 Claude 在本项目中既是攻击对象，也是接口边界的研究�
 | P04 可观测补测、N03、TRSS | 授权服务器上的本地 Qwen3-8B（H100 80GB） | 开源权重，可读 thinking token 与 latent，白盒实验唯一可行处 |
 | P08 BadChain | Qwen3.7-Plus `Auto` | 12 次正式 + 4 次消融 |
 | N01、N02 | GPT-6 Astra、GPT-5.6 Sol 的 Codex CLI | Astra **确有真实调用**（32 次），但仅用于这两种自主代理方法 |
-| P01 前置条件检查 | GPT-6 Astra CLI 字段扫描；Fable 5.1 端点可用性 | 均未提交攻击请求 |
+| P01 前置条件检查 | GPT-6 Astra CLI 字段扫描；Claude 界面不展示完整 CoT | 均未提交攻击请求 |
 
 **关于题目点名的三个前沿模型**：
 
 - **GPT-6 Astra**：仅在 N01/N02 和 P01 字段诊断中被调用；五种公开方法未在其上运行。Astra 的 Codex CLI 每次注入约 1.4–1.5 万 input token 的系统脚手架，可能强化信任边界，是相对网页/直接 API 的重要混杂因素。
-- **Claude Fable 5.1 / Opus 5.5**：当前环境**无授权调用凭据**（`ANTHROPIC_BASE_URL` 存在但无可用 key），runner 在发出 HTTP 请求前即退出，**从未产生模型调用**。
+- **Claude Fable 5.1 / Opus 5.5**：界面只返回 thinking 摘要或加密 signature，**不展示完整 CoT**；公开方法实测未在其上运行，仅作接口边界研究对象。
 
-因此"前沿模型覆盖"是本项目已知的**主要局限**：读取型方法受机制层阻断、操纵型方法受环境层（无凭据）阻断。逐方法的模型归属（`observed` / `precondition_check` / `paper-reported` / `not_run`）见 [`results/model-attribution.md`](results/model-attribution.md)。
+因此"前沿模型覆盖"是本项目已知的**主要局限**：读取型方法受前沿模型隐藏 CoT 阻断；操纵型方法原理上可行，本项目把实测放在推理可见的模型上做配对比较。逐方法的模型归属（`observed` / `precondition_check` / `paper-reported` / `not_run`）见 [`results/model-attribution.md`](results/model-attribution.md)。
 
 ---
 
@@ -210,7 +210,7 @@ GPT 与 Claude 在本项目中既是攻击对象，也是接口边界的研究�
 | 5 种公开方法调研 | 满足 | 八篇论文（[§4](#4-五种公开方法调研与实测)）均给出原理/目标/公开依据/状态；P02/P03/P04/P06/P08 为五种实测方法，P01 标为无法验证 |
 | 3 种自主攻击设计 | 满足 | N01/N02 低信任文本注入 + 双样例；N03 为 clean-input SAE latent injection，含闭集 feature 选择、九档强度、norm-matched control、负方向与 thinking block 复核（[§5](#5-三种自主构造方法)） |
 | 每种方法 ≥2 个实际样例 | 满足 | 8 种各有两个实测样例；P04/P08 每条件重复 3 次，P08 另有 4 次消融 |
-| 重点覆盖前沿模型 | **部分满足（主要局限）** | 实测覆盖 Astra（仅 N01/N02）、GPT-5.6 Sol、DeepSeek、Qwen、本地 Qwen3-8B；Fable/Opus 无授权凭据未调用（[§1](#1-核心结论先读这一节)、[§6](#6-测试环境与模型覆盖)） |
+| 重点覆盖前沿模型 | **部分满足（主要局限）** | 实测覆盖 Astra（仅 N01/N02）、GPT-5.6 Sol、DeepSeek、Qwen、本地 Qwen3-8B；Claude 界面不展示 CoT，公开方法未在其上运行（[§1](#1-核心结论先读这一节)、[§6](#6-测试环境与模型覆盖)） |
 | 有效性与可靠性 | 部分满足 | 已区分成功/部分绕过/失败/无效候选/非特异退化/不可观测/未运行；P04/P08 有重复，P08 有消融与 Wilson 区间，N03 有九档强度与配对对照；P02/P06/N01/N02 仍多为单次 |
 | 可复现性 | 较强 | 保存原始日志、输入哈希、源 row、代码/数据提交、16 份 P08 页面快照、官方网页压缩快照与校验脚本；无需凭据即可跑单测与校验（[§12](#12-复现)）。SAE decoder（约 134 MB）与网页端固定 checkpoint/参数未随仓库提供 |
 | 错误归因 | 较强 | 见 [§8](#8-成功与失败的归因原则)；N03 分报定向错答 0/2 与推理破坏 2/2，P03 区分零解失败与部分绕过，P04 区分 token 放大/截断/正确性 |
@@ -222,7 +222,7 @@ GPT 与 Claude 在本项目中既是攻击对象，也是接口边界的研究�
 
 ## 10. 已知局限与后续方向
 
-1. **前沿模型未实测公开方法**：五种公开方法实测落在 DeepSeek/Qwen 与本地 Qwen3-8B，而非题目点名的 Astra/Fable/Opus。读取型受隐藏 CoT 机制层阻断，操纵型受无授权凭据的环境层阻断。取得授权端点后，**P04**（以 API 返回的 reasoning token 为指标、请求无害）是最优先可补的前沿覆盖项。
+1. **前沿模型未实测公开方法**：五种公开方法实测落在 DeepSeek/Qwen 与本地 Qwen3-8B，而非题目点名的 Astra/Fable/Opus。读取型受前沿模型隐藏 CoT 阻断；操纵型原理上可行，本项目将其放在推理可见的模型上做配对比较。其中 **P04** 以 reasoning token 用量为指标、请求无害，即使在不展示 CoT 文本的接口上也可测量，是最优先可补的前沿覆盖项。
 2. **统计规模**：P02/P06/N01/N02 仍多为单次或少量运行，固定两样例只能称 PoC，需扩展到每条件 3–5 次（乃至 20 次）并加入更难的独立保留集，按模型与方法分别汇总、不跨任务合并 ASR。
 3. **自主方法 N01/N02 任务偏简单**：两道算术代理题应升级为多步推理任务，并补充删除可信字段、标记不可信来源、错误候选无背书等消融。
 4. **N03 为探索性白盒 PoC**：作者未公开 SAE checkpoint，本项目使用自训 8,192-feature fallback 与极端离分布强度，结论不外推到商业 API 的隐藏 CoT。
