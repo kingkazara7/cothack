@@ -150,20 +150,36 @@ GPT 与 Claude 在本项目中既是攻击对象，也是接口边界的研究�
 
 #### P01：Stealing Reasoning Traces（当前环境无法验证）
 
-论文：Panfilov 等，[arXiv:2608.09867](https://arxiv.org/abs/2608.09867)。
+论文：Panfilov 等，*Stealing Reasoning Traces from Proprietary LLM APIs*，[arXiv:2608.09867](https://arxiv.org/abs/2608.09867)。
 
-- **技术原理**：强模型（论文主例 Opus 4.8）返回的 signed/encrypted thinking block 在同一厂商生态内可跨会话、跨用户、跨模型重放；把它填进更弱、拒绝更松的模型（Haiku 4.5）的空 thinking 块并预填可见前缀，服务端解开自己签发的块后，弱模型把内容外显为明文。攻击利用"块只验证真伪、未充分绑定用户/会话/模型/历史"的缺口，不破解密文、不伪造签名。
-- **攻击目标**：提取未展示的推理轨迹、恢复日志中的敏感内容，或让不透明块携带跨上下文 prompt injection。论文另报告公开侧 315,320 个重建 block 中 1,028 个含隐私泄露、328 个真实用户会话含敏感项。
-- **兼容性边界**：论文兼容矩阵中 Opus 4.8 的块可交给 Haiku 4.5，但 Fable 5 的块只兼容 Fable 5 自身，不支持"Haiku 转写 Fable 5/5.1"。
-- **本项目状态（`N/A`）**：题目为这篇指定 GPT-6 Astra 与 Claude Fable 5.1。Astra 当前 CLI 不返回可跨会话重放的原始 block/signature；Fable 5.1 无本项目获授权的端点。两者都不具备论文攻击的**必要输入**，因此没有提交任何攻击请求。仓库的本地 block 模拟（`scripts/reproduce_trace_replay.py`，不调用任何 LLM）只演示"上下文绑定 vs 未绑定"的机制可实现性，不计作 P01 模型实验。详见 [`research/p01-stolen-thoughts.md`](research/p01-stolen-thoughts.md)。
+- **① 背景与问题**：各厂商把推理过程藏起来，以加密块的形式返回给客户端、并要求客户端在后续请求里带回。作者发现这些块在同一厂商生态内"可跨会话、跨用户、跨模型互换"，由此构造出一种**解密式提取/越狱**：把强模型的加密推理块喂给同厂商更弱、拒绝更松的模型，让后者把它解成明文。
+- **② 威胁模型**：攻击者是该厂商的普通 API 用户。先合法地让强模型正常解题、拿到它返回的 signed block（看不到也不改明文），再对弱模型发一个带 assistant-turn 预填的新请求。不破解密钥、不伪造签名。
+- **③ 方法机制**：(a) 让 **Opus 4.8（source/teacher）** 正常解题，客户端保存随 thinking 返回的长 signature；(b) 新建 **Haiku 4.5（decoder）** 请求，把 Opus 的合法 signature 放进当前 assistant turn 的空 thinking 块，并预填一个转写起始前缀；(c) 服务端验证并解开这个由自己签发的块后，Haiku 续写同一 assistant turn，把处理到的内容外显为明文。该链依赖跨会话/跨模型兼容 + Haiku 支持 assistant 预填 + 拒绝更弱。可选的 reconciliation：对同一块多次采样 Haiku 转写、过滤拒绝，再让 Opus 在 `temperature=0` 下合并去噪。只有把恢复的 `题目—推理—答案` 用于训练另一个 student，才构成严格蒸馏。
+- **④ 论文实验与结果**：覆盖 Anthropic/OpenAI/Google，用 AIME 2025、Codeforces、HLE 等生成推理块。Claude 提取以固定模板在 `temperature=1` 运行；120 道 Codeforces 上比较 source API 计费 thinking token 与恢复文本重输入后的 token 数，两者**紧密跟随**（非逐 token 精确 1:1）。公开侧从 6,708 条 agent 轨迹重建 315,320 个 block，报告 1,028 个含隐私泄露、328 个真实会话含敏感项；并演示"最终答案拒绝、但推理里暴露有害内容"和"不透明块携带隐形 prompt injection"两类风险。
+- **⑤ 局限与边界**：兼容矩阵有方向性——Opus 4.8 的块可交给 Haiku 4.5，但 Fable 5 的块只兼容 Fable 5 自身。作者 2026-09 的披露后审计显示效果取决于服务路由（OpenAI 第一方 Astra 重放失败、Azure 路由成功；Anthropic 第一方与 Azure 的 Fable 5/5.1 均失败），不能笼统说"已全部修复"或"仍普遍可用"。因无隐藏明文真值，也不能声称逐 token 完全一致。
+- **⑥ 本项目状态（`N/A`）**：题目为这篇指定 GPT-6 Astra 与 Claude Fable 5.1。Astra 当前 CLI 不返回可跨会话重放的原始 block/signature；Claude 界面不展示完整 CoT，也不返回可重放的原始 block。两者都不具备论文攻击的**必要输入**，因此没有提交任何攻击请求。仓库的本地 block 模拟（`scripts/reproduce_trace_replay.py`，不调用任何 LLM）只演示"上下文绑定 vs 未绑定"的机制可实现性，不计作 P01 模型实验。详见 [`research/p01-stolen-thoughts.md`](research/p01-stolen-thoughts.md)。
 
 #### P05：CatAttack 语义无关触发（背景）
 
-论文：Rajeev 等，[arXiv:2503.01781v2](https://arxiv.org/html/2503.01781v2)。自动搜索不改变题意的短触发，在便宜代理模型上筛选后迁移到更强推理模型，提高其错误率。作者从 DeepSeek V3 原本答对的 1,618 题找到 574 个成功候选，约 114 个迁移到 R1 仍致错，三个语义触发在 R1 上组合错误率倍率 3.0×。本项目回放官方 row 2/5 的已发布触发：DeepSeek 两例保持正确（0/2），Qwen3.8-Max 的 row 5 由 `Yes` 变为错误 `No`（1/2）。与 CoT 的直接联系较弱，仅作背景，不替代五种实测方法。
+论文：Rajeev 等，*Cats Confuse Reasoning LLM: Query-Agnostic Adversarial Triggers for Reasoning Models*，[arXiv:2503.01781v2](https://arxiv.org/html/2503.01781v2)。
+
+- **① 背景与问题**：推理模型理应对与题目无关的文字稳健。作者证明：在题目后附上一句**与问题无关的短触发**（如一句关于猫的闲话），就能在不改变题意的前提下显著拉高模型的答错率。
+- **② 威胁模型**：黑盒。攻击者只在用户查询上追加一小段前/后缀；先在便宜的代理模型上搜索触发，再迁移到更强的目标模型。
+- **③ 方法机制**：用自动化的攻击者在环搜索（PAIR 式）寻找"不改变语义、却能诱发错误"的触发，在便宜代理（DeepSeek V3）上筛选后迁移到更强模型（R1）；其中一类候选是与问题无关的简短句子，论文归纳出三种语义触发类型。
+- **④ 论文实验与结果**：从 DeepSeek V3 原本答对的 1,618 题中找到 574 个成功候选，约 114 个迁移到 R1 后仍致错；经语义筛选的三个触发在 R1 上组合错误率倍率 **3.0×**。注意这是相对错误率倍率，不是绝对 ASR。
+- **⑤ 局限与边界**：相对倍率不等于绝对成功率；迁移效果取决于代理与目标的相似度；本项目只回放作者已发布的触发，不重新运行 PAIR 搜索。
+- **⑥ 本项目实测与归因**：用官方数据集 row 2、row 5 的原题与 `modified_problems[1]`。DeepSeek 两例均保持正确（0/2）；Qwen3.8-Max 的 row 2 保持正确、row 5 由基线 `Yes` 变为攻击条件的错误 `No`，故 Qwen **1/2**。归因：它攻击的是推理鲁棒性（无关触发致错），与"操纵 CoT 内容本身"的联系较弱，因此仅作背景，不计入调研的五种。详见 [`results/official-replay-20261022.md`](results/official-replay-20261022.md)。
 
 #### P07：Understanding Refusal with Sparse Autoencoders（论文引用）
 
-论文：Yeo 等，[Findings of EMNLP 2025](https://aclanthology.org/2025.findings-emnlp.338/)；代码：[SenticNet/Refusal-SAE](https://github.com/SenticNet/Refusal-SAE)。从有害/无害 activation 均值差得到 refusal direction，按余弦相似度预筛 SAE features，再用 attribution patching 找紧凑因果集合，正负缩放以增强或撤销拒答。作者在 Gemma-2-2B、Llama-3.1-8B 与 GemmaScope/LlamaScope 上，于 JailbreakBench/HarmBench/AdvBench 各取 100 条；WildJailbreak sparse-feature probe 平均准确率 0.86/0.75、dense probe 0.68/0.51。它操作 safety alignment，狭义上不是修改 CoT 文本，但为 latent-space 因果干预提供方法依据；本项目据此思路构造并测试了 N03，论文原流程标为 `paper-reported`、未冒充复现。详见 [`research/p07-refusal-sae.md`](research/p07-refusal-sae.md)。
+论文：Yeo 等，*Understanding Refusal in Language Models with Sparse Autoencoders*，[Findings of EMNLP 2025](https://aclanthology.org/2025.findings-emnlp.338/)；代码：[SenticNet/Refusal-SAE](https://github.com/SenticNet/Refusal-SAE)。
+
+- **① 背景与问题**：语言模型"为什么、靠什么"拒答？作者用稀疏自编码器（SAE）定位拒答背后的因果特征，并证明按正负缩放这些特征就能增强或撤销拒答——这是一个白盒可解释性 + 干预工作。
+- **② 威胁模型**：白盒。需要开放权重 + 对应 SAE，攻击者能读写中间层 activation。对闭源 API 不适用。
+- **③ 方法机制**：先用有害/无害 activation 的均值差得到 refusal direction；每层按余弦相似度预筛 SAE features；再用 attribution patching 找出紧凑的因果 refusal feature 集合；对这些特征做正负缩放、解码回 residual stream，以增强或撤销拒答。CoT 只用于检查能力副作用。
+- **④ 论文实验与结果**：在 Gemma-2-2B、Llama-3.1-8B 与 GemmaScope/LlamaScope 上，于 JailbreakBench/HarmBench/AdvBench 各取 100 条；WildJailbreak sparse-feature probe 平均准确率 **0.86 / 0.75**、dense probe 0.68 / 0.51，并有随机 feature 对照与普通能力副作用检查。
+- **⑤ 局限与边界**：它操作的是 safety alignment，不是 CoT 文本，**狭义上不属于 CoT 攻击**；需要开放权重与 SAE checkpoint；Gemma/Llama 上的结论不迁移到闭源模型。
+- **⑥ 本项目关系与状态（`paper-reported`）**：本项目**没有**运行作者的 Gemma/Llama Refusal-SAE 全流程（标为 `paper-reported`，不冒充复现），而是借用其 SAE 因果干预思路，在 Qwen3-8B 上构造并测试了自主方法 N03。区别：论文攻击拒答/安全对齐，N03 攻击正常推理输出的完整性；论文的 feature 选择依赖拒答方向与多 token 归因，N03 依赖答案 token 的 contrastive logit 投影。详见 [`research/p07-refusal-sae.md`](research/p07-refusal-sae.md) 与 [§5](#5-三种自主构造方法)。
 
 五种公开方法的表格版实测见 [`results/public-five-poc.md`](results/public-five-poc.md)。
 
