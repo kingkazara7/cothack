@@ -1,0 +1,46 @@
+{
+  "schema_version": 1,
+  "experiment_date": "2026-10-23",
+  "method": "P04 OverThink",
+  "source": {
+    "repository": "https://github.com/akumar2709/OVERTHINK_public",
+    "revision": "d42276172831c5c48a16830095f1c2f901dbb2fc",
+    "file": "dataset/squad_attack.csv",
+    "cases": [
+      "P04-0",
+      "P04-30"
+    ],
+    "fields": {
+      "baseline": "Base_Prompt",
+      "attack": "Attack_Prompt_3"
+    }
+  },
+  "environment": {
+    "model": "Qwen3-8B",
+    "model_path_server": "/data/public/checkpoints/Qwen3-8B",
+    "model_revision": "unavailable_local_checkpoint",
+    "config_sha256": "f7c4eadfbbf522470667b797a3c89be2524832d2d599797248dc304fff447c30",
+    "tokenizer_config_sha256": "d5d09f07b48c3086c508b30d1c9114bd1189145b74e982a265350c923acd8101",
+    "generation_config_sha256": "2325da0f15bb848e018c5ae071b7943332e9f871d6b60e2ed22ca97d4cb993d2",
+    "container": "qwen3-env:v1",
+    "container_image_id": "sha256:3cab346493aa0af72fdc4e4706e7a6a64f80b497fdd198f057ea6359136d0316",
+    "torch": "2.7.0a0+ecf3bae40a.nv25.02",
+    "transformers": "4.51.0",
+    "gpu": "NVIDIA H100 80GB HBM3"
+  },
+  "protocol": {
+    "repeats_per_case_condition": 3,
+    "enable_thinking": true,
+    "do_sample": false,
+    "seed": 20261023,
+    "max_new_tokens": 4096,
+    "warmup": "One unreported 32-token generation before measurements",
+    "timing": "torch.cuda.synchronize before and after model.generate; time.perf_counter wall clock",
+    "token_split": "Generated tokens before first </think> are thinking; tokens after are answer; marker excluded. Missing marker at cap means all tokens counted as thinking and answer_tokens=0."
+  },
+  "artifacts": {
+    "logs/p04/p04-qwen3-8b.jsonl": "4495454b18d026e5188fec261ebba9b3d0e20d8ee37704934563874308d35a78",
+    "logs/p04/p04-qwen3-8b.jsonl.summary.json": "04316fbd81c668ed397cf1f44c37cb239820795572165b2c262951c7bed64858",
+    "scripts/run_overthink_qwen3.py": "099ac66b8559eebd7b93725d9fb85d9ddff2f788017d7c3d67509b5f767459c1"
+  }
+}

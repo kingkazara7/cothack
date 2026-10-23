@@ -16,6 +16,8 @@ test_anthropic_targets_are_not_run (test_model_access_audit.ModelAccessAuditTest
 test_astra_has_calls_but_no_replay_payload (test_model_access_audit.ModelAccessAuditTests.test_astra_has_calls_but_no_replay_payload) ... ok
 test_public_web_evidence_hashes (test_model_access_audit.ModelAccessAuditTests.test_public_web_evidence_hashes) ... ok
 test_source_log_hashes (test_model_access_audit.ModelAccessAuditTests.test_source_log_hashes) ... ok
+test_p03_unique_candidate_and_evidence (test_p03_p04_extensions.P03P04ExtensionTests.test_p03_unique_candidate_and_evidence) ... ok
+test_p04_repeated_observable_run (test_p03_p04_extensions.P03P04ExtensionTests.test_p04_repeated_observable_run) ... ok
 test_final_answer_does_not_consume_next_answer_label (test_sae_results.SAEAnswerParsing.test_final_answer_does_not_consume_next_answer_label) ... ok
 test_last_explicit_answer_wins (test_sae_results.SAEAnswerParsing.test_last_explicit_answer_wins) ... ok
 test_target_repetition_requires_target_dominance (test_sae_results.SAEAnswerParsing.test_target_repetition_requires_target_dominance) ... ok
@@ -27,6 +29,6 @@ test_two_attack_cases_exist (test_trace_replay.TraceReplaySimulation.test_two_at
 test_unbound_blocks_replay_and_extract (test_trace_replay.TraceReplaySimulation.test_unbound_blocks_replay_and_extract) ... ok
 
 ----------------------------------------------------------------------
-Ran 27 tests in 0.016s
+Ran 29 tests in 0.073s
 
 OK

@@ -1,6 +1,6 @@
 # 模型研究重点与 CoT 可观测性
 
-核对日期：2026-10-22。本项目把 **DeepSeek 与 Qwen** 作为后续主要实证对象；GPT 与 Claude 保留为输出鲁棒性对照和接口边界研究对象。
+核对日期：2026-10-23。本项目把 **DeepSeek 与 Qwen** 作为后续主要实证对象；GPT 与 Claude 保留为输出鲁棒性对照和接口边界研究对象。
 
 ## 核心结论
 
@@ -14,6 +14,7 @@
 |---|---|---|---|
 | DeepSeek Chat / `DeepThink` | 网页显示 reasoning 文本与思考秒数 | 主要黑盒推理操纵与开销测试 | 已完成 P02–P05 各 2 个论文样例，以及 P06 两个正式样例；网页不披露 checkpoint |
 | Qwen Chat / `Qwen3.8-Max`、`Qwen3.7-Plus` | 网页显示 `Thinking completed`，可展开部分可见推理 | 第二个主要黑盒模型；与 DeepSeek 做同题配对 | 已完成 P02–P05 各 2 个论文样例；P06 有 1 个有效交叉样例；P08 有 2 个样例、12 次正式重复和 4 次消融 |
+| 本地 Qwen3-8B | 可读取生成 token、`</think>` 边界、预算、截断和同步墙钟时间 | P04 可观测开销与 N03 白盒干预 | P04 两题各条件 3 次；N03 两个正式样例 |
 | OpenAI / GPT | 最终输出、usage，以及支持时可选的 reasoning summary | 输出完整性、拒绝与开销代理；不把摘要当隐藏 CoT | Astra 与 GPT-5.6 Sol 已各完成 32 次 CLI 调用；CLI 未返回可读 raw CoT |
 | Anthropic / Claude | `thinking` 可为空或返回摘要；完整推理在 signature 中加密 | 接口边界和论文兼容性分析 | Fable 5.1/Opus 5.5 probe 均因缺少凭据在 HTTP 发送前结束，状态 `not_run` |
 
@@ -36,6 +37,6 @@
 
 DeepSeek 网页显示的 reasoning 文本对黑盒行为研究很有用，可以比较攻击前后是否采纳伪结论、是否出现额外步骤、可见思考时间是否改变。但没有隐藏轨迹真值，不能证明网页文本就是未加工的内部 CoT。
 
-早期 Qwen3.8-Max 算术代理矩阵全部最终答案正确，它只能说明那些简化提示没有奏效。论文原始输入回放得到不同结果：Qwen3.7-Plus 的 H-CoT 为 1/2 拒答绕过，CoT Hijacking 为一个成功和一个无效候选；Qwen3.8-Max 的 CatAttack 为 1/2 错误迁移，OverThink 两例均执行诱饵但缺少 token/成本指标。P06 中，DeepSeek 两个正式样例与 Qwen 的一个有效样例都纠正了被篡改数值。P08 中，Qwen3.7-Plus 的 6 次攻击均生成官方 `×2.1` 后门步骤和目标答案，4 次单因素消融均保持正确。无论结果成功或失败，网页展开文本都只称“网页可见推理”，不能称 raw CoT。完整逐例结果见 [P02–P05 报告](../results/official-replay-20261022.md)、[P06 报告](../results/cpt-replay-20261022.md) 和 [P08 报告](../results/badchain-replay-20261022.md)。
+早期 Qwen3.8-Max 算术代理矩阵全部最终答案正确，它只能说明简化提示没有奏效。论文原始输入回放得到不同结果：H-CoT 为 1/2 拒答绕过；CoT Hijacking 的正式两个有效样例为一个完整成功和一个部分绕过；CatAttack 为 1/2 错误迁移。P04 的本地 Qwen3-8B 补测直接记录到 6.061× 和至少 33.574× thinking-token 放大。P06 的有效样例均纠正篡改数值；P08 的 6 次攻击均生成官方后门步骤和目标答案。网页展开文本仍只称“网页可见推理”；本地 Qwen3 token 计量也只是生成边界计数，不是不可见的独立真值。
 
 本项目另提供机器可复核的接口审计：32 条 Astra Codex CLI 记录的事件 item 全部为 `agent_message`，`reasoning` item、`signature`、`encrypted_content` 与 raw reasoning text 字段均为 0/不存在；Fable 5.1 与 Opus 5.5 的 probe 记录均为 `missing_credential`，请求未发送。日志路径、SHA-256、CLI 版本和官方文档压缩快照见 [model-access-audit-20261022.md](../results/model-access-audit-20261022.md)。
