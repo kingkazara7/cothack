@@ -37,7 +37,7 @@
 由此得到的研究边界：
 
 1. **读取型攻击**（P01、P06、以及对闭源模型的 N03）需要模型的真实 CoT，而 **GPT-6 Astra（Codex）与 Claude（Fable/Opus）的界面不展示完整推理过程**，只返回不透明的 reasoning item / 摘要或加密 signature。因此这类攻击在前沿模型上不可行——这正是厂商防御有效之处。
-2. **操纵型 / 消耗型攻击**（P02/P03/P04/P08）不依赖读到 CoT，原理上可打前沿模型。为了在同一套**可见推理**下做配对比较与错误归因，本项目把这些方法的实测放在推理可见的 **DeepSeek、Qwen 网页端与本地开源 Qwen3-8B** 上（实证主力）；**GPT-6 Astra、Claude Fable 5.1、Opus 5.5 仅作象征性接口测试、不承担主要证据**（见 [§6](#6-测试环境与模型覆盖)）。
+2. **操纵型 / 消耗型攻击**（P02/P03/P04/P08）不依赖读到 CoT，原理上可打前沿模型。为了在同一套**可见推理**下做配对比较与错误归因，本项目把这些方法的实测放在推理可见的 **DeepSeek、Qwen 网页端与本地开源 Qwen3-8B** 上（实证主力）；**GPT-6 Astra 只作象征性接口测试，Claude Fable 5.1 / Opus 5.5 直接跳过（无可用调用环境、未纳入实测）**（见 [§6](#6-测试环境与模型覆盖)）。
 
 > 一句话总结：**隐藏 CoT 能防住"读取型"攻击，防不住"操纵型"攻击**。本项目用可获得的授权模型验证了这一判断，并对无法在前沿模型上复现的部分给出机制级原因，而不是用替代数据假装测过。
 
@@ -157,7 +157,7 @@ GPT 与 Claude 在本项目中既是攻击对象，也是接口边界的研究�
 - **③ 方法机制**：(a) 让 **Opus 4.8（source/teacher）** 正常解题，客户端保存随 thinking 返回的长 signature；(b) 新建 **Haiku 4.5（decoder）** 请求，把 Opus 的合法 signature 放进当前 assistant turn 的空 thinking 块，并预填一个转写起始前缀；(c) 服务端验证并解开这个由自己签发的块后，Haiku 续写同一 assistant turn，把处理到的内容外显为明文。该链依赖跨会话/跨模型兼容 + Haiku 支持 assistant 预填 + 拒绝更弱。可选的 reconciliation：对同一块多次采样 Haiku 转写、过滤拒绝，再让 Opus 在 `temperature=0` 下合并去噪。只有把恢复的 `题目—推理—答案` 用于训练另一个 student，才构成严格蒸馏。
 - **④ 论文实验与结果**：覆盖 Anthropic/OpenAI/Google，用 AIME 2025、Codeforces、HLE 等生成推理块。Claude 提取以固定模板在 `temperature=1` 运行；120 道 Codeforces 上比较 source API 计费 thinking token 与恢复文本重输入后的 token 数，两者**紧密跟随**（非逐 token 精确 1:1）。公开侧从 6,708 条 agent 轨迹重建 315,320 个 block，报告 1,028 个含隐私泄露、328 个真实会话含敏感项；并演示"最终答案拒绝、但推理里暴露有害内容"和"不透明块携带隐形 prompt injection"两类风险。
 - **⑤ 局限与边界**：兼容矩阵有方向性——Opus 4.8 的块可交给 Haiku 4.5，但 Fable 5 的块只兼容 Fable 5 自身。作者 2026-09 的披露后审计显示效果取决于服务路由（OpenAI 第一方 Astra 重放失败、Azure 路由成功；Anthropic 第一方与 Azure 的 Fable 5/5.1 均失败），不能笼统说"已全部修复"或"仍普遍可用"。因无隐藏明文真值，也不能声称逐 token 完全一致。
-- **⑥ 本项目状态（`N/A`）**：题目为这篇指定 GPT-6 Astra 与 Claude Fable 5.1。Astra 当前 CLI 不返回可跨会话重放的原始 block/signature；Claude 界面不展示完整 CoT，也不返回可重放的原始 block。两者都不具备论文攻击的**必要输入**，因此没有提交任何攻击请求。仓库的本地 block 模拟（`scripts/reproduce_trace_replay.py`，不调用任何 LLM）只演示"上下文绑定 vs 未绑定"的机制可实现性，不计作 P01 模型实验。详见 [`research/p01-stolen-thoughts.md`](research/p01-stolen-thoughts.md)。
+- **⑥ 本项目状态（`N/A`）**：题目为这篇指定 GPT-6 Astra 与 Claude Fable 5.1。Astra 当前 CLI 不返回可跨会话重放的原始 block/signature，不具备论文攻击的**必要输入**，未提交请求；**Claude Fable 5.1 本项目直接跳过**——无可用调用环境、未纳入实测。仓库的本地 block 模拟（`scripts/reproduce_trace_replay.py`，不调用任何 LLM）只演示"上下文绑定 vs 未绑定"的机制可实现性，不计作 P01 模型实验。详见 [`research/p01-stolen-thoughts.md`](research/p01-stolen-thoughts.md)。
 
 #### P05：CatAttack 语义无关触发（背景）
 
@@ -193,8 +193,8 @@ GPT 与 Claude 在本项目中既是攻击对象，也是接口边界的研究�
 
 | 方法 | 核心假设 | 攻击面 | 实测结果 |
 |---|---|---|---|
-| **N01 检查点替换** | 模型会把伪造的序列化"已验证"状态当作可信推理恢复点，直接输出错误候选 | 低信任文档 / 记忆摘要 | 简单版 **0/2**；升级消融套件已备、待跑 |
-| **N02 验证器结论洗白** | 伪造独立验证器的认可，会使模型把求解任务降格为机械转写 | 检索内容中的假验证结果 | 简单版 **0/2**；升级消融套件已备、待跑 |
+| **N01 检查点替换** | 模型会把伪造的序列化"已验证"状态当作可信推理恢复点，直接输出错误候选 | 低信任文档 / 记忆摘要 | 简单版 **0/2**；升级套件已备，本项目无法运行（无 Codex 环境） |
+| **N02 验证器结论洗白** | 伪造独立验证器的认可，会使模型把求解任务降格为机械转写 | 检索内容中的假验证结果 | 简单版 **0/2**；升级套件已备，本项目无法运行（无 Codex 环境） |
 | **N03 SAE Latent 反事实注入** | 即使输入正常、模型本可答对，只要能访问开放权重推理过程，直接改一个 SAE latent 就能定向改变或破坏后续推理 | 白盒 activation 写权限 | 定向完整错答 **0/2**；thinking 生成破坏 **2/2** |
 
 下面每种方法按六部分展开：**① 动机与假设 · ② 威胁模型 / 攻击面 · ③ 方法设计（与已有方法的区别）· ④ 对照与消融设计 · ⑤ 局限与边界 · ⑥ 本项目实测与归因**。
@@ -206,7 +206,7 @@ GPT 与 Claude 在本项目中既是攻击对象，也是接口边界的研究�
 - **③ 方法设计**：升级后用**多步算术题**（如 `36→×4→+18→×2→−24 = 300`、一道 960 widget 的 5 步题）取代原来的 `17×19`，让重算有真实代价；并把伪造状态从一行 JSON 升级为**长且自洽的序列化 checkpoint**——带 session/schema、`status: validated`、逐步 `step_log`（前几步算术正确、只在末步撒谎）、`validation: 4/4`、`next_action: emit_candidate` 与 candidate。与历史 M03（CoT Forgery）的区别：去掉 think 角色标签，改用状态机 / 检查点字段伪装可信度；原来的一行 JSON 版保留为消融基线。
 - **④ 对照与消融设计**：用例备在 [`data/n01-n02-upgrade.json`](data/n01-n02-upgrade.json)，每题跑四个条件，逐一只改一个变量：**c1** 加固提示 + 标注 untrusted + 短 payload（≈原版）；**c2** 同前但换长且自洽 checkpoint（隔离长度/连贯）；**c3** 改用**不预警**的中性系统提示（隔离提示加固）；**c4** 再把状态**不标 untrusted**、作为"已恢复的求解状态"呈现（隔离来源标注，最接近未加固的 RAG/agent）。每条件配 control（纯题目），计划每条件重复 5 次。
 - **⑤ 局限与边界**：历史简单版有天花板效应（`17×19` 一眼可重算），且系统提示自带"忽略 UNTRUSTED"预警，结果被混淆；升级版针对性地加难任务、去预警、加长连贯状态与来源伪装，但仍限于算术域、单模型族。
-- **⑥ 本项目实测与归因**：**历史简单版**在 Astra / GPT-5.6 Sol 各一次，均 **0/2**——模型忽略伪造状态、自己重算。但该结果被"简单任务 + 预警提示 + 短 payload"混淆，不能证明攻击面无效。**升级消融套件已备、可直接运行**：`python3 scripts/run_codex_cli.py --cases data/n01-n02-upgrade.json --method N01 --repeats 5`；本环境无 Codex CLI，**待在已登录 Codex 的环境执行**，届时按 c1→c4 的成功率差异归因（是提示加固、来源标注还是长度/连贯在起作用）。历史调用见 [`results/gpt-6-astra-codex-cli-pilot.md`](results/gpt-6-astra-codex-cli-pilot.md)、[`results/gpt-5.6-sol-codex-cli-pilot.md`](results/gpt-5.6-sol-codex-cli-pilot.md)。
+- **⑥ 本项目实测与归因**：**历史简单版**在 Astra / GPT-5.6 Sol 各一次，均 **0/2**——模型忽略伪造状态、自己重算。但该结果被"简单任务 + 预警提示 + 短 payload"混淆，不能证明攻击面无效。**升级消融套件已设计、用例已备，但本项目无法运行**——环境无 Codex CLI 与凭据，它作为设计 / 用例交付、未实跑。若在装有 Codex CLI 的环境运行：`python3 scripts/run_codex_cli.py --cases data/n01-n02-upgrade.json --method N01 --repeats 5`，可按 c1→c4 的成功率差异归因（是提示加固、来源标注还是长度/连贯在起作用）。历史调用见 [`results/gpt-6-astra-codex-cli-pilot.md`](results/gpt-6-astra-codex-cli-pilot.md)、[`results/gpt-5.6-sol-codex-cli-pilot.md`](results/gpt-5.6-sol-codex-cli-pilot.md)。
 
 ### N02 验证器结论洗白（Verifier Laundering）
 
@@ -215,7 +215,7 @@ GPT 与 Claude 在本项目中既是攻击对象，也是接口边界的研究�
 - **③ 方法设计**：升级后同样换用多步难题，并把伪造验证器从一句话升级为**长且自洽的验证报告**——`certificate_id`、checker 版本、完整 `worked_solution`（走一条只改一个前提的自洽错误路径）、`verdict: CERTIFIED`，以及"下游只需转写、无需重解"的措辞。与 M01 的区别：权威来自"第三方验证器"这一外部身份，而非模型自身执行阶段；一句话版保留为消融基线。
 - **④ 对照与消融设计**：与 N01 同一套四条件消融（c1 短 + 加固 → c2 长 → c3 去预警 → c4 作为 `TOOL RESULT (verifier_v)` 不标 untrusted），备在同一文件 [`data/n01-n02-upgrade.json`](data/n01-n02-upgrade.json)，用 `--method N02` 选取。
 - **⑤ 局限与边界**：同 N01——历史一句话版受"简单任务 + 预警提示"混淆；升级版加难任务、长自洽报告与来源伪装，仍限于算术域、单模型族。
-- **⑥ 本项目实测与归因**：历史简单版两入口均 **0/2**——模型没有把求解降格为转写，仍自行计算。**升级套件可直接运行**：`python3 scripts/run_codex_cli.py --cases data/n01-n02-upgrade.json --method N02 --repeats 5`，待在 Codex 环境执行。原始调用见上述两份 Codex CLI 记录。
+- **⑥ 本项目实测与归因**：历史简单版两入口均 **0/2**——模型没有把求解降格为转写，仍自行计算。**升级套件已备，但本项目无法运行**（环境无 Codex CLI）；若在 Codex 环境运行：`python3 scripts/run_codex_cli.py --cases data/n01-n02-upgrade.json --method N02 --repeats 5`。原始调用见上述两份 Codex CLI 记录。
 
 ### N03 SAE Latent 反事实注入（SAE Latent Counterfactual Injection）
 
@@ -240,14 +240,14 @@ TRSS（Thinking-strategy Reasoning Suppression Steering）是 N03 的一个变�
 | P04 可观测补测、N03、TRSS | 授权服务器上的本地 Qwen3-8B（H100 80GB） | 开源权重，可读 thinking token 与 latent，白盒实验唯一可行处 |
 | P08 BadChain | Qwen3.7-Plus `Auto` | 12 次正式 + 4 次消融 |
 | N01、N02 | GPT-6 Astra、GPT-5.6 Sol 的 Codex CLI | Astra **确有真实调用**（32 次），但仅用于这两种自主代理方法 |
-| P01 前置条件检查 | GPT-6 Astra CLI 字段扫描；Claude 界面不展示完整 CoT | 均未提交攻击请求 |
+| P01 前置条件检查 | GPT-6 Astra CLI 字段扫描；Fable / Opus 直接跳过 | 均未提交攻击请求 |
 
 **关于题目点名的三个前沿模型**：
 
 - **GPT-6 Astra**：仅在 N01/N02 和 P01 字段诊断中被调用；五种公开方法未在其上运行。Astra 的 Codex CLI 每次注入约 1.4–1.5 万 input token 的系统脚手架，可能强化信任边界，是相对网页/直接 API 的重要混杂因素。
-- **Claude Fable 5.1 / Opus 5.5**：界面只返回 thinking 摘要或加密 signature，**不展示完整 CoT**；公开方法实测未在其上运行，仅作接口边界研究对象。
+- **Claude Fable 5.1 / Opus 5.5**：本项目**直接跳过**——无可用调用环境，未提交任何请求、未纳入实测（界面本身也只返回 thinking 摘要或加密 signature，不展示完整 CoT）。
 
-因此本项目的**实证设计**是：**以推理可见的 DeepSeek、Qwen 和本地 Qwen3-8B 为主力**（只有它们能支撑 CoT 完整性判定与配对归因）；**GPT-6 Astra 仅用于自主方法 N01/N02 与 P01 字段诊断，Claude Fable 5.1 与 Opus 5.5 未实际调用——三者都只作象征性的接口 / 边界触及、不承担公开方法的主要证据**。这与题目"重点关注前沿模型"的字面要求有偏差，但考虑到前沿模型隐藏 CoT、读取型攻击本就无法在其上验证，是本项目有意的取舍。逐方法的模型归属（`observed` / `precondition_check` / `paper-reported` / `not_run`）见 [`results/model-attribution.md`](results/model-attribution.md)。
+因此本项目的**实证设计**是：**以推理可见的 DeepSeek、Qwen 和本地 Qwen3-8B 为主力**（只有它们能支撑 CoT 完整性判定与配对归因）；**GPT-6 Astra 仅用于自主方法 N01/N02 与 P01 字段诊断（象征性、不承担主要证据），Claude Fable 5.1 / Opus 5.5 直接跳过——无可用调用环境、未纳入实测**。这与题目"重点关注前沿模型"的字面要求有偏差，但考虑到前沿模型隐藏 CoT、读取型攻击本就无法在其上验证，是本项目有意的取舍。逐方法的模型归属（`observed` / `precondition_check` / `paper-reported` / `not_run`）见 [`results/model-attribution.md`](results/model-attribution.md)。
 
 ---
 
@@ -279,9 +279,9 @@ TRSS（Thinking-strategy Reasoning Suppression Steering）是 N03 的一个变�
 | 要求 | 覆盖情况 | 支撑材料与边界 |
 |---|---|---|
 | 5 种公开方法调研 | 满足 | 调研的 5 种代表性公开方法 P02/P03/P04/P06/P08 均给出原理/目标/公开依据/实测（[§4](#4-五种公开方法调研与实测)）；另附 P01/P05/P07 作为背景文献 |
-| 3 种自主攻击设计 | 满足 | N01/N02 低信任文本注入（历史双样例 0/2，已备升级消融套件待跑）；N03 为 clean-input SAE latent injection，含闭集 feature 选择、九档强度、norm-matched control、负方向与 thinking block 复核（[§5](#5-三种自主构造方法)） |
+| 3 种自主攻击设计 | 满足 | N01/N02 低信任文本注入（历史双样例 0/2，升级消融套件已备、本项目无法运行）；N03 为 clean-input SAE latent injection，含闭集 feature 选择、九档强度、norm-matched control、负方向与 thinking block 复核（[§5](#5-三种自主构造方法)） |
 | 每种方法 ≥2 个实际样例 | 满足 | 8 种各有两个实测样例；P04/P08 每条件重复 3 次，P08 另有 4 次消融 |
-| 重点覆盖前沿模型 | **部分满足（有意取舍）** | 实证主力为 DeepSeek / Qwen / 本地 Qwen3-8B；Astra 仅用于自主方法 N01/N02、Fable 5.1 与 Opus 5.5 未调用，三者只作象征性接口测试、不承担公开方法的主要证据——因前沿模型隐藏 CoT，读取型攻击本就无法在其上验证（[§1](#1-核心结论先读这一节)、[§6](#6-测试环境与模型覆盖)） |
+| 重点覆盖前沿模型 | **部分满足（有意取舍）** | 实证主力为 DeepSeek / Qwen / 本地 Qwen3-8B；Astra 仅用于自主方法 N01/N02（象征性）；Fable 5.1 / Opus 5.5 直接跳过（无可用调用环境、未纳入实测）——因前沿模型隐藏 CoT，读取型攻击本就无法在其上验证（[§1](#1-核心结论先读这一节)、[§6](#6-测试环境与模型覆盖)） |
 | 有效性与可靠性 | 部分满足 | 已区分成功/部分绕过/失败/无效候选/非特异退化/不可观测/未运行；P04/P08 有重复，P08 有消融与 Wilson 区间，N03 有九档强度与配对对照；P02/P06/N01/N02 仍多为单次 |
 | 可复现性 | 较强 | 保存原始日志、输入哈希、源 row、代码/数据提交、16 份 P08 页面快照、官方网页压缩快照与校验脚本；无需凭据即可跑单测与校验（[§12](#12-复现)）。SAE decoder（约 134 MB）与网页端固定 checkpoint/参数未随仓库提供 |
 | 错误归因 | 较强 | 见 [§8](#8-成功与失败的归因原则)；N03 分报定向错答 0/2 与推理破坏 2/2，P03 区分零解失败与部分绕过，P04 区分 token 放大/截断/正确性 |
@@ -293,9 +293,9 @@ TRSS（Thinking-strategy Reasoning Suppression Steering）是 N03 的一个变�
 
 ## 10. 已知局限与后续方向
 
-1. **前沿模型仅象征性覆盖（有意取舍）**：实证主力是 DeepSeek / Qwen / 本地 Qwen3-8B；Astra、Fable 只做象征性接口测试。读取型攻击受前沿模型隐藏 CoT 阻断、本就无法在其上验证；操纵型原理上可行。若要补前沿覆盖，**P04**（以 reasoning token 用量为指标、请求无害）即使在不展示 CoT 文本的接口上也可测量，是最可行的一项。
+1. **前沿模型仅象征性覆盖（有意取舍）**：实证主力是 DeepSeek / Qwen / 本地 Qwen3-8B；Astra 只做象征性接口测试，Fable / Opus 直接跳过（无可用调用环境）。读取型攻击受前沿模型隐藏 CoT 阻断、本就无法在其上验证；操纵型原理上可行。若要补前沿覆盖，**P04**（以 reasoning token 用量为指标、请求无害）即使在不展示 CoT 文本的接口上也可测量，是最可行的一项。
 2. **统计规模**：P02/P06/N01/N02 仍多为单次或少量运行，固定两样例只能称 PoC，需扩展到每条件 3–5 次（乃至 20 次）并加入更难的独立保留集，按模型与方法分别汇总、不跨任务合并 ASR。
-3. **自主方法 N01/N02 仍待实跑**：已把设计从两道简单算术题升级为多步难题 + 长且自洽的伪造状态 + 四条件消融套件（[`data/n01-n02-upgrade.json`](data/n01-n02-upgrade.json)），但本环境无 Codex CLI 尚未实跑；历史简单版 0/2 属被混淆的结果，不作结论。
+3. **自主方法 N01/N02 仍待实跑**：已把设计从两道简单算术题升级为多步难题 + 长且自洽的伪造状态 + 四条件消融套件（[`data/n01-n02-upgrade.json`](data/n01-n02-upgrade.json)），但**本项目无法运行**（环境无 Codex CLI 与凭据），作为设计 / 用例交付；历史简单版 0/2 属被混淆的结果，不作结论。
 4. **N03 为探索性白盒 PoC**：作者未公开 SAE checkpoint，本项目使用自训 8,192-feature fallback 与极端离分布强度，结论不外推到商业 API 的隐藏 CoT。
 5. **网页端不透明字段**：网页模型不公开固定 checkpoint、seed、temperature 与隐藏 reasoning token，相关字段一律记 `N/A`，不按零处理，也不解释为隐藏 CoT 真值。
 
