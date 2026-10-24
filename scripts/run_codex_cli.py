@@ -79,6 +79,11 @@ def invoke(model, prompt, timeout):
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--model", default="gpt-6-astra")
+    parser.add_argument(
+        "--cases",
+        default="data/cases.json",
+        help="Path (relative to repo root) to the case file to run.",
+    )
     parser.add_argument("--repeats", type=int, default=1)
     parser.add_argument("--seed", type=int, default=20261022)
     parser.add_argument("--timeout", type=int, default=180)
@@ -93,7 +98,7 @@ def main():
     if not 1 <= args.repeats <= 10:
         parser.error("repeats must be between 1 and 10")
 
-    cases = json.loads((ROOT / "data/cases.json").read_text())
+    cases = json.loads((ROOT / args.cases).read_text())
     if args.method:
         cases = [case for case in cases if case["method"] == args.method]
     if args.sample_index:
